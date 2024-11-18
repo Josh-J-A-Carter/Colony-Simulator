@@ -10,7 +10,7 @@ public class PathfindingGraph : MonoBehaviour {
     static readonly int DIAGONAL_DIR_COST = 14;
 
     [SerializeField]
-    Tilemap gameWorld, obstacles;
+    Tilemap gameWorld, obstacles, pathVisualiser;
 
     [SerializeField]
     Tile wood;
@@ -59,20 +59,15 @@ public class PathfindingGraph : MonoBehaviour {
 
 
 
-        Debug.Log("Find path: ");
-
+        // Debug.Log("Find path: ");
         List<Vector2Int> path = FindPath(new Vector2(0, 0), new Vector2(-10, -5));
 
-        String str = "";
+        // String str = "";
         foreach (Vector2Int v in path) {
-            str = str + "    (" + v.x + ", " + v.y + ")";
-            gameWorld.SetTile(new Vector3Int(v.x, v.y, 0), wood);
+            // str = str + "    (" + v.x + ", " + v.y + ")";
+            pathVisualiser.SetTile(new Vector3Int(v.x, v.y, 0), wood);
         }
-        Debug.Log(str);
-
-
-        // d((-2, 0), (-10, -5)) > d((-2, 1), (-10, -5)); i.e. this is not finding the optimal path :/
-        // The heuristic is, in theory, consistent, so we should be finding the optimal - there must be a problem with this implementation
+        // Debug.Log(str);
     }
 
     List<(Vector2Int, int)> GetNeighbours(Vector2Int point) {
@@ -140,7 +135,7 @@ public class PathfindingGraph : MonoBehaviour {
         List<Node> queue = new List<Node>();
         List<Node> found = new List<Node>();
 
-        queue.Add(new Node(root, null, 0, CalculateHeuristic(root, goal)));
+        queue.Add(new Node(root, null, 0, 0));
 
         Node destination = null;
         while (queue.Count > 0) {
@@ -165,8 +160,8 @@ public class PathfindingGraph : MonoBehaviour {
             if (seen) continue;
 
             // This must be a genuinely-new point to visit, so add its neighbours
-            foreach ((Vector2Int neighbour, int gCost) in GetNeighbours(next.point)) {
-                queue.Add(new Node(neighbour, next, next.gCost + gCost, CalculateHeuristic(neighbour, goal)));
+            foreach ((Vector2Int neighbour, int edgeWeight) in GetNeighbours(next.point)) {
+                queue.Add(new Node(neighbour, next, next.gCost + edgeWeight, CalculateHeuristic(neighbour, goal)));
             }
         }
 
@@ -201,7 +196,10 @@ public class PathfindingGraph : MonoBehaviour {
         while (index < queue.Count - 1) {
             index += 1;
             // If the overall cost of this node is smaller, use it instead
-            if (queue[index].fCost < minCost) minIndex = index;
+            if (queue[index].fCost < minCost) {
+                minIndex = index;
+                minCost = queue[index].fCost;
+            }
         }
 
         Node next = queue[minIndex];

@@ -9,22 +9,23 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
 
-    static readonly float panSpeedBase = 1.0f;
+    static readonly float panSpeedBase = 0.25f;
     float UniDirectionalPanSpeed => panSpeedBase * zoom;
     // Let a, b be the velocities for x-, y-directions, let c be the velocity in the xy-direction.
+    // We know that the xy-direction should have the same velocity as the unidirectional speed.
     // By Pythagoras, a^2 + b^2 = c^2
-    // We want the velocities in x, y to be the same, so
+    // The velocities in x, y directions are the same, so
     // a^2 = b^2     =>    2 * a^2 = c^2
-    //               =>    c = sqrt(2 * a^2)
-    float BiDirectionalPanSpeed => (float) Math.Sqrt(2 * UniDirectionalPanSpeed);
+    //               =>    a = sqrt(c^2 / 2)
+    float BiDirectionalPanSpeed => (float) (zoom * panSpeedBase / Math.Sqrt(2));
 
     enum VertDir { None = 0, Up = 1, Down = -1 };
     enum HorizDir { None = 0, Right = 1, Left = -1 };
 
     (VertDir, HorizDir) holdingKeys = (VertDir.None, HorizDir.None);
 
-    static readonly float zoomMin = 0.5f;
-    static readonly float zoomMax = 5.0f;
+    static readonly float zoomMin = 0.75f;
+    static readonly float zoomMax = 7.5f;
     static readonly float zoomDefault = 1.0f;
     static readonly float zoomEaseFactorBase = 0.2f;
     // When zoom <= 1, change zoom by by 0.2f. When zoom > 1, this factor is too small, so increase linearly with zoom.

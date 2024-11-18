@@ -13,6 +13,9 @@ public class PathfindingGraph : MonoBehaviour {
     Tilemap gameWorld, obstacles;
 
     [SerializeField]
+    Tile wood;
+
+    [SerializeField]
     int minX, minY, maxX, maxY;
 
     bool[,] walkableCells;
@@ -56,13 +59,20 @@ public class PathfindingGraph : MonoBehaviour {
 
 
 
-        // Debug.Log("Find path between (0, 0) and (3, 3): ");
+        Debug.Log("Find path: ");
 
-        // List<Vector2Int> path = FindPath(new Vector2(0, 0), new Vector2(3, 3));
+        List<Vector2Int> path = FindPath(new Vector2(0, 0), new Vector2(-10, -5));
 
-        // String str = "";
-        // foreach (Vector2Int v in path) str = str + "    (" + v.x + ", " + v.y + ")";
-        // Debug.Log(str);
+        String str = "";
+        foreach (Vector2Int v in path) {
+            str = str + "    (" + v.x + ", " + v.y + ")";
+            gameWorld.SetTile(new Vector3Int(v.x, v.y, 0), wood);
+        }
+        Debug.Log(str);
+
+
+        // d((-2, 0), (-10, -5)) > d((-2, 1), (-10, -5)); i.e. this is not finding the optimal path :/
+        // The heuristic is, in theory, consistent, so we should be finding the optimal - there must be a problem with this implementation
     }
 
     List<(Vector2Int, int)> GetNeighbours(Vector2Int point) {
@@ -91,9 +101,6 @@ public class PathfindingGraph : MonoBehaviour {
         if (IsInBounds(x + 1, y - 1) && IsUnobstructed(x + 1, y - 1)
             && (IsUnobstructed(x + 1, y) || IsUnobstructed(x, y - 1))) neighbours.Add((new Vector2Int(x + 1, y - 1), DIAGONAL_DIR_COST));
 
-        // ...
-
-
         return neighbours;
     }
 
@@ -108,13 +115,20 @@ public class PathfindingGraph : MonoBehaviour {
     class Node {
         public Vector2Int point { get; }
         public Node parent { get; }
-        public int cost { get; }
+        public int fCost => gCost + hCost;
+        public int gCost { get; }
+        public int hCost { get; }
 
-        public Node(Vector2Int point, Node parent, int cost) {
+        public Node(Vector2Int point, Node parent, int gCost, int hCost) {
             this.point = point;
             this.parent = parent;
-            this.cost = cost;
+            this.gCost = gCost;
+            this.hCost = hCost;
         }
+    }
+
+    int CalculateHeuristic(Vector2Int p1, Vector2Int p2) {
+        return (int) (10 * Math.Sqrt(Math.Pow(p1.x - p2.x, 2) + Math.Pow(p1.y - p2.y, 2)));
     }
 
     public List<Vector2Int> FindPath(Vector2 startPoint, Vector2 endPoint) {
@@ -126,7 +140,7 @@ public class PathfindingGraph : MonoBehaviour {
         List<Node> queue = new List<Node>();
         List<Node> found = new List<Node>();
 
-        queue.Add(new Node(root, null, 0));
+        queue.Add(new Node(root, null, 0, CalculateHeuristic(root, goal)));
 
         Node destination = null;
         while (queue.Count > 0) {
@@ -151,8 +165,8 @@ public class PathfindingGraph : MonoBehaviour {
             if (seen) continue;
 
             // This must be a genuinely-new point to visit, so add its neighbours
-            foreach ((Vector2Int neighbour, int cost) in GetNeighbours(next.point)) {
-                queue.Add(new Node(neighbour, next, next.cost + cost));
+            foreach ((Vector2Int neighbour, int gCost) in GetNeighbours(next.point)) {
+                queue.Add(new Node(neighbour, next, next.gCost + gCost, CalculateHeuristic(neighbour, goal)));
             }
         }
 
@@ -173,14 +187,21 @@ public class PathfindingGraph : MonoBehaviour {
         return path;
     }
 
+    // Not strictly necessary at the moment; biggest performance issue was using Dijkstra as opposed to A*
+    // 
+    // void Enqueue(List<Node> queue, Node node) {
+    // 
+    // }
+
     Node Dequeue(List<Node> queue) {
         int minIndex = 0;
-        int minCost = queue[minIndex].cost;
+        int minCost = queue[minIndex].fCost;
 
         int index = 0;
         while (index < queue.Count - 1) {
             index += 1;
-            if (queue[index].cost < minCost) minIndex = index;
+            // If the overall cost of this node is smaller, use it instead
+            if (queue[index].fCost < minCost) minIndex = index;
         }
 
         Node next = queue[minIndex];

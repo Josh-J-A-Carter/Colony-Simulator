@@ -51679,6 +51679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameWorld: {fileID: 239917262}
   obstacles: {fileID: 1759477140}
+  wood: {fileID: 11400000, guid: 704a32f773ce5954786c0b0d8bb9ec14, type: 2}
   minX: 0
   minY: 0
   maxX: 0

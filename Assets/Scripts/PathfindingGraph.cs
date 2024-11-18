@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -58,13 +56,13 @@ public class PathfindingGraph : MonoBehaviour {
 
 
 
-        Debug.Log("Find path between (0, 0) and (3, 3): ");
+        // Debug.Log("Find path between (0, 0) and (3, 3): ");
 
-        List<Vector2Int> path = FindPath(new Vector2(0, 0), new Vector2(3, 3));
+        // List<Vector2Int> path = FindPath(new Vector2(0, 0), new Vector2(3, 3));
 
-        String str = "";
-        foreach (Vector2Int v in path) str = str + "    (" + v.x + ", " + v.y + ")";
-        Debug.Log(str);
+        // String str = "";
+        // foreach (Vector2Int v in path) str = str + "    (" + v.x + ", " + v.y + ")";
+        // Debug.Log(str);
     }
 
     List<(Vector2Int, int)> GetNeighbours(Vector2Int point) {
@@ -84,7 +82,14 @@ public class PathfindingGraph : MonoBehaviour {
         // // - (x*, y*) is in the grid bounds
         // // - (x*, y*) is not obstructed
         // // - there is an unobstructed cardinal cell next to it (otherwise, we could slip through corners in walls)
-
+        if (IsInBounds(x - 1, y - 1) && IsUnobstructed(x - 1, y - 1)
+            && (IsUnobstructed(x - 1, y) || IsUnobstructed(x, y - 1))) neighbours.Add((new Vector2Int(x - 1, y - 1), DIAGONAL_DIR_COST));
+        if (IsInBounds(x - 1, y + 1) && IsUnobstructed(x - 1, y + 1)
+            && (IsUnobstructed(x - 1, y) || IsUnobstructed(x, y + 1))) neighbours.Add((new Vector2Int(x - 1, y + 1), DIAGONAL_DIR_COST));
+        if (IsInBounds(x + 1, y + 1) && IsUnobstructed(x + 1, y + 1)
+            && (IsUnobstructed(x + 1, y) || IsUnobstructed(x, y + 1))) neighbours.Add((new Vector2Int(x + 1, y + 1), DIAGONAL_DIR_COST));
+        if (IsInBounds(x + 1, y - 1) && IsUnobstructed(x + 1, y - 1)
+            && (IsUnobstructed(x + 1, y) || IsUnobstructed(x, y - 1))) neighbours.Add((new Vector2Int(x + 1, y - 1), DIAGONAL_DIR_COST));
 
         // ...
 

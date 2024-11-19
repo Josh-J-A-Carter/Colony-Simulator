@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WorkerBeeBehaviour : MonoBehaviour
 {
@@ -9,23 +9,50 @@ public class WorkerBeeBehaviour : MonoBehaviour
     [SerializeField]
     Animator animator;
 
+    [SerializeField]
+    PathfindingGraph graph;
+
     enum State {
         Idle,
         Fly
     };
 
+    List<Vector2Int> flyPath;
+    Vector2Int flyGoal;
+
     State currentState = State.Idle;
 
-    int timer = 0;
-    int timerMax = 300;
+    int timer = timerMax;
+    static readonly int timerMax = 250;
 
-    // void Start() {}
+    
+    void Start() {
+        Random.InitState(DateTime.Now.Millisecond);
+    }
+
     void FixedUpdate() {
-        timer += 1;
 
-        if (timer >= timerMax) {
-            timer = 0;
-            ChangeState(currentState == State.Idle ? State.Fly : State.Idle);
+        if (currentState == State.Idle) {
+            timer += 1;
+
+            if (timer >= timerMax) {
+                timer = 0;
+
+                // ChangeState(State.Fly);
+                if (flyPath != null) graph.DevisualisePath(flyPath);
+
+                bool foundGoal = false;
+                while (!foundGoal) {
+                    int x = Random.Range(graph.minX, graph.maxX);
+                    int y = Random.Range(graph.minY + 1, graph.maxY);
+
+                    if (graph.IsUnobstructed(x, y)) {
+                        flyPath = graph.FindPath(transform.position, new Vector2Int(x, y));
+                        graph.VisualisePath(flyPath);
+                        break;
+                    }
+                }
+            }
         }
     }
 

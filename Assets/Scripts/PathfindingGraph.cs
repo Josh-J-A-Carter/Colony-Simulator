@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
+using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,7 +19,7 @@ public class PathfindingGraph : MonoBehaviour {
     Tile wood;
 
     [SerializeField]
-    int minX, minY, maxX, maxY;
+    public int minX, minY, maxX, maxY;
 
     bool[,] walkableCells;
 
@@ -44,32 +47,23 @@ public class PathfindingGraph : MonoBehaviour {
 
         // need to do y, then x (if displaying the debug stuff! I got super confused as to why the image was rotated 90 degrees lol)
         for (int y = maxY ; y > minY ; y -= 1) {
-
-            // String currLog = "";
             for (int x = minX ; x < maxX ; x += 1) {
 
                 int xIndex = x - minX;
                 int yIndex = maxY - y;
 
                 walkableCells[xIndex, yIndex] = ! obstacles.HasTile(new Vector3Int(x, y, 0));
-                // currLog = currLog + " " + (walkableCells[xIndex, yIndex] ? "X" : ". ");
             }
-            // Debug.Log(currLog);
         }
-
-
-
-        // Debug.Log("Find path: ");
-        List<Vector2Int> path = FindPath(new Vector2(0, 0), new Vector2(-10, -5));
-
-        // String str = "";
-        foreach (Vector2Int v in path) {
-            // str = str + "    (" + v.x + ", " + v.y + ")";
-            pathVisualiser.SetTile(new Vector3Int(v.x, v.y, 0), wood);
-        }
-        // Debug.Log(str);
     }
 
+    public void VisualisePath(List<Vector2Int> path) {
+        foreach (Vector2Int v in path) pathVisualiser.SetTile(new Vector3Int(v.x, v.y, 0), wood);
+    }
+
+    public void DevisualisePath(List<Vector2Int> path) {
+        foreach (Vector2Int v in path) pathVisualiser.SetTile(new Vector3Int(v.x, v.y, 0), null);
+    }
     List<(Vector2Int, int)> GetNeighbours(Vector2Int point) {
         List<(Vector2Int, int)> neighbours = new List<(Vector2Int, int)>();
 
@@ -99,27 +93,12 @@ public class PathfindingGraph : MonoBehaviour {
         return neighbours;
     }
 
-    bool IsInBounds(int x, int y) {
+    public bool IsInBounds(int x, int y) {
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
 
-    bool IsUnobstructed(int x, int y) {
+    public bool IsUnobstructed(int x, int y) {
         return walkableCells[x - minX, maxY - y];
-    }
-
-    class Node {
-        public Vector2Int point { get; }
-        public Node parent { get; }
-        public int fCost => gCost + hCost;
-        public int gCost { get; }
-        public int hCost { get; }
-
-        public Node(Vector2Int point, Node parent, int gCost, int hCost) {
-            this.point = point;
-            this.parent = parent;
-            this.gCost = gCost;
-            this.hCost = hCost;
-        }
     }
 
     int CalculateHeuristic(Vector2Int p1, Vector2Int p2) {
@@ -130,51 +109,69 @@ public class PathfindingGraph : MonoBehaviour {
         Vector2Int root = new Vector2Int((int) startPoint.x, (int) startPoint.y);
         Vector2Int goal = new Vector2Int((int) endPoint.x, (int) endPoint.y);
 
+        HashSet<Vector2Int> openSet = new HashSet<Vector2Int>();
+        HashSet<Vector2Int> closedSet = new HashSet<Vector2Int>();
+
+        Dictionary<Vector2Int, Vector2Int> parents = new Dictionary<Vector2Int, Vector2Int>();
+        Dictionary<Vector2Int, int> gScores = new Dictionary<Vector2Int, int>();
+        Dictionary<Vector2Int, int> fScores = new Dictionary<Vector2Int, int>();
+
         if (!IsInBounds(goal.x, goal.y) || !IsUnobstructed(goal.x, goal.y)) return null;
 
-        List<Node> queue = new List<Node>();
-        List<Node> found = new List<Node>();
+        openSet.Add(root);
+        gScores.Add(root, 0);
+        fScores.Add(root, 0);
 
-        queue.Add(new Node(root, null, 0, 0));
-
-        Node destination = null;
-        while (queue.Count > 0) {
+        bool found = false;
+        while (openSet.Count > 0) {
+            
             // Get the next node to visit
-            Node next = Dequeue(queue);
+            Vector2Int next = GetNext(openSet, fScores);
+            openSet.Remove(next);
+            closedSet.Add(next);
 
             // Are we done?
-            if (next.point == goal) {
-                destination = next;
+            if (next == goal) {
+                found = true;
                 break;
             }
 
-            // Have we already seen this point?
-            bool seen = false;
-            foreach (Node node in found) {
-                if (node.point == next.point) {
-                    seen = true;
-                    break;
-                }
-            }
-
-            if (seen) continue;
-
             // This must be a genuinely-new point to visit, so add its neighbours
-            foreach ((Vector2Int neighbour, int edgeWeight) in GetNeighbours(next.point)) {
-                queue.Add(new Node(neighbour, next, next.gCost + edgeWeight, CalculateHeuristic(neighbour, goal)));
+            int gScore;
+            gScores.TryGetValue(next, out gScore);
+
+            foreach ((Vector2Int neighbour, int edgeWeight) in GetNeighbours(next)) {
+
+                // Have we already found the best path to this point?
+                if (closedSet.Contains(neighbour)) continue;
+
+                // Have we got a better tentative answer in the open set?
+                int neighbourGScore = gScore + edgeWeight;
+                int existingGScore;
+                if (fScores.TryGetValue(neighbour, out existingGScore) && existingGScore < neighbourGScore) continue;
+
+                // No (better) tentative answer thus far, so add the node
+                openSet.Add(neighbour);
+                parents[neighbour] = next;
+                gScores[neighbour] = neighbourGScore;
+                int neighbourHScore = CalculateHeuristic(neighbour, goal);
+                fScores[neighbour] = neighbourGScore + neighbourHScore;
             }
         }
 
         // No path was found :(
-        if (destination == null) return null;
+        if (!found) return null;
 
         // A path was found, so convert the linked list of Node instances into List<Vector2Int>
         List<Vector2Int> path = new List<Vector2Int>();
+        path.Add(goal);
 
-        Node current = destination;
-        while (current.point != root) {
-            path.Add(current.point);
-            current = current.parent;
+        Vector2Int current = goal;
+        Vector2Int parent;
+
+        while (parents.TryGetValue(current, out parent)) {
+            path.Add(parent);
+            current = parent;
         }
 
         path.Reverse();
@@ -182,29 +179,21 @@ public class PathfindingGraph : MonoBehaviour {
         return path;
     }
 
-    // Not strictly necessary at the moment; biggest performance issue was using Dijkstra as opposed to A*
-    // 
-    // void Enqueue(List<Node> queue, Node node) {
-    // 
-    // }
 
-    Node Dequeue(List<Node> queue) {
-        int minIndex = 0;
-        int minCost = queue[minIndex].fCost;
+    Vector2Int GetNext(HashSet<Vector2Int> openSet, Dictionary<Vector2Int, int> fScores) {
+        
+        Vector2Int optimum = openSet.ElementAt(0);
+        int optimalCost;
+        fScores.TryGetValue(optimum, out optimalCost);
 
-        int index = 0;
-        while (index < queue.Count - 1) {
-            index += 1;
-            // If the overall cost of this node is smaller, use it instead
-            if (queue[index].fCost < minCost) {
-                minIndex = index;
-                minCost = queue[index].fCost;
+        foreach (Vector2Int current in openSet) {
+            int currentCost;
+            if (fScores.TryGetValue(current, out currentCost) && currentCost < optimalCost) {
+                optimum = current;
+                optimalCost = currentCost;
             }
         }
 
-        Node next = queue[minIndex];
-        queue.RemoveAt(minIndex);
-
-        return next;
+        return optimum;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class PathfindingGraph : MonoBehaviour {
 
@@ -104,8 +105,8 @@ public class PathfindingGraph : MonoBehaviour {
     }
 
     public List<Vector2Int> FindPath(Vector2 startPoint, Vector2 endPoint) {
-        Vector2Int root = new Vector2Int((int) startPoint.x, (int) startPoint.y);
-        Vector2Int goal = new Vector2Int((int) endPoint.x, (int) endPoint.y);
+        Vector2Int root = new Vector2Int((int) Math.Floor(startPoint.x), (int) Math.Floor(startPoint.y));
+        Vector2Int goal = new Vector2Int((int) Math.Floor(endPoint.x), (int) Math.Floor(endPoint.y));
 
         HashSet<Vector2Int> openSet = new HashSet<Vector2Int>();
         HashSet<Vector2Int> closedSet = new HashSet<Vector2Int>();
@@ -161,8 +162,7 @@ public class PathfindingGraph : MonoBehaviour {
         if (!found) return null;
 
         // A path was found, so convert the linked list of Node instances into List<Vector2Int>
-        List<Vector2Int> path = new List<Vector2Int>();
-        path.Add(goal);
+        List<Vector2Int> path = new List<Vector2Int> { goal };
 
         Vector2Int current = goal;
         Vector2Int parent;

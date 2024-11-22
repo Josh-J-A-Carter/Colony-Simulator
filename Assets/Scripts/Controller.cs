@@ -45,6 +45,15 @@ public class Controller : MonoBehaviour
 
     void Update() {
         checkButtonInput();
+
+        Vector3 pos = Input.mousePosition;
+        Vector2 ray = camera.ScreenToWorldPoint(pos);
+        RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero);
+
+        if (hit.collider != null) {
+            Debug.Log("Hit " + hit.collider.gameObject.transform.position);
+        }
+
     }
 
     // Update is called once per frame

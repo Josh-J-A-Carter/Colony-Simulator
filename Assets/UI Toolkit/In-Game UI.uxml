@@ -2,8 +2,8 @@
     <Style src="project://database/Assets/UI%20Toolkit/In-Game.uss?fileID=7433441132597879392&amp;guid=ed9058af04489d941a8085dce5f0069a&amp;type=3#In-Game" />
     <ui:VisualElement name="container" style="flex-grow: 1; width: 100%; height: 100%;">
         <ui:VisualElement name="toolbar" class="toolbar" style="flex-grow: 1; flex-direction: row; left: 0; justify-content: flex-start;">
-            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="construct-tool" class="tool" style="background-image: url(&quot;project://database/Assets/UI%20Toolkit/img/ui_construct.png?fileID=21300000&amp;guid=9f46950688b65ee44a39c99f38832369&amp;type=3#ui_construct&quot;);" />
-            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="destroy-tool" class="tool" style="background-image: url(&quot;project://database/Assets/UI%20Toolkit/img/ui_destroy.png?fileID=21300000&amp;guid=2de7c9d054ac7fb4088d18a1448c52c0&amp;type=3#ui_destroy&quot;);" />
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="construct-tool" class="tool no-click-through" style="background-image: url(&quot;project://database/Assets/UI%20Toolkit/img/ui_construct.png?fileID=21300000&amp;guid=9f46950688b65ee44a39c99f38832369&amp;type=3#ui_construct&quot;);" />
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="destroy-tool" class="tool no-click-through" style="background-image: url(&quot;project://database/Assets/UI%20Toolkit/img/ui_destroy.png?fileID=21300000&amp;guid=2de7c9d054ac7fb4088d18a1448c52c0&amp;type=3#ui_destroy&quot;);" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

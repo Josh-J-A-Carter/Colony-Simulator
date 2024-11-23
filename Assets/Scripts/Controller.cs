@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Tilemaps;
 
 public class Controller : MonoBehaviour
 {
@@ -34,6 +35,28 @@ public class Controller : MonoBehaviour
     float cameraSizeDefault;
 
 
+    // Tool Selection
+    [SerializeField]
+    Tilemap previewMap, gameWorld, obstacles;
+    
+    [SerializeField]
+    Tile selectPreviewTile, constructPreviewTile, constructTile, destroyPreviewTile, obstacle;
+    Tile destroyTile = null;
+
+    Vector2Int previewPoint;
+
+    bool previewPointActive = false;
+
+    public enum Tool {
+        Select,
+        Construct,
+        Destroy
+    }
+
+    public static Tool toolSelection = Tool.Select;
+
+
+
     // Mouse Selection
 
     enum MouseSelection {
@@ -59,6 +82,48 @@ public class Controller : MonoBehaviour
         CheckButtonInput();
 
         CheckMouseSelection();
+
+        
+        ////// Very sloppily giving a preview of the current tool
+
+        // We are no longer hovering over a tile, but the preview is still active; so remove it
+        if (previewPointActive && mouseSelection != MouseSelection.Tile) {
+            previewMap.SetTile(new Vector3Int(previewPoint.x, previewPoint.y, 0), null);
+            previewPointActive = false;
+        }
+        // We are still hovering over a tile but the preview has moved; so remove the old and update it
+        else if (previewPointActive && mouseSelection == MouseSelection.Tile && previewPoint != tileSelection) {
+            previewMap.SetTile(new Vector3Int(previewPoint.x, previewPoint.y, 0), null);
+
+            Tile tile = selectPreviewTile;
+            if (toolSelection == Tool.Construct) tile = constructPreviewTile;
+            else if (toolSelection == Tool.Destroy) tile = destroyPreviewTile;
+            
+            previewPoint = tileSelection;
+            previewMap.SetTile(new Vector3Int(previewPoint.x, previewPoint.y, 0), tile);
+        }
+        else if (!previewPointActive && mouseSelection == MouseSelection.Tile) {
+            previewPointActive = true;
+
+            Tile tile = selectPreviewTile;
+            if (toolSelection == Tool.Construct) tile = constructPreviewTile;
+            else if (toolSelection == Tool.Destroy) tile = destroyPreviewTile;
+            
+            previewPoint = tileSelection;
+            previewMap.SetTile(new Vector3Int(previewPoint.x, previewPoint.y, 0), tile);
+        }
+
+
+        ////// Very sloppily using the tool
+        if (Input.GetKeyDown(KeyCode.Mouse0) && mouseSelection == MouseSelection.Tile) {
+            if (toolSelection == Tool.Construct) {
+                gameWorld.SetTile(new Vector3Int(tileSelection.x, tileSelection.y, 0), constructTile);
+                obstacles.SetTile(new Vector3Int(tileSelection.x, tileSelection.y, 0), obstacle);
+            } else if (toolSelection == Tool.Destroy) {
+                gameWorld.SetTile(new Vector3Int(tileSelection.x, tileSelection.y, 0), destroyTile);
+                obstacles.SetTile(new Vector3Int(tileSelection.x, tileSelection.y, 0), destroyTile);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -115,7 +180,8 @@ public class Controller : MonoBehaviour
         // 3. We have no UI or entities here, but the cursor is in the window. Thus, select the appropriate tile position
         if (camera.pixelRect.Contains(Input.mousePosition)) {
             mouseSelection = MouseSelection.Tile;
-            tileSelection = new Vector2Int((int) Math.Floor(Input.mousePosition.x), (int) Math.Floor(Input.mousePosition.y));
+            Vector2 pos = camera.ScreenToWorldPoint(Input.mousePosition);
+            tileSelection = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
             return;
         }
 

@@ -27,3 +27,9 @@
     border-color: rgb(77, 77, 77);
     scale: 1.05 1.05;
 }
+
+.selected {
+    background-color: rgb(83, 83, 83);
+    border-color: rgb(47, 47, 47);
+    scale: 1.05 1.05;
+}

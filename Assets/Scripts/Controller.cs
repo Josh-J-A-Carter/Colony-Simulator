@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Controller : MonoBehaviour
 {
@@ -36,6 +33,21 @@ public class Controller : MonoBehaviour
 
     float cameraSizeDefault;
 
+
+    // Mouse Selection
+
+    enum MouseSelection {
+        UI,
+        Entity,
+        Tile,
+        None
+    }
+
+    MouseSelection mouseSelection;
+    GameObject entitySelection;
+    Vector2Int tileSelection;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,26 +56,20 @@ public class Controller : MonoBehaviour
     }
 
     void Update() {
-        checkButtonInput();
+        CheckButtonInput();
 
-        Vector3 pos = Input.mousePosition;
-        Vector2 ray = camera.ScreenToWorldPoint(pos);
-        RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero);
-
-        if (hit.collider != null) {
-            Debug.Log("Hit " + hit.collider.gameObject.transform.position);
-        }
-
+        CheckMouseSelection();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        // Debug.Log(holdingKeys);
-        applyButtonMotion();
+        ApplyButtonMotion();
+
+        // Debug.Log(mouseSelection);
     }
 
-    void checkButtonInput() {
+    void CheckButtonInput() {
         // Note: holdingKeys is structured as (verticalDirection, horizontalDirection)
 
         // Check if any keys have been released
@@ -88,7 +94,36 @@ public class Controller : MonoBehaviour
         }
     }
 
-    void applyButtonMotion() {
+    void CheckMouseSelection() {
+
+        // 1. Check whether UI is blocking the mouse
+        if (EventSystem.current.IsPointerOverGameObject()) {
+            mouseSelection = MouseSelection.UI;
+            return;
+        }
+
+        // 2. Look for entities
+        Vector2 worldMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(worldMousePosition, Vector2.zero);
+
+        if (hit.collider != null) {
+            mouseSelection = MouseSelection.Entity;
+            entitySelection = hit.collider.gameObject;
+            return;
+        }
+
+        // 3. We have no UI or entities here, but the cursor is in the window. Thus, select the appropriate tile position
+        if (camera.pixelRect.Contains(Input.mousePosition)) {
+            mouseSelection = MouseSelection.Tile;
+            tileSelection = new Vector2Int((int) Math.Floor(Input.mousePosition.x), (int) Math.Floor(Input.mousePosition.y));
+            return;
+        }
+
+        // 4. The cursor is not even inside the window; nothing is selected.
+        mouseSelection = MouseSelection.None;
+    }
+
+    void ApplyButtonMotion() {
 
         // Determine the direction
         Vector3 translation = new Vector3((int) holdingKeys.Item2, (int) holdingKeys.Item1);

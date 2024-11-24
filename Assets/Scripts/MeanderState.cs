@@ -7,6 +7,9 @@ public class MeanderState : State {
     [SerializeField]
     AnimationClip animation;
 
+    [SerializeField]
+    Pathfind pathfind;
+
     public override void OnEnter() {
         this.animator.Play(animation.name);
 

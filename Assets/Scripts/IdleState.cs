@@ -14,7 +14,7 @@ public class IdleState : State {
     public override void OnChildExit(State exitingChild) {
         if (exitingChild == Stall) {
             stateMachine.SetState(Meander);
-        } else {
+        } else if (exitingChild == Meander) {
             stateMachine.SetState(Stall);
         }
     }

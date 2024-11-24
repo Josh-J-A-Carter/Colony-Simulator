@@ -5,64 +5,14 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
-public class PathfindingGraph : MonoBehaviour {
+public class Pathfind : MonoBehaviour {
 
+    TileManager tm = TileManager.Instance;
 
     static readonly int CARDINAL_DIR_COST = 10;
     static readonly int DIAGONAL_DIR_COST = 14;
 
-    [SerializeField]
-    Tilemap gameWorld, obstacles, pathVisualiser;
 
-    [SerializeField]
-    Tile wood;
-
-    [SerializeField]
-    public int minX, minY, maxX, maxY;
-
-    bool[,] walkableCells;
-
-
-    // Start is called before the first frame update
-    void Start() {
-        //// Get the grid bounds
-        Bounds localBounds = gameWorld.localBounds;
-        // Bottom left corner
-        Vector3 p1 = gameWorld.transform.TransformPoint(localBounds.min);
-        // Top right corner
-        Vector3 p2 = gameWorld.transform.TransformPoint(localBounds.max);
-
-
-        // This is super confusing; x- comes before x+, and y- also comes before y+...
-        // i.e. y+ does NOT grow down from the top of the screen
-        minX = (int) p1.x;
-        minY = (int) p1.y;
-
-        maxX = (int) p2.x;
-        maxY = (int) p2.y;
-
-        //// Create the array to store the cells
-        walkableCells = new bool[maxX - minX, maxY - minY];
-
-        // need to do y, then x (if displaying the debug stuff! I got super confused as to why the image was rotated 90 degrees lol)
-        for (int y = maxY ; y > minY ; y -= 1) {
-            for (int x = minX ; x < maxX ; x += 1) {
-
-                int xIndex = x - minX;
-                int yIndex = maxY - y;
-
-                walkableCells[xIndex, yIndex] = ! obstacles.HasTile(new Vector3Int(x, y, 0));
-            }
-        }
-    }
-
-    public void VisualisePath(List<Vector2Int> path) {
-        foreach (Vector2Int v in path) pathVisualiser.SetTile(new Vector3Int(v.x, v.y, 0), wood);
-    }
-
-    public void DevisualisePath(List<Vector2Int> path) {
-        foreach (Vector2Int v in path) pathVisualiser.SetTile(new Vector3Int(v.x, v.y, 0), null);
-    }
     List<(Vector2Int, int)> GetNeighbours(Vector2Int point) {
         List<(Vector2Int, int)> neighbours = new List<(Vector2Int, int)>();
 
@@ -70,34 +20,26 @@ public class PathfindingGraph : MonoBehaviour {
         int y = point.y;
 
         // Neighbouring cells in cardinal directions
-        if (IsInBounds(x - 1, y) && IsUnobstructed(x - 1, y)) neighbours.Add((new Vector2Int(x - 1, y), CARDINAL_DIR_COST));
-        if (IsInBounds(x + 1, y) && IsUnobstructed(x + 1, y)) neighbours.Add((new Vector2Int(x + 1, y), CARDINAL_DIR_COST));
-        if (IsInBounds(x, y - 1) && IsUnobstructed(x, y - 1)) neighbours.Add((new Vector2Int(x, y - 1), CARDINAL_DIR_COST));
-        if (IsInBounds(x, y + 1) && IsUnobstructed(x, y + 1)) neighbours.Add((new Vector2Int(x, y + 1), CARDINAL_DIR_COST));
+        if (tm.IsInBounds(x - 1, y) && tm.IsUnobstructed(x - 1, y)) neighbours.Add((new Vector2Int(x - 1, y), CARDINAL_DIR_COST));
+        if (tm.IsInBounds(x + 1, y) && tm.IsUnobstructed(x + 1, y)) neighbours.Add((new Vector2Int(x + 1, y), CARDINAL_DIR_COST));
+        if (tm.IsInBounds(x, y - 1) && tm.IsUnobstructed(x, y - 1)) neighbours.Add((new Vector2Int(x, y - 1), CARDINAL_DIR_COST));
+        if (tm.IsInBounds(x, y + 1) && tm.IsUnobstructed(x, y + 1)) neighbours.Add((new Vector2Int(x, y + 1), CARDINAL_DIR_COST));
 
         // // Diagonals
         // // Can only go to diagonal tile (x*, y*) if:
         // // - (x*, y*) is in the grid bounds
         // // - (x*, y*) is not obstructed
         // // - there is an unobstructed cardinal cell next to it (otherwise, we could slip through corners in walls)
-        if (IsInBounds(x - 1, y - 1) && IsUnobstructed(x - 1, y - 1)
-            && (IsUnobstructed(x - 1, y) || IsUnobstructed(x, y - 1))) neighbours.Add((new Vector2Int(x - 1, y - 1), DIAGONAL_DIR_COST));
-        if (IsInBounds(x - 1, y + 1) && IsUnobstructed(x - 1, y + 1)
-            && (IsUnobstructed(x - 1, y) || IsUnobstructed(x, y + 1))) neighbours.Add((new Vector2Int(x - 1, y + 1), DIAGONAL_DIR_COST));
-        if (IsInBounds(x + 1, y + 1) && IsUnobstructed(x + 1, y + 1)
-            && (IsUnobstructed(x + 1, y) || IsUnobstructed(x, y + 1))) neighbours.Add((new Vector2Int(x + 1, y + 1), DIAGONAL_DIR_COST));
-        if (IsInBounds(x + 1, y - 1) && IsUnobstructed(x + 1, y - 1)
-            && (IsUnobstructed(x + 1, y) || IsUnobstructed(x, y - 1))) neighbours.Add((new Vector2Int(x + 1, y - 1), DIAGONAL_DIR_COST));
+        if (tm.IsInBounds(x - 1, y - 1) && tm.IsUnobstructed(x - 1, y - 1)
+            && (tm.IsUnobstructed(x - 1, y) || tm.IsUnobstructed(x, y - 1))) neighbours.Add((new Vector2Int(x - 1, y - 1), DIAGONAL_DIR_COST));
+        if (tm.IsInBounds(x - 1, y + 1) && tm.IsUnobstructed(x - 1, y + 1)
+            && (tm.IsUnobstructed(x - 1, y) || tm.IsUnobstructed(x, y + 1))) neighbours.Add((new Vector2Int(x - 1, y + 1), DIAGONAL_DIR_COST));
+        if (tm.IsInBounds(x + 1, y + 1) && tm.IsUnobstructed(x + 1, y + 1)
+            && (tm.IsUnobstructed(x + 1, y) || tm.IsUnobstructed(x, y + 1))) neighbours.Add((new Vector2Int(x + 1, y + 1), DIAGONAL_DIR_COST));
+        if (tm.IsInBounds(x + 1, y - 1) && tm.IsUnobstructed(x + 1, y - 1)
+            && (tm.IsUnobstructed(x + 1, y) || tm.IsUnobstructed(x, y - 1))) neighbours.Add((new Vector2Int(x + 1, y - 1), DIAGONAL_DIR_COST));
 
         return neighbours;
-    }
-
-    public bool IsInBounds(int x, int y) {
-        return x >= minX && x <= maxX && y >= minY && y <= maxY;
-    }
-
-    public bool IsUnobstructed(int x, int y) {
-        return walkableCells[x - minX, maxY - y];
     }
 
     int CalculateHeuristic(Vector2Int p1, Vector2Int p2) {
@@ -115,7 +57,7 @@ public class PathfindingGraph : MonoBehaviour {
         Dictionary<Vector2Int, int> gScores = new Dictionary<Vector2Int, int>();
         Dictionary<Vector2Int, int> fScores = new Dictionary<Vector2Int, int>();
 
-        if (!IsInBounds(goal.x, goal.y) || !IsUnobstructed(goal.x, goal.y)) return null;
+        if (!tm.IsInBounds(goal.x, goal.y) || !tm.IsUnobstructed(goal.x, goal.y)) return null;
 
         openSet.Add(root);
         gScores.Add(root, 0);

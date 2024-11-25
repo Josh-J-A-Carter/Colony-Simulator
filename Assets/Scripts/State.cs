@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 public abstract class State : MonoBehaviour {
@@ -15,10 +17,9 @@ public abstract class State : MonoBehaviour {
         this.animator = animator;
         this.parent = parent;
 
-        // Set up children recursively (if they exist)
-        State[] states = GetComponentsInChildren<State>();
-        foreach (State state in states) {
-            state.Setup(gameObject, animator, this);
+        // Recursively set up child states, if present
+        foreach (Transform child in gameObject.transform) {
+            child.GetComponent<State>().Setup(gameObject, animator, this);
         }
     }
 
@@ -37,7 +38,7 @@ public abstract class State : MonoBehaviour {
 
 
     public void CompleteState() {
-        this.parent.stateMachine.ResetState();
+        this.parent?.stateMachine.ResetState();
     }
 
     public void RunRecursive() {

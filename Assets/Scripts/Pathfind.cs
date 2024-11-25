@@ -2,18 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
-public class Pathfind : MonoBehaviour {
+public static class Pathfind {
 
-    TileManager tm = TileManager.Instance;
+    static TileManager tm = TileManager.Instance;
 
     static readonly int CARDINAL_DIR_COST = 10;
     static readonly int DIAGONAL_DIR_COST = 14;
 
-
-    List<(Vector2Int, int)> GetNeighbours(Vector2Int point) {
+    /// <summary>
+    /// Find all the neighbouring tiles and their cost to travel to each of them.
+    /// </summary>
+    /// <returns>List of tuples, each containing a neighbour and its associated travel cost / weight</returns>
+    static List<(Vector2Int, int)> GetNeighbours(Vector2Int point) {
         List<(Vector2Int, int)> neighbours = new List<(Vector2Int, int)>();
 
         int x = point.x;
@@ -42,11 +43,20 @@ public class Pathfind : MonoBehaviour {
         return neighbours;
     }
 
-    int CalculateHeuristic(Vector2Int p1, Vector2Int p2) {
-        return (int) (10 * Math.Sqrt(Math.Pow(p1.x - p2.x, 2) + Math.Pow(p1.y - p2.y, 2)));
+    /// <summary>
+    /// Heuristic function in A* algorithm (Straight line distance)
+    /// </summary>
+    /// <returns>Distance, multiplied by 10 and truncated</returns>
+    static int CalculateHeuristic(Vector2Int p1, Vector2Int p2) {
+        return (int) (10 * Vector2Int.Distance(p1, p2));
     }
 
-    public List<Vector2Int> FindPath(Vector2 startPoint, Vector2 endPoint) {
+    /// <summary>
+    /// Find a path, if it exists, between a start point and an end point, in the tile grid.
+    /// </summary>
+    /// <returns>A valid path between <c>startPoint</c> and <c>endPoint</c> if one exists; 
+    /// or returns <c>null</c> if no such path exists.</returns>
+    public static Path FindPath(Vector2 startPoint, Vector2 endPoint) {
         Vector2Int root = new Vector2Int((int) Math.Floor(startPoint.x), (int) Math.Floor(startPoint.y));
         Vector2Int goal = new Vector2Int((int) Math.Floor(endPoint.x), (int) Math.Floor(endPoint.y));
 
@@ -116,11 +126,14 @@ public class Pathfind : MonoBehaviour {
 
         path.Reverse();
 
-        return path;
+        return new Path(path);
     }
 
 
-    Vector2Int GetNext(HashSet<Vector2Int> openSet, Dictionary<Vector2Int, int> fScores) {
+    /// <summary>
+    /// Get the next point from the open set, with the lowest fScore.
+    /// </summary>
+    static Vector2Int GetNext(HashSet<Vector2Int> openSet, Dictionary<Vector2Int, int> fScores) {
         
         Vector2Int optimum = openSet.ElementAt(0);
         int optimalCost;

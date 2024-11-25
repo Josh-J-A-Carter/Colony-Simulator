@@ -7,7 +7,7 @@ public class Graph : MonoBehaviour {
 
     Tilemap tilemap;
     
-    public int minX, minY, maxX, maxY;
+    int minX, minY, maxX, maxY;
 
     bool[,] emptyCells;
 
@@ -50,6 +50,8 @@ public class Graph : MonoBehaviour {
     }
 
     public bool IsUnobstructed(int x, int y) {
+        if (x < minX || x > maxX || y < minY || y > maxX) return true;
+
         return emptyCells[x - minX, maxY - y];
     }
 

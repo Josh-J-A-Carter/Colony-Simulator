@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,6 @@ public class WorkerBehaviour : MonoBehaviour {
 
     [SerializeField]
     State Idle, House, Forage;
-
-    [SerializeField]
     Animator animator;
 
     StateMachine stateMachine;
@@ -15,15 +14,23 @@ public class WorkerBehaviour : MonoBehaviour {
     void Start() {
         stateMachine = new StateMachine();
 
-        State[] states = GetComponentsInChildren<State>();
-        foreach (State state in states) {
-            state.Setup(gameObject, animator, null);
+        animator = GetComponent<Animator>();
+
+        // Recursively set up the states
+        foreach (Transform child in gameObject.transform) {
+            child.GetComponent<State>().Setup(gameObject, animator, null);
         }
     }
 
     // Update is called once per frame
     void Update() {
-        if (stateMachine.currentState == null) DecideState();
+        if (stateMachine.EmptyState()) DecideState();
+
+        stateMachine.Run();
+    }
+
+    void FixedUpdate() {
+        stateMachine.FixedRun();
     }
 
     void DecideState() {

@@ -29,11 +29,23 @@ public class TileManager : MonoBehaviour {
         return graph.IsInBounds(x, y);
     }
 
+    public bool IsInBounds(Vector2Int p) {
+        return graph.IsInBounds(p.x, p.y);
+    }
+
     public bool IsUnobstructed(int x, int y) {
         return graph.IsUnobstructed(x, y);
     }
 
-    public void SetObstruction(int x, int y, bool value) {
-        graph.SetObstruction(x, y, value);
+    public bool IsUnobstructed(Vector2Int p) {
+        return graph.IsUnobstructed(p.x, p.y);
     }
+
+    // public void SetObstruction(int x, int y, bool value) {
+    //     graph.SetObstruction(x, y, value);
+    // }
+
+    // public void SetObstruction(Vector2Int p, bool value) {
+    //     graph.SetObstruction(p.x, p.y, value);
+    // }
 }

@@ -11,23 +11,30 @@ public class StateMachine {
     public void SetState(State state) {
         if (state == currentState) return;
 
+        // Make sure we change the state BEFORE calling OnChildExit, otherwise we might have an infinite recursion
+        State oldState = currentState;
+
+        currentState = state;
+
         // Exit code down the branch
-        currentState?.OnExitRecursive();
+        oldState?.OnExitRecursive();
         // Notify parents up the branch that we've exited down the branch
-        currentState?.parent?.OnChildExit(currentState);
+        oldState?.parent?.OnChildExit(oldState);
 
         activeSince = Time.time;
-
         currentState?.OnEnter();
     }
 
     public void ResetState() {
-        // Exit code down the branch
-        currentState?.OnExitRecursive();
-        // Notify parents up the branch that we've exited down the branch
-        currentState?.parent?.OnChildExit(currentState);
+        // Make sure we change the state BEFORE calling OnChildExit, otherwise we might have an infinite recursion
+        State oldState = currentState;
 
         currentState = null;
+
+        // Exit code down the branch
+        oldState?.OnExitRecursive();
+        // Notify parents up the branch that we've exited down the branch
+        oldState?.parent?.OnChildExit(oldState);
     }
 
     public bool EmptyState() {

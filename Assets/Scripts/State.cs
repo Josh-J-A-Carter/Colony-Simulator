@@ -38,7 +38,6 @@ public abstract class State : MonoBehaviour {
 
 
     public void CompleteState() {
-        Debug.Log("Complete " + this);
         this.parent?.stateMachine.ResetState();
     }
 

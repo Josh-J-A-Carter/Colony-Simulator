@@ -36,8 +36,6 @@ public class MeanderState : State {
 
         Vector2Int current = new Vector2Int(currentX, currentY);
 
-        // Debug.Log($"Valid: {path.IsValidFrom(current)} from: {current} with path: {path}");
-
         if (path.IsValidFrom(current)) {
             
             // Linearly interpolate to next point
@@ -58,7 +56,7 @@ public class MeanderState : State {
             if (step > stepsMax) CompleteState();
 
         } else {
-            Debug.Log("Rechoose");
+            Vector2 pos = entity.transform.position;
             ChooseTarget();
         }
     }

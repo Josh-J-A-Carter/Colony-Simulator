@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 355dddfeee7979b41a2ac455747f4072
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - previewMap: {instanceID: 0}
+  - selectPreviewTile: {fileID: 11400000, guid: 04b085c990805f74e90b7188be5e9e18, type: 2}
+  - constructPreviewTile: {fileID: 11400000, guid: 87d83be92d6f6284ca82ced5f98a5984, type: 2}
+  - constructTile: {instanceID: 0}
+  - destroyPreviewTile: {fileID: 11400000, guid: 1c9d093ae73311d47b4881b69b75bbdd, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

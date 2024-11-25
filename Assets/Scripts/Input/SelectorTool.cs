@@ -1,0 +1,43 @@
+using System;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+public class SelectorTool : Tool {
+
+    [SerializeField]
+    Tile previewTile;
+
+    TileManager tm => TileManager.Instance;
+
+    Vector2Int previewPoint;
+    bool previewActive = false;
+
+    public void Run(HoverData data) {
+        HoverType type = data.GetType();
+
+        if (previewActive && type != HoverType.Tile) {
+            tm.SetPreview(previewPoint.x, previewPoint.y, null);
+            previewActive = false;
+        }
+
+        // We are still hovering over a tile but the preview has moved; so remove the old and update it
+        else if (previewActive && type == HoverType.Tile && previewPoint != data.GetTileData()) {
+            tm.SetPreview(previewPoint.x, previewPoint.y, null);
+            previewPoint = data.GetTileData();
+            tm.SetPreview(previewPoint.x, previewPoint.y, previewTile);
+        }
+
+        // No active selection, but we need one
+        else if (!previewActive && type == HoverType.Tile) {
+            previewActive = true;
+            previewPoint = data.GetTileData();
+            tm.SetPreview(previewPoint.x, previewPoint.y, previewTile);
+        }
+
+    }
+
+    public void OnDequip() {
+        if (previewActive) tm.SetPreview(previewPoint.x, previewPoint.y, null);
+    }
+
+}

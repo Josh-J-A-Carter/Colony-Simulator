@@ -6,7 +6,11 @@ public class TileManager : MonoBehaviour {
     public static TileManager Instance { get; private set; }
 
     [SerializeField]
-    Tilemap worldMap, obstaclesMap, previewMap;
+    Tilemap worldMap, obstacleMap, previewMap;
+
+    [SerializeField]
+    Tile obstacleTile;
+
     Graph graph;
 
     void Awake() {
@@ -22,7 +26,7 @@ public class TileManager : MonoBehaviour {
 
     void Instantiate() {
         graph = GetComponent<Graph>();
-        graph.CreateGraph(obstaclesMap);
+        graph.CreateGraph(obstacleMap);
     }
 
     public bool IsInBounds(int x, int y) {
@@ -41,11 +45,15 @@ public class TileManager : MonoBehaviour {
         return graph.IsUnobstructed(p.x, p.y);
     }
 
-    // public void SetObstruction(int x, int y, bool value) {
-    //     graph.SetObstruction(x, y, value);
-    // }
+    public void SetPreview(int x, int y, Tile t) {
+        previewMap.SetTile(new Vector3Int(x, y, 0), t);
+    }
 
-    // public void SetObstruction(Vector2Int p, bool value) {
-    //     graph.SetObstruction(p.x, p.y, value);
-    // }
+    public void SetTile(int x, int y, Tile t, bool obstructive) {
+        Vector3Int pos = new Vector3Int(x, y, 0);
+        worldMap.SetTile(pos, t);
+
+        if (obstructive) obstacleMap.SetTile(pos, obstacleTile);
+        else obstacleMap.SetTile(pos, null);
+    }
 }

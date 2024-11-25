@@ -9,8 +9,8 @@ public class StallState : State {
     AnimationClip animation;
 
     // Min & max times we will remain in this state
-    static readonly float minStallTime = 2;
-    static readonly float maxStallTime = 4;
+    static readonly float minStallTime = 1;
+    static readonly float maxStallTime = 3;
 
     // Time to remain in the state (will be chosen randomly when the state is next entered)
     float stallTime;

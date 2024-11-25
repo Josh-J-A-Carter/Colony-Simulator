@@ -40,10 +40,12 @@ public class MeanderState : State {
             
             // Linearly interpolate to next point
             Vector2 nextPoint = path.LinearlyInterpolate(step, stepsMax);
-            entity.transform.Translate(nextPoint - (Vector2) entity.transform.position);
-
+            Vector2 translation = nextPoint - (Vector2) entity.transform.position;
+            entity.transform.Translate(translation);
 
             /// Remember to flip the character's sprite as needed
+            int sign = Math.Sign(translation.x);
+            if (sign != 0) entity.transform.localScale = new Vector3(sign, 1, 1);
             /// 
             /// 
             /// 
@@ -55,10 +57,7 @@ public class MeanderState : State {
             // Once we reach the end of the path, the state is completed
             if (step > stepsMax) CompleteState();
 
-        } else {
-            Vector2 pos = entity.transform.position;
-            ChooseTarget();
-        }
+        } else ChooseTarget();
     }
 
     /// <summary>

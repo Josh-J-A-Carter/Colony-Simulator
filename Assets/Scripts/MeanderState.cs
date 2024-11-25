@@ -12,11 +12,11 @@ public class MeanderState : State {
     [SerializeField]
     AnimationClip animation;
 
-    static readonly int maxTargetAttempts = 10;
+    static readonly int maxTargetAttempts = 20;
 
     Path path;
 
-    static readonly int stepSpeed = 25;
+    static readonly int stepSpeed = 10;
 
     int stepsMax;
 
@@ -57,13 +57,17 @@ public class MeanderState : State {
             // Once we reach the end of the path, the state is completed
             if (step > stepsMax) CompleteState();
 
-        } else ChooseTarget();
+        } else {
+            Debug.Log("Rechoose");
+            ChooseTarget();
+        }
     }
 
     /// <summary>
     /// Choose a random destination (within a given radius) & calculate the path to it
     /// </summary>
     void ChooseTarget() {
+
         int currentX = (int) Math.Floor(entity.transform.position.x);
         int currentY = (int) Math.Floor(entity.transform.position.y);
 
@@ -86,6 +90,7 @@ public class MeanderState : State {
             if (path != null) {
                 targetFound = true;
                 this.path = path;
+                break;
             }
         }
 

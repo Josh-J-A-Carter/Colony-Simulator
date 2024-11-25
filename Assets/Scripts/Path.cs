@@ -75,6 +75,7 @@ public class Path {
         }
 
         linearMax = linearSegments.Last();
+        // Debug.Log(linearSegments.Aggregate<float, String>("", (acc, seg) => acc + " " + seg));
     }
 
     float Distance(Vector2Int p1, Vector2Int p2) {
@@ -99,6 +100,8 @@ public class Path {
         // Map 'step' from [0, stepsTotal] to [0, linearMax]
         float normalisedStep = linearMax * step / stepsTotal;
 
+        // Debug.Log("normal step: " + normalisedStep);
+
         // Find the indices i, j of points in the path, such that linearSegments[i] < normalisedStep < linearSegments[j].
         int index = 0;
         for (int i = 0 ; i < linearSegments.Length - 1; i += 1) {
@@ -119,7 +122,7 @@ public class Path {
         Vector2 segmentStart = points.ElementAt(index) + translation;
         Vector2 segmentEnd = points.ElementAt(index + 1) + translation;
 
-        Vector2 interpolatedPosition = segmentStart + t * segmentEnd;
+        Vector2 interpolatedPosition = segmentStart + t * (segmentEnd - segmentStart);
 
         return interpolatedPosition;
     }

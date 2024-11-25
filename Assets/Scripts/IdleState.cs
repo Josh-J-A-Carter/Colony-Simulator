@@ -9,13 +9,9 @@ public class IdleState : State {
 
     public override void OnEnter() {
         stateMachine.SetState(Stall);
-
-        Debug.Log("Set stall");
     }
 
     public override void OnChildExit(State exitingChild) {
-        Debug.Log("Exit stall");
-
         if (exitingChild == Stall) {
             stateMachine.SetState(Meander);
         } else if (exitingChild == Meander) {

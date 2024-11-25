@@ -12,6 +12,8 @@ public class MeanderState : State {
     [SerializeField]
     AnimationClip animation;
 
+    static readonly int maxTargetAttempts = 10;
+
     Path path;
 
     static readonly int stepSpeed = 25;
@@ -34,11 +36,13 @@ public class MeanderState : State {
 
         Vector2Int current = new Vector2Int(currentX, currentY);
 
+        // Debug.Log($"Valid: {path.IsValidFrom(current)} from: {current} with path: {path}");
+
         if (path.IsValidFrom(current)) {
             
             // Linearly interpolate to next point
             Vector2 nextPoint = path.LinearlyInterpolate(step, stepsMax);
-            entity.transform.position = nextPoint;
+            entity.transform.Translate(nextPoint - (Vector2) entity.transform.position);
 
 
             /// Remember to flip the character's sprite as needed
@@ -66,7 +70,7 @@ public class MeanderState : State {
         Vector2Int current = new Vector2Int(currentX, currentY);
 
         bool targetFound = false;
-        while (!targetFound) {
+        for (int attempt = 0 ; attempt < maxTargetAttempts ; attempt += 1) {
             int signX = (int) Math.Pow(-1, Random.Range(0, 2));
             int displacementX = signX * Random.Range(minRange, maxRange);
             int targetX = currentX + displacementX;
@@ -78,10 +82,16 @@ public class MeanderState : State {
             Vector2Int target = new Vector2Int(targetX, targetY);
 
             Path path = Pathfind.FindPath(current, target);
+            
             if (path != null) {
                 targetFound = true;
                 this.path = path;
             }
+        }
+
+        if (!targetFound) {
+            CompleteState();
+            return;
         }
 
         step = 0;

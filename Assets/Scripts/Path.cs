@@ -24,6 +24,10 @@ public class Path {
         CalculateLinearSegments();
     }
 
+    public override string ToString(){
+        return points.Aggregate<Vector2Int, String>("", (acc, p) => acc + " | " + p);
+    }
+
     /// <summary>
     /// Is this path still valid / unobstructed, starting from a given point?
     /// 

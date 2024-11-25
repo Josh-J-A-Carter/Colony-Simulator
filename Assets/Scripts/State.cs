@@ -19,7 +19,7 @@ public abstract class State : MonoBehaviour {
 
         // Recursively set up child states, if present
         foreach (Transform child in gameObject.transform) {
-            child.GetComponent<State>().Setup(gameObject, animator, this);
+            child.GetComponent<State>().Setup(entity, animator, this);
         }
     }
 

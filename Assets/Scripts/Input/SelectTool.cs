@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class SelectorTool : Tool {
+public class SelectTool : Tool {
 
     [SerializeField]
     Tile previewTile;
@@ -12,7 +12,7 @@ public class SelectorTool : Tool {
     Vector2Int previewPoint;
     bool previewActive = false;
 
-    public void Run(HoverData data) {
+    public override void Run(HoverData data) {
         HoverType type = data.GetType();
 
         if (previewActive && type != HoverType.Tile) {
@@ -33,7 +33,6 @@ public class SelectorTool : Tool {
             previewPoint = data.GetTileData();
             tm.SetPreview(previewPoint.x, previewPoint.y, previewTile);
         }
-
     }
 
     public void OnDequip() {

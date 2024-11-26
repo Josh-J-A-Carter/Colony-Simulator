@@ -18,6 +18,7 @@ public class HoverData {
     Vector2Int tileData;
 
     public HoverData(VisualElement UIData) {
+        this.type = HoverType.UI;
         this.UIData = UIData;
     }
 
@@ -27,6 +28,7 @@ public class HoverData {
     }
 
     public HoverData(Vector2Int tileData) {
+        this.type = HoverType.Tile;
         this.tileData = tileData;
     }
 

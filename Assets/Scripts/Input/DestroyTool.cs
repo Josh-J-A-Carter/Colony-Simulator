@@ -5,14 +5,14 @@ using UnityEngine.Tilemaps;
 public class DestroyTool : Tool {
 
     [SerializeField]
-    Tile previewTile;
+    TileBase previewTile;
 
     TileManager tm => TileManager.Instance;
 
     Vector2Int previewPoint;
     bool previewActive = false;
 
-    public void Run(HoverData data) {
+    public override void Run(HoverData data) {
         Preview(data);
 
         if (Input.GetKeyDown(KeyCode.Mouse0)) Build(data);

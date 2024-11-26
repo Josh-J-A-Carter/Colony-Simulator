@@ -45,15 +45,17 @@ public class TileManager : MonoBehaviour {
         return graph.IsUnobstructed(p.x, p.y);
     }
 
-    public void SetPreview(int x, int y, Tile t) {
+    public void SetPreview(int x, int y, TileBase t) {
         previewMap.SetTile(new Vector3Int(x, y, 0), t);
     }
 
-    public void SetTile(int x, int y, Tile t, bool obstructive) {
+    public void SetTile(int x, int y, TileBase t, bool obstructive) {
         Vector3Int pos = new Vector3Int(x, y, 0);
         worldMap.SetTile(pos, t);
 
         if (obstructive) obstacleMap.SetTile(pos, obstacleTile);
         else obstacleMap.SetTile(pos, null);
+
+        graph.SetObstructed(pos.x, pos.y, obstructive);
     }
 }

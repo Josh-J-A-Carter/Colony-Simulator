@@ -1,7 +1,10 @@
 using System;
 using UnityEngine;
 
-public class CameraController {
+public class CameraManager : MonoBehaviour {
+
+    public static CameraManager Instance { get; private set; }
+
 
     // Scene & camera specifics
     GameObject root;
@@ -32,10 +35,21 @@ public class CameraController {
     static readonly Func<float, float> zoomEaseFactor = zoom => zoom <= 1 ? zoomEaseFactorBase : zoomEaseFactorBase * zoom;
     float zoom = zoomDefault;
 
-    public void Setup(GameObject root, Camera camera) {
-        this.root = root;
+    void Awake() {
+        // Instantiate singleton
+        if (Instance == null) Instance = (CameraManager) this;
+        else if (Instance != this) {
+            Destroy(this);
+            return;
+        }
 
-        this.camera = camera;
+        Instantiate();
+    }
+
+    public void Instantiate() {
+        this.root = gameObject;
+
+        this.camera = Camera.main;
         cameraSizeDefault = camera.orthographicSize;
     }
 

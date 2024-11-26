@@ -10,6 +10,11 @@ public class NewBehaviourScript : MonoBehaviour {
 
     List<Button> buttons;
 
+    [SerializeField]
+    Constructable comb, pyramid;
+
+    ToolManager tm => ToolManager.Instance;
+
     void OnEnable() {
         root = GetComponent<UIDocument>().rootVisualElement;
 
@@ -29,7 +34,7 @@ public class NewBehaviourScript : MonoBehaviour {
     }
 
     void ClickedSelectTool(ClickEvent evt) {
-        Controller.toolSelection = Controller.Tool.Select;
+        tm.SetTool(ToolType.Select);
 
         DeselectAllButtons();
 
@@ -37,7 +42,7 @@ public class NewBehaviourScript : MonoBehaviour {
     }
 
     void ClickedConstructTool(ClickEvent evt) {
-        Controller.toolSelection = Controller.Tool.Construct;
+        tm.SetTool(ToolType.Build);
 
         DeselectAllButtons();
 
@@ -45,7 +50,7 @@ public class NewBehaviourScript : MonoBehaviour {
     }
 
     void ClickedDestroyTool(ClickEvent evt) {
-        Controller.toolSelection = Controller.Tool.Destroy;
+        tm.SetTool(ToolType.Destroy);
 
         DeselectAllButtons();
 

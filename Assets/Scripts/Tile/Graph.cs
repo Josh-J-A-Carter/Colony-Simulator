@@ -55,7 +55,9 @@ public class Graph : MonoBehaviour {
         return emptyCells[x - minX, maxY - y];
     }
 
-    public void SetObstruction(int x, int y, bool value) {
-        emptyCells[x, y] = value;
+    public void SetObstructed(int x, int y, bool value) {
+        if (!IsInBounds(x, y)) throw new System.Exception($"Position ({x}, {y}) is not inside the map bounds. Consider making the Graph implementation dynamic to solve such problems.");
+
+        emptyCells[x - minX, maxY - y] = !value;
     }
 }

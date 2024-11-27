@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 public class BuildTool : Tool {
 
     // [SerializeField]
-    Constructable constructable => parent.currentConstructable;
+    Constructable constructable;
 
     TileManager tm => TileManager.Instance;
 
@@ -16,85 +16,48 @@ public class BuildTool : Tool {
         Preview(data);
 
         if (Input.GetKeyDown(KeyCode.Mouse0)) Build(data);
+
+        constructable = parent.currentConstructable;
     }
 
     void Preview(HoverData data) {
         HoverType type = data.GetType();
 
+        Constructable newConstructable = parent.currentConstructable;
+        Vector2Int newPreviewPoint = data.GetTileData();
+
         if (previewActive && type != HoverType.Tile) {
-            DestroyPreview();
+            tm.RemovePreview(previewPoint);
+            previewActive = false;
         }
 
-        // We are still hovering over a tile but the preview has moved; so remove the old and update it
-        else if (previewActive && type == HoverType.Tile && previewPoint != data.GetTileData()) {
-            DestroyPreview();
+        // We are still hovering over a tile but the preview has moved, or the constructable has since changed
+        else if (previewActive && type == HoverType.Tile && (previewPoint != newPreviewPoint || constructable != newConstructable)) {
+            tm.RemovePreview(previewPoint);
 
-            previewPoint = data.GetTileData();
-            ConstructPreview();
+            previewPoint = newPreviewPoint;
+            constructable = newConstructable;
+            tm.SetPreview(previewPoint, constructable);
         }
 
         // No active selection, but we need one
         else if (!previewActive && type == HoverType.Tile) {
-            previewPoint = data.GetTileData();
+            previewPoint = newPreviewPoint;
+            constructable = newConstructable;
+            previewActive = true;
             
-            ConstructPreview();
-        }
-    }
-
-    void ConstructPreview() {
-        previewActive = true;
-
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            Row rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.tileConstructs.Length; col += 1) {
-                TileConstruct tc = rowData.tileConstructs[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
-
-                tm.SetPreview(previewPoint.x + col, previewPoint.y + row, tc.previewTile);
-            }
-        }
-    }
-
-    void DestroyPreview() {
-        previewActive = false;
-
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            Row rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.tileConstructs.Length; col += 1) {
-                TileConstruct tc = rowData.tileConstructs[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
-
-                tm.SetPreview(previewPoint.x + col, previewPoint.y + row, null);
-            }
+            tm.SetPreview(previewPoint, constructable);
         }
     }
 
     void Build(HoverData data) {
         if (data.GetType() != HoverType.Tile) return;
 
-        Construct();
+        tm.Construct(previewPoint, constructable);
     }
 
-    void Construct() {
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            Row rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.tileConstructs.Length; col += 1) {
-                TileConstruct tc = rowData.tileConstructs[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
-
-                tm.SetTile(previewPoint.x + col, previewPoint.y + row, tc.worldTile, tc.obstructive);
-            }
-        }
-    }
-
-    public void OnDequip() {
-        if (previewActive) tm.SetPreview(previewPoint.x, previewPoint.y, null);
+    public override void OnDequip() {
+        if (previewActive) tm.RemovePreview(previewPoint);
     }
 
 }

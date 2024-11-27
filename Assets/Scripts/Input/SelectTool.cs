@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 public class SelectTool : Tool {
 
     [SerializeField]
-    Tile previewTile;
+    Constructable preview;
 
     TileManager tm => TileManager.Instance;
 
@@ -16,27 +16,27 @@ public class SelectTool : Tool {
         HoverType type = data.GetType();
 
         if (previewActive && type != HoverType.Tile) {
-            tm.SetPreview(previewPoint.x, previewPoint.y, null);
+            tm.RemovePreview(previewPoint);
             previewActive = false;
         }
 
         // We are still hovering over a tile but the preview has moved; so remove the old and update it
         else if (previewActive && type == HoverType.Tile && previewPoint != data.GetTileData()) {
-            tm.SetPreview(previewPoint.x, previewPoint.y, null);
+            tm.RemovePreview(previewPoint);
             previewPoint = data.GetTileData();
-            tm.SetPreview(previewPoint.x, previewPoint.y, previewTile);
+            tm.SetPreview(previewPoint, preview);
         }
 
         // No active selection, but we need one
         else if (!previewActive && type == HoverType.Tile) {
             previewActive = true;
             previewPoint = data.GetTileData();
-            tm.SetPreview(previewPoint.x, previewPoint.y, previewTile);
+            tm.SetPreview(previewPoint, preview);
         }
     }
 
-    public void OnDequip() {
-        if (previewActive) tm.SetPreview(previewPoint.x, previewPoint.y, null);
+    public override void OnDequip() {
+        if (previewActive) tm.RemovePreview(previewPoint);
     }
 
 }

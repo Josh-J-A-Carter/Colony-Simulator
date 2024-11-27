@@ -17,6 +17,10 @@ public class Constructable : ScriptableObject {
 
         return rows[index];
     }
+
+    public void SetRows(Row[] rows) {
+        this.rows = rows;
+    }
 }
 
 [Serializable]

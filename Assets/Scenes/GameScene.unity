@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0ed3a9394fe5b43bae6d68ba1a6616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  previewTile: {fileID: 11400000, guid: 04b085c990805f74e90b7188be5e9e18, type: 2}
+  preview: {fileID: 11400000, guid: 7d10c257bfe80f74786741f88b97de63, type: 2}
 --- !u!1 &239917259
 GameObject:
   m_ObjectHideFlags: 0
@@ -47393,7 +47393,6 @@ GameObject:
   - component: {fileID: 999588076}
   - component: {fileID: 999588075}
   - component: {fileID: 999588078}
-  - component: {fileID: 999588079}
   m_Layer: 0
   m_Name: Tile Manager
   m_TagString: Untagged
@@ -47447,18 +47446,6 @@ MonoBehaviour:
   obstacleMap: {fileID: 1759477140}
   previewMap: {fileID: 551670567}
   obstacleTile: {fileID: 11400000, guid: 704a32f773ce5954786c0b0d8bb9ec14, type: 2}
---- !u!114 &999588079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 999588074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a1b2c54d9e68844bbc03ce8f9fa804b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1077591157
 GameObject:
   m_ObjectHideFlags: 0

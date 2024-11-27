@@ -21,31 +21,75 @@ public class DestroyTool : Tool {
     void Preview(HoverData data) {
         HoverType type = data.GetType();
 
+        Vector2Int newPreviewPoint = data.GetTileData();
+
         if (previewActive && type != HoverType.Tile) {
             tm.RemovePreview(previewPoint);
             previewActive = false;
         }
 
         // We are still hovering over a tile but the preview has moved; so remove the old and update it
-        else if (previewActive && type == HoverType.Tile && previewPoint != data.GetTileData()) {
+        else if (previewActive && type == HoverType.Tile && previewPoint != newPreviewPoint) {
             tm.RemovePreview(previewPoint);
 
-            previewPoint = data.GetTileData();
-            // tm.SetPreview(previewPoint, preview);
+            previewPoint = newPreviewPoint;
+            SetDestroyPreview();
         }
 
         // No active selection, but we need one
         else if (!previewActive && type == HoverType.Tile) {
-            previewActive = true;
-            previewPoint = data.GetTileData();
-            // tm.SetPreview(previewPoint, preview);
+            previewPoint = newPreviewPoint;
+            SetDestroyPreview();
         }
+    }
+
+    void SetDestroyPreview() {
+        (Vector2Int startPos, Constructable oldConstructable) = tm.GetConstructableAt(previewPoint);
+        // We may not actually have anything here at all!
+        if (oldConstructable == null) {
+            previewActive = false;
+            return;
+        }
+
+        previewActive = true;
+        Constructable newConstructable = CreateDestroyPreviewConstructable(oldConstructable);
+        tm.SetPreview(startPos, newConstructable);
+    }
+
+    Constructable CreateDestroyPreviewConstructable(Constructable oldConstructable) {
+        Constructable newConstructable = (Constructable) ScriptableObject.CreateInstance(typeof(Constructable));
+
+        Row[] rows = new Row[oldConstructable.RowCount()];
+
+        for (int row = 0 ; row < rows.Length ; row += 1) {
+            TileConstruct[] originalRow = oldConstructable.GetRow(row).tileConstructs;
+
+            TileConstruct[] newRow = new TileConstruct[originalRow.Length];
+
+            for (int col = 0 ; col < newRow.Length ; col += 1) {
+                if (originalRow[col].worldTile == null) {
+                    newRow[col] = new TileConstruct { worldTile = null, previewTile = null, obstructive = false };
+                } else {
+                    newRow[col] = new TileConstruct { worldTile = previewTile, previewTile = previewTile, obstructive = false };
+                }
+            }
+
+            rows[row] = new Row { tileConstructs = newRow };
+        }
+
+        newConstructable.SetRows(rows);
+
+        return newConstructable;
     }
 
     void Destroy(HoverData data) {
         if (data.GetType() != HoverType.Tile) return;
 
         tm.Destroy(previewPoint);
+        if (previewActive) {
+            tm.RemovePreview(previewPoint);
+            previewActive = false;
+        }
     }
 
     public override void OnDequip() {

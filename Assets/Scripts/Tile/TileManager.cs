@@ -92,6 +92,8 @@ public class TileManager : MonoBehaviour {
         // Find the beginning of the constructable which covers the desired position
         (Vector2Int startPos, Constructable constructable) = GetConstructableAt(position);
 
+        if (constructable == null) return;
+
         int x = startPos.x;
         int y = startPos.y;
 
@@ -130,6 +132,8 @@ public class TileManager : MonoBehaviour {
     public void RemovePreview(Vector2Int position) {
 
         (Vector2Int startPos, Constructable constructable) = GetConstructablePreviewAt(position);
+
+        if (constructable == null) return;
 
         int x = startPos.x;
         int y = startPos.y;

@@ -38,7 +38,10 @@ public class SelectTool : Tool {
     }
 
     public override void OnDequip() {
-        if (previewActive) tm.RemovePreview(previewPoint);
+        if (previewActive) {
+            tm.RemovePreview(previewPoint);
+            previewActive = false;
+        }
     }
 
 }

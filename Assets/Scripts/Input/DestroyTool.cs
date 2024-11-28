@@ -59,25 +59,25 @@ public class DestroyTool : Tool {
     Constructable CreateDestroyPreviewConstructable(Constructable oldConstructable) {
         Constructable newConstructable = (Constructable) ScriptableObject.CreateInstance(typeof(Constructable));
 
-        Row[] rows = new Row[oldConstructable.RowCount()];
+        GridRow[] rows = new GridRow[oldConstructable.RowCount()];
 
         for (int row = 0 ; row < rows.Length ; row += 1) {
-            TileConstruct[] originalRow = oldConstructable.GetRow(row).tileConstructs;
+            GridEntry[] originalRow = oldConstructable.GetRow(row).gridEntries;
 
-            TileConstruct[] newRow = new TileConstruct[originalRow.Length];
+            GridEntry[] newRow = new GridEntry[originalRow.Length];
 
             for (int col = 0 ; col < newRow.Length ; col += 1) {
                 if (originalRow[col].worldTile == null) {
-                    newRow[col] = new TileConstruct { worldTile = null, previewTile = null, obstructive = false };
+                    newRow[col] = new GridEntry { worldTile = null, previewTile = null, obstructive = false };
                 } else {
-                    newRow[col] = new TileConstruct { worldTile = previewTile, previewTile = previewTile, obstructive = false };
+                    newRow[col] = new GridEntry { worldTile = previewTile, previewTile = previewTile, obstructive = false };
                 }
             }
 
-            rows[row] = new Row { tileConstructs = newRow };
+            rows[row] = new GridRow { gridEntries = newRow };
         }
 
-        newConstructable.SetRows(rows);
+        newConstructable.SetData(rows);
 
         return newConstructable;
     }
@@ -94,6 +94,7 @@ public class DestroyTool : Tool {
 
     public override void OnDequip() {
         if (previewActive) tm.RemovePreview(previewPoint);
+        previewActive = false;
     }
 
 }

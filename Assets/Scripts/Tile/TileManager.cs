@@ -11,10 +11,15 @@ public class TileManager : MonoBehaviour {
     [SerializeField]
     Tile obstacleTile;
 
+    [SerializeField]
+    Constructable comb;
+
     Graph graph;
 
     ConstructableGraph constructableGraph;
     ConstructableGraph constructablePreviewGraph;
+
+    TileEntityStore tileEntityStore;
 
     void Awake() {
         // Instantiate singleton
@@ -34,6 +39,19 @@ public class TileManager : MonoBehaviour {
         constructableGraph = new ConstructableGraph(worldMap, this);
 
         constructablePreviewGraph = new ConstructableGraph(previewMap, this);
+
+        tileEntityStore = new TileEntityStore();
+
+        Vector2Int pos = new Vector2Int(-4, -3);
+        TileEntityData data = new TileEntityData(new (int, int)[2] {
+            ((int) CombAttr.ContainsBrood, 1), ((int) CombAttr.ContainsFor, 0)
+        });
+
+        Construct(pos, comb, data);
+    }
+
+    void FixedUpdate() {
+        tileEntityStore.Tick();
     }
 
     public bool IsInBounds(int x, int y) {
@@ -52,16 +70,21 @@ public class TileManager : MonoBehaviour {
         return graph.IsUnobstructed(p.x, p.y);
     }
 
-    public bool Construct(Vector2Int startPosition, Constructable constructable) {
+    public bool Construct(Vector2Int startPosition, Constructable constructable, TileEntityData data = null) {
         int x = startPosition.x;
         int y = startPosition.y;
 
+        // If the constructable is a tile entity, make sure to add this
+        if (constructable.isTileEntity) {
+            tileEntityStore.AddTileEntity(startPosition, constructable, data);
+        }
+
         // First, check if the desired area is completely clear.
         for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            Row rowData = constructable.GetRow(row);
+            GridRow rowData = constructable.GetRow(row);
 
-            for (int col = 0; col < rowData.tileConstructs.Length; col += 1) {
-                TileConstruct tc = rowData.tileConstructs[col];
+            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
+                GridEntry tc = rowData.gridEntries[col];
                 // Ignore empty constructs
                 if (tc.worldTile == null) continue;
 
@@ -72,10 +95,10 @@ public class TileManager : MonoBehaviour {
 
         // The area is clear, so we may continue with construction
         for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            Row rowData = constructable.GetRow(row);
+            GridRow rowData = constructable.GetRow(row);
 
-            for (int col = 0; col < rowData.tileConstructs.Length; col += 1) {
-                TileConstruct tc = rowData.tileConstructs[col];
+            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
+                GridEntry tc = rowData.gridEntries[col];
                 // Ignore empty constructs
                 if (tc.worldTile == null) continue;
 
@@ -97,11 +120,16 @@ public class TileManager : MonoBehaviour {
         int x = startPos.x;
         int y = startPos.y;
 
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            Row rowData = constructable.GetRow(row);
+        // If the constructable is a tile entity, make sure to add this
+        if (constructable.isTileEntity) {
+            tileEntityStore.RemoveTileEntity(startPos);
+        }
 
-            for (int col = 0; col < rowData.tileConstructs.Length; col += 1) {
-                TileConstruct tc = rowData.tileConstructs[col];
+        for (int row = 0; row < constructable.RowCount() ; row += 1) {
+            GridRow rowData = constructable.GetRow(row);
+
+            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
+                GridEntry tc = rowData.gridEntries[col];
                 // Ignore empty constructs
                 if (tc.worldTile == null) continue;
 
@@ -116,10 +144,10 @@ public class TileManager : MonoBehaviour {
         int y = startPosition.y;
 
         for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            Row rowData = constructable.GetRow(row);
+            GridRow rowData = constructable.GetRow(row);
 
-            for (int col = 0; col < rowData.tileConstructs.Length; col += 1) {
-                TileConstruct tc = rowData.tileConstructs[col];
+            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
+                GridEntry tc = rowData.gridEntries[col];
                 // Ignore empty constructs
                 if (tc.worldTile == null) continue;
 
@@ -139,10 +167,10 @@ public class TileManager : MonoBehaviour {
         int y = startPos.y;
 
         for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            Row rowData = constructable.GetRow(row);
+            GridRow rowData = constructable.GetRow(row);
 
-            for (int col = 0; col < rowData.tileConstructs.Length; col += 1) {
-                TileConstruct tc = rowData.tileConstructs[col];
+            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
+                GridEntry tc = rowData.gridEntries[col];
                 // Ignore empty constructs
                 if (tc.worldTile == null) continue;
 

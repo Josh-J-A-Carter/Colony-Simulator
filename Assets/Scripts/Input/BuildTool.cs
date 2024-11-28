@@ -57,7 +57,10 @@ public class BuildTool : Tool {
     }
 
     public override void OnDequip() {
-        if (previewActive) tm.RemovePreview(previewPoint);
+        if (previewActive) {
+            tm.RemovePreview(previewPoint);
+            previewActive = false;
+        }
     }
 
 }

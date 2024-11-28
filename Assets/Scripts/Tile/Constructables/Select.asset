@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c25a7fab5fdf84da2fadb84937ea98, type: 3}
   m_Name: Select
   m_EditorClassIdentifier: 
-  rows:
-  - tileConstructs:
+  gridData:
+  - gridEntries:
     - worldTile: {fileID: 11400000, guid: 04b085c990805f74e90b7188be5e9e18, type: 2}
       previewTile: {fileID: 11400000, guid: 04b085c990805f74e90b7188be5e9e18, type: 2}
       obstructive: 0

@@ -8,7 +8,7 @@ public class CameraManager : MonoBehaviour {
 
     // Scene & camera specifics
     GameObject root;
-    Camera camera;
+    Camera mainCamera;
     float cameraSizeDefault;
 
     // Pan speed fields & calculations
@@ -37,20 +37,16 @@ public class CameraManager : MonoBehaviour {
 
     void Awake() {
         // Instantiate singleton
-        if (Instance == null) Instance = (CameraManager) this;
+        if (Instance == null) Instance = this;
         else if (Instance != this) {
             Destroy(this);
             return;
         }
 
-        Instantiate();
-    }
+        root = gameObject;
 
-    public void Instantiate() {
-        this.root = gameObject;
-
-        this.camera = Camera.main;
-        cameraSizeDefault = camera.orthographicSize;
+        mainCamera = Camera.main;
+        cameraSizeDefault = mainCamera.orthographicSize;
     }
 
     public void Update() {
@@ -75,7 +71,7 @@ public class CameraManager : MonoBehaviour {
         if (scrollDelta < 0 && zoom < zoomMax) zoom = Math.Min(zoomMax, zoom - scrollDelta * zoomEaseFactor(zoom));
         else if (scrollDelta > 0 && zoom > zoomMin) zoom = Math.Max(zoomMin, zoom - scrollDelta * zoomEaseFactor(zoom));
 
-        if (scrollDelta != 0) camera.orthographicSize = cameraSizeDefault * zoom;
+        if (scrollDelta != 0) mainCamera.orthographicSize = cameraSizeDefault * zoom;
     }
 
     void ApplyCameraChanges() {

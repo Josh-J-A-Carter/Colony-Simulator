@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class ToolManager : MonoBehaviour {
 
     public static ToolManager Instance { get; private set; }
-    Camera camera;
+    Camera mainCamera;
 
     // Tool references
     Tool selectTool, buildTool, destroyTool;
@@ -19,17 +19,13 @@ public class ToolManager : MonoBehaviour {
 
     void Awake() {
         // Instantiate singleton
-        if (Instance == null) Instance = (ToolManager) this;
+        if (Instance == null) Instance = this;
         else if (Instance != this) {
             Destroy(this);
             return;
         }
 
-        Instantiate();
-    }
-
-    public void Instantiate() {
-        camera = Camera.main;
+        mainCamera = Camera.main;
 
         selectTool = GetComponentInChildren<SelectTool>();
         buildTool = GetComponentInChildren<BuildTool>();
@@ -62,14 +58,14 @@ public class ToolManager : MonoBehaviour {
         }
 
         // 2. Look for entities (i.e. game objects with collider components)
-        Vector2 worldMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 worldMousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(worldMousePosition, Vector2.zero);
 
         if (hit.collider != null) return new HoverData(hit.collider.gameObject);
 
         // 3. We have no UI or entities here, but the cursor is in the window. Thus, select the appropriate tile position
-        if (camera.pixelRect.Contains(Input.mousePosition)) {
-            Vector2 pos = camera.ScreenToWorldPoint(Input.mousePosition);
+        if (mainCamera.pixelRect.Contains(Input.mousePosition)) {
+            Vector2 pos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int tileData = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
             return new HoverData(tileData);
         }

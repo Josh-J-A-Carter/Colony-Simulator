@@ -47446,6 +47446,7 @@ MonoBehaviour:
   obstacleMap: {fileID: 1759477140}
   previewMap: {fileID: 551670567}
   obstacleTile: {fileID: 11400000, guid: 704a32f773ce5954786c0b0d8bb9ec14, type: 2}
+  comb: {fileID: 11400000, guid: 928cb5dc22216df48a239ce0372de8fa, type: 2}
 --- !u!1 &1077591157
 GameObject:
   m_ObjectHideFlags: 0

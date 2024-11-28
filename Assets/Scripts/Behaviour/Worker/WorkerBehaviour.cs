@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WorkerBehaviour : MonoBehaviour {
+public class WorkerBehaviour : MonoBehaviour, TaskAgent {
 
     [SerializeField]
     State Idle, House, Forage;
     Animator animator;
+
+    WorkerTask task;
 
     StateMachine stateMachine;
 
@@ -20,6 +22,21 @@ public class WorkerBehaviour : MonoBehaviour {
         foreach (Transform child in gameObject.transform) {
             child.GetComponent<State>().Setup(gameObject, animator, null);
         }
+    }
+
+    public bool OfferTask(Task task) {
+        if (task is WorkerTask workerTask) {
+            this.task = workerTask;
+            return true;
+        } else return false;
+    }
+
+    public void SetTask(Task task) {
+        if (task is WorkerTask workerTask) this.task = workerTask;
+    }
+
+    public Task GetTask() {
+        return task;
     }
 
     // Update is called once per frame

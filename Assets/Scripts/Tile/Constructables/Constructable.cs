@@ -10,6 +10,8 @@ public class Constructable : ScriptableObject {
 
     public bool isTileEntity { get; protected set; } = false;
 
+    public TileEntityData defaultData { get; protected set; }
+
     public int RowCount() {
         return gridData.Length;
     }

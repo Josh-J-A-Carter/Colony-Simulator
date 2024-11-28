@@ -7,6 +7,10 @@ public class Comb : Constructable {
 
     void Awake() {
         isTileEntity = true;
+
+        defaultData = new TileEntityData(new (int, int)[2] {
+            ((int) CombAttr.ContainsBrood, 1), ((int) CombAttr.ContainsFor, 0)
+        });
     }
 
     /// <summary>

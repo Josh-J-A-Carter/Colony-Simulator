@@ -44,6 +44,9 @@ public class TileEntityStore {
     }
 
     public void AddTileEntity(Vector2Int position, Constructable constructable, TileEntityData data) {
+        // Use the default data if none is provided
+        if (data == null) data = constructable.defaultData;
+
         tileEntitiesToAdd.Add((position, constructable, data));
     }
 
@@ -56,7 +59,7 @@ public class TileEntityStore {
             Vector2Int position = tileEntitiesToRemove[i];
 
             for (int j = 0 ; j < tileEntities.Count ; j += 1) {
-                if (tileEntities[j].Item1 == position) tileEntities.RemoveAt(i);
+                if (tileEntities[j].Item1 == position) tileEntities.RemoveAt(j);
                 break;
             }
         }

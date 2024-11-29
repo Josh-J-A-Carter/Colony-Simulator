@@ -19,7 +19,7 @@ public class Comb : Constructable {
     /// For non tile-entities, this function simply returns - but tile entities are derived from classes that 
     /// inherit from Constructable, allowing them to extend this function.
     /// </summary>
-    public override void TickTileEntity(TileEntityData instance) {
+    public override void TickTileEntity(Vector2Int position, TileEntityData instance) {
 
         int containsBrood, containsFor;
         if (instance.TryGetAttribute((int) CombAttr.ContainsBrood, out containsBrood)
@@ -29,7 +29,7 @@ public class Comb : Constructable {
                 instance.SetAttribute((int) CombAttr.ContainsBrood, 0);
                 instance.SetAttribute((int) CombAttr.ContainsFor, 0);
                 Debug.Log("yay adult now or something");
-                TileManager.Instance.Destroy(new Vector2Int(-4, -3));
+                TileManager.Instance.Destroy(position);
             }
             
             else instance.SetAttribute((int) CombAttr.ContainsFor, containsFor + 1);

@@ -34,7 +34,7 @@ public class Constructable : ScriptableObject {
     /// For non tile-entities, this function simply returns - but tile entities are derived from classes that 
     /// inherit from Constructable, allowing them to extend this function.
     /// </summary>
-    public virtual void TickTileEntity(TileEntityData instance) {}
+    public virtual void TickTileEntity(Vector2Int position, TileEntityData instance) {}
 
 
     /// <summary>

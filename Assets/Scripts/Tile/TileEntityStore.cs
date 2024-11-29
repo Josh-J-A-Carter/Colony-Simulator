@@ -37,8 +37,8 @@ public class TileEntityStore {
         if (tick >= TICK_RATE) {
             tick = 0;
 
-            foreach ((_, Constructable constructable, TileEntityData data) in tileEntities) {
-                constructable.TickTileEntity(data);
+            foreach ((Vector2Int position, Constructable constructable, TileEntityData data) in tileEntities) {
+                constructable.TickTileEntity(position, data);
             }
         }
     }

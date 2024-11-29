@@ -62,7 +62,6 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent {
     void DecideState() {
         if (task == null) {
             stateMachine.SetChildState(Idle);
-            Debug.Log("Now idle");
             return;
         }
 

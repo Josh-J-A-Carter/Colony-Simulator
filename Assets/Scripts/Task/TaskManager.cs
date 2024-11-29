@@ -139,42 +139,16 @@ public class TaskManager : MonoBehaviour {
         }
     }
 
-    // /// <summary>
-    // /// An internal helper function, to assign a task to an agent.
-    // /// <br></br>
-    // /// NOTE: This function assumes implicitly that <c>worker</c> currently
-    // /// has no task assigned.
-    // /// </summary>
-    // void AssignAgent(TaskAgent agent, Task task) {
-    //     if ((agent is WorkerBehaviour worker) && (task is WorkerTask workerTask)) {
-    //         unassignedWorkers.Remove(worker);
+    public void UnassignAgent(TaskAgent agent) {
+        if (agent is WorkerBehaviour worker) {
+            // Remove from assigned workers list. If it wasn't there, then don't continue with this function
+            if (!assignedWorkers.Remove(worker)) return;
 
-    //         assignedWorkers.Add(worker);
-    //         task.IncrementAssignment();
-
-    //         return;
-    //     }
-    // }
-
-    // /// <summary>
-    // /// An internal helper function that unassigns a task from an agent,
-    // /// and returns it to the list of unassigned agents.
-    // /// <br></br>
-    // /// NOTE: This only works as expected if the agent has indeed been assigned a task.
-    // /// </summary>
-    // void UnassignAgent(TaskAgent agent) {
-    //     if (agent is WorkerBehaviour worker) {
-    //         Task oldTask = worker.GetTask();
-
-    //         oldTask.DecrementAssignment();
-    //         worker.SetTask(null);
-
-    //         assignedWorkers.Remove(worker);
-    //         unassignedWorkers.Add(worker);
-
-    //         return;
-    //     }
-    // }
+            worker.GetTask().DecrementAssignment();
+            worker.SetTask(null);
+            unassignedWorkers.Add(worker);
+        }
+    }
 
     public void CreateTask(Task task) {
         if (task is WorkerTask workerTask) {

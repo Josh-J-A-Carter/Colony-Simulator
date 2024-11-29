@@ -6,24 +6,13 @@ public class HiveState : State {
 
     [SerializeField]
     State Pathfind, Build;
-
-    WorkerTask task => (WorkerTask) taskAgent.GetTask();
+    BuildTask task => (BuildTask) taskAgent.GetTask();
 
     const float MAX_IDLE = 2.0f;
     
     public override void OnEntry() {
-        Debug.Log("Enter hive state");
-
         if (task == null) {
             CompleteState();
-            Debug.Log("Exit hive state");
-            return;
-        }
-
-        // Wrong type of task, exit the state
-        if (this.task.category != WorkerTaskType.Hive) {
-            CompleteState();
-                        Debug.Log("Exit hive state");
             return;
         }
     }
@@ -40,13 +29,14 @@ public class HiveState : State {
         }
     }
 
-    public override void OnChildExit(State exitingChild) {
-        if (exitingChild == Pathfind) {
-            Debug.Log("Exit pathfind");
+    public override void OnChildExit(State exitingChild, bool success) {
+        if (exitingChild == Pathfind && success) {
             stateMachine.SetChildState(Build);
-        } else if (exitingChild == Build) {
-            Debug.Log("Exit hive state");
+        } else if (exitingChild == Build && success) {
             CompleteState();
+        } else if (!success) {
+            CompleteState();
+            taskAgent.CancelAssignment();
         }
     }
 }

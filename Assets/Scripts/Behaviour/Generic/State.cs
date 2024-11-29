@@ -11,8 +11,6 @@ public abstract class State : MonoBehaviour {
     public TaskAgent taskAgent;
     public Animator animator;
     public GameObject entity;
-    public Task task;
-
     public void Setup(GameObject entity, TaskAgent taskAgent, Animator animator, StateMachine parent) {
         stateMachine = new StateMachine(this);
 
@@ -38,11 +36,11 @@ public abstract class State : MonoBehaviour {
 
     public virtual void OnExit() {}
 
-    public virtual void OnChildExit(State exitingChild) {}
+    public virtual void OnChildExit(State exitingChild, bool success = true) {}
 
 
-    public void CompleteState() {
-        parent.ResetChildState();
+    public void CompleteState(bool success = true) {
+        parent.ResetChildState(success);
     }
 
     public void RunRecursive() {

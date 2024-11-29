@@ -46,11 +46,6 @@ public class MeanderState : State {
             /// Remember to flip the character's sprite as needed
             int sign = Math.Sign(translation.x);
             if (sign != 0) entity.transform.localScale = new Vector3(sign, 1, 1);
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
 
             step += 1;
 

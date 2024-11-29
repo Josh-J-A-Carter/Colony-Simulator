@@ -12,6 +12,10 @@ public interface TaskAgent {
     /// <returns>Returns <c>true</c> if accepted, <c>false</c> otherwise.</returns>
     public abstract bool OfferTask(Task task);
 
+    public void CancelAssignment() {
+        TaskManager.Instance.UnassignAgent(this);
+    }
+
     /// <summary>
     /// Forcibly set the task of the agent. This is always accepted by the agent,
     //  as opposed to <c>OfferTask</c> which can be declined.

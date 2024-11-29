@@ -3,18 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildState : State {
-    WorkerTask task => (WorkerTask) taskAgent.GetTask();
+    BuildTask task => (BuildTask) taskAgent.GetTask();
 
-    public override void OnEntry() {
-        Debug.Log("Enter build");
-    }
-
-    public override void Run(){
+    public override void FixedRun(){
         task.IncrementProgress();
         if (task.IsComplete()) {
-            Debug.Log("Complete build");
             CompleteState();
         }
     }
-
 }

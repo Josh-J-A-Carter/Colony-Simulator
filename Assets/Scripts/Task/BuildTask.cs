@@ -17,11 +17,6 @@ public class BuildTask : WorkerTask {
 
     public override void OnCreation() {
         TileManager.Instance.SetTaskPreview(location, constructable);
-
-        List<Vector2Int> exterior = CalculateExteriorPoints();
-
-        // Debug.Log("exterior:");
-        // foreach (Vector2Int v in exterior) Debug.Log(v);
     }
 
     public override void OnCompletion() {

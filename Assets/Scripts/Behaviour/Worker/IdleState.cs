@@ -10,10 +10,10 @@ public class IdleState : State {
     Task task => taskAgent.GetTask();
 
     public override void OnEntry() {
-        stateMachine.SetChildState(Stall);
+        stateMachine.SetChildState(Meander);
     }
 
-    public override void OnChildExit(State exitingChild) {
+    public override void OnChildExit(State exitingChild, bool _) {
         if (task != null) CompleteState();
 
         if (exitingChild == Stall) {

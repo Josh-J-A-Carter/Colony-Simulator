@@ -31,7 +31,7 @@ public class TaskManager : MonoBehaviour {
     }
 
     void Start() {
-        CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(-4, -3), comb));
+        CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(-6, -5), comb));
     }
 
     void Update() {

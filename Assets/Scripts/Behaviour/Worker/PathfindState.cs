@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PathfindState : State {
+
+    Vector2Int destination;
+
     public override void OnEntry() {
         Debug.Log("Enter pathfind");
     }
@@ -12,4 +15,9 @@ public class PathfindState : State {
             CompleteState();
         }
     }
+
+    void TryGetDestination() {
+        // Vector2Int taskLocation = 
+    }
+
 }

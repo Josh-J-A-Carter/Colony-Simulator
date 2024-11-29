@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class Pathfind {
 
-    static TileManager tm = TileManager.Instance;
+    static TileManager tm => TileManager.Instance;
 
     static readonly int CARDINAL_DIR_COST = 10;
     static readonly int DIAGONAL_DIR_COST = 14;

@@ -4,22 +4,26 @@ using UnityEngine;
 
 public abstract class State : MonoBehaviour {
 
-    public State parent;
+    public StateMachine parent;
     public StateMachine stateMachine;
+    protected State child => stateMachine.childState;
 
+    public TaskAgent taskAgent;
     public Animator animator;
     public GameObject entity;
+    public Task task;
 
-    public void Setup(GameObject entity, Animator animator, State parent) {
-        stateMachine = new StateMachine();
+    public void Setup(GameObject entity, TaskAgent taskAgent, Animator animator, StateMachine parent) {
+        stateMachine = new StateMachine(this);
 
         this.entity = entity;
+        this.taskAgent = taskAgent;
         this.animator = animator;
         this.parent = parent;
 
         // Recursively set up child states, if present
         foreach (Transform child in gameObject.transform) {
-            child.GetComponent<State>().Setup(entity, animator, this);
+            child.GetComponent<State>().Setup(entity, taskAgent, animator, stateMachine);
         }
     }
 
@@ -29,7 +33,7 @@ public abstract class State : MonoBehaviour {
     public void OnExitRecursive() {
         OnExit();
 
-        this.stateMachine.ResetState();
+        stateMachine.ResetChildState();
     }
 
     public virtual void OnExit() {}
@@ -38,7 +42,7 @@ public abstract class State : MonoBehaviour {
 
 
     public void CompleteState() {
-        this.parent?.stateMachine.ResetState();
+        parent.ResetChildState();
     }
 
     public void RunRecursive() {

@@ -7,15 +7,19 @@ public class IdleState : State {
     [SerializeField]
     State Stall, Meander;
 
+    Task task => taskAgent.GetTask();
+
     public override void OnEntry() {
-        stateMachine.SetState(Stall);
+        stateMachine.SetChildState(Stall);
     }
 
     public override void OnChildExit(State exitingChild) {
+        if (task != null) CompleteState();
+
         if (exitingChild == Stall) {
-            stateMachine.SetState(Meander);
+            stateMachine.SetChildState(Meander);
         } else if (exitingChild == Meander) {
-            stateMachine.SetState(Stall);
+            stateMachine.SetChildState(Stall);
         }
     }
 }

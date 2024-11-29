@@ -2,51 +2,58 @@ using UnityEngine;
 
 public class StateMachine {
 
-    public State currentState;
+    public State childState;
+
+    public readonly State state;
 
     public float activeSince;
 
     public float activeFor => Time.time - activeSince;
 
-    public void SetState(State state) {
-        if (state == currentState) return;
-
-        // Make sure we change the state BEFORE calling OnChildExit, otherwise we might have an infinite recursion
-        State oldState = currentState;
-
-        currentState = state;
-
-        // Exit code down the branch
-        oldState?.OnExitRecursive();
-        // Notify parents up the branch that we've exited down the branch
-        oldState?.parent?.OnChildExit(oldState);
-
-        activeSince = Time.time;
-        currentState?.OnEntry();
+    public StateMachine() {}
+    public StateMachine(State state) {
+        this.state = state;
     }
 
-    public void ResetState() {
-        // Make sure we change the state BEFORE calling OnChildExit, otherwise we might have an infinite recursion
-        State oldState = currentState;
+    public void SetChildState(State childState) {
+        if (this.childState == childState) return;
 
-        currentState = null;
+        // Make sure we change the state BEFORE calling OnChildExit, otherwise we might have an infinite recursion
+        State oldState = this.childState;
+
+        this.childState = childState;
 
         // Exit code down the branch
         oldState?.OnExitRecursive();
         // Notify parents up the branch that we've exited down the branch
-        oldState?.parent?.OnChildExit(oldState);
+        state?.OnChildExit(oldState);
+
+        activeSince = Time.time;
+        this.childState?.OnEntry();
+    }
+
+    public void ResetChildState() {
+        // Make sure we change the state BEFORE calling OnChildExit, otherwise we might have an infinite recursion
+        State oldState = childState;
+
+        childState = null;
+
+        // Exit code down the branch
+        oldState?.OnExitRecursive();
+        // Notify parents up the branch that we've exited down the branch
+        state?.OnChildExit(oldState);
     }
 
     public bool EmptyState() {
-        return currentState == null;
+        return childState == null;
     }
 
     public void Run() {
-        currentState?.RunRecursive();
+        childState?.RunRecursive();
     }
 
     public void FixedRun() {
-        currentState?.FixedRunRecursive();
+        childState?.FixedRunRecursive();
     }
 
 }

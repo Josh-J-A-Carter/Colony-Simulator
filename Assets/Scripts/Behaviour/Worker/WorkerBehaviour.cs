@@ -6,12 +6,13 @@ using UnityEngine;
 public class WorkerBehaviour : MonoBehaviour, TaskAgent {
 
     [SerializeField]
-    State Idle, House, Forage;
+    State Idle, Hive, Forage;
     Animator animator;
 
     WorkerTask task;
 
     StateMachine stateMachine;
+    State currentState => stateMachine.childState;
 
     void Start() {
         stateMachine = new StateMachine();
@@ -20,7 +21,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent {
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
-            child.GetComponent<State>().Setup(gameObject, animator, null);
+            child.GetComponent<State>().Setup(gameObject, this, animator, stateMachine);
         }
 
         TaskManager.Instance.RegisterAgent(this);
@@ -34,7 +35,14 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent {
     }
 
     public void SetTask(Task task) {
-        if (task is WorkerTask workerTask) this.task = workerTask;
+        if (task == null) {
+            this.task = null;
+            return;
+        }
+
+        if (task is WorkerTask workerTask) {
+            this.task = workerTask;
+        }
     }
 
     public Task GetTask() {
@@ -52,6 +60,19 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent {
     }
 
     void DecideState() {
-        stateMachine.SetState(Idle);
+        if (task == null) {
+            stateMachine.SetChildState(Idle);
+            Debug.Log("Now idle");
+            return;
+        }
+
+        switch (task.category) {
+            case WorkerTaskType.Hive: {
+                stateMachine.SetChildState(Hive);
+                return;
+            }
+        }
+
+        stateMachine.SetChildState(Idle);
     }
 }

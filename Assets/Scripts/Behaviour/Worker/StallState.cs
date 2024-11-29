@@ -23,7 +23,7 @@ public class StallState : State {
     }
 
     public override void Run() {
-        if (parent.stateMachine.activeFor > stallTime) {
+        if (parent.activeFor > stallTime) {
             CompleteState();
         }
     }

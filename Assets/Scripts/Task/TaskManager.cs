@@ -39,9 +39,7 @@ public class TaskManager : MonoBehaviour {
         // Deal with the queue of tasks that have been marked as complete
         ClearPendingTasks();
 
-        if (workerTasks.Count > 0) {
-            workerTasks[0].IncrementProgress();
-        }
+
         // 
         // To do: Deal with urgent tasks or something
         // 

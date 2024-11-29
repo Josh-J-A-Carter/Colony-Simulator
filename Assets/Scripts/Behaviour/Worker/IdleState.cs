@@ -7,7 +7,7 @@ public class IdleState : State {
     [SerializeField]
     State Stall, Meander;
 
-    public override void OnEnter() {
+    public override void OnEntry() {
         stateMachine.SetState(Stall);
     }
 

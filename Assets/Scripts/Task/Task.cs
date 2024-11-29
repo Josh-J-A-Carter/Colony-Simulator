@@ -18,8 +18,10 @@ public abstract class Task {
         if (complete) return;
         progress += 1;
 
-        TaskManager.Instance.MarkComplete(this);
-        complete = true;
+        if (progress >= MAX_PROGRESS) {
+            TaskManager.Instance.MarkComplete(this);
+            complete = true;
+        }
     }
 
     public void IncrementAssignment() {
@@ -41,10 +43,9 @@ public abstract class Task {
 }
 
 public enum TaskPriority {
-    Emergency,
     Critical,
     Urgent,
     Important,
-    Nonessential,
-    Insignificant
+    Normal,
+    Nonessential
 }

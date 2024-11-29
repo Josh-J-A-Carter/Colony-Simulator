@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(menuName = "ScriptableObjects/Comb")]
 public class Comb : Constructable {
 
-    void Awake() {
+    void OnEnable() {
         isTileEntity = true;
 
         defaultData = new TileEntityData(new (int, int)[2] {

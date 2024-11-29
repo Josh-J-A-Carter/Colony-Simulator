@@ -22,7 +22,7 @@ public class StateMachine {
         oldState?.parent?.OnChildExit(oldState);
 
         activeSince = Time.time;
-        currentState?.OnEnter();
+        currentState?.OnEntry();
     }
 
     public void ResetState() {

@@ -10,7 +10,7 @@ public class MeanderState : State {
     static int minRange = 3, maxRange = 8;
 
     [SerializeField]
-    AnimationClip animation;
+    AnimationClip anim;
 
     static readonly int maxTargetAttempts = 20;
 
@@ -22,8 +22,8 @@ public class MeanderState : State {
 
     int step;
 
-    public override void OnEnter() {
-        this.animator.Play(animation.name);
+    public override void OnEntry() {
+        this.animator.Play(anim.name);
 
         ChooseTarget();
     }

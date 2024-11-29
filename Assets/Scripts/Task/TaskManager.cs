@@ -11,6 +11,11 @@ public class TaskManager : MonoBehaviour {
     List<WorkerTask> workerTasks;
     List<WorkerBehaviour> assignedWorkers;
     List<WorkerBehaviour> unassignedWorkers;
+
+    [SerializeField]
+    Constructable comb;
+
+
     void Awake() {
         if (Instance == null) Instance = this;
         else {
@@ -25,12 +30,18 @@ public class TaskManager : MonoBehaviour {
         unassignedWorkers = new List<WorkerBehaviour>();
     }
 
+    void Start() {
+        CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(-4, -3), comb));
+    }
+
     void Update() {
 
         // Deal with the queue of tasks that have been marked as complete
         ClearPendingTasks();
 
-
+        if (workerTasks.Count > 0) {
+            workerTasks[0].IncrementProgress();
+        }
         // 
         // To do: Deal with urgent tasks or something
         // 
@@ -41,6 +52,8 @@ public class TaskManager : MonoBehaviour {
     }
 
     void OccupyUnassignedAgents() {
+        if (workerTasks.Count == 0) return;
+
         for (int i = 0 ; i < unassignedWorkers.Count ; i += 1) {
             WorkerTask task = GetMostUrgent(workerTasks);
             WorkerBehaviour worker = unassignedWorkers[i];
@@ -56,6 +69,8 @@ public class TaskManager : MonoBehaviour {
     }
 
     WorkerTask GetMostUrgent(List<WorkerTask> taskList) {
+        if (taskList.Count == 0) return null;
+
         WorkerTask mostUrgent = taskList[0];
 
         foreach (WorkerTask task in taskList) {
@@ -166,6 +181,7 @@ public class TaskManager : MonoBehaviour {
     public void CreateTask(Task task) {
         if (task is WorkerTask workerTask) {
             workerTasks.Add(workerTask);
+            workerTask.OnCreation();
             return;
         }
     }

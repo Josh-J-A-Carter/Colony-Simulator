@@ -22,6 +22,8 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent {
         foreach (Transform child in gameObject.transform) {
             child.GetComponent<State>().Setup(gameObject, animator, null);
         }
+
+        TaskManager.Instance.RegisterAgent(this);
     }
 
     public bool OfferTask(Task task) {
@@ -39,7 +41,6 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent {
         return task;
     }
 
-    // Update is called once per frame
     void Update() {
         if (stateMachine.EmptyState()) DecideState();
 

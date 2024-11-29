@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 public class StallState : State {
 
     [SerializeField]
-    AnimationClip animation;
+    AnimationClip anim;
 
     // Min & max times we will remain in this state
     static readonly float minStallTime = 1;
@@ -15,8 +15,8 @@ public class StallState : State {
     // Time to remain in the state (will be chosen randomly when the state is next entered)
     float stallTime;
 
-    public override void OnEnter() {
-        this.animator.Play(animation.name);
+    public override void OnEntry() {
+        this.animator.Play(anim.name);
 
         // Choose a random amount of time to stall
         stallTime = Random.Range(minStallTime, maxStallTime);

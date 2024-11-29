@@ -11,9 +11,6 @@ public class TileManager : MonoBehaviour {
     [SerializeField]
     Tile obstacleTile;
 
-    [SerializeField]
-    Constructable comb;
-
     Graph graph;
 
     ConstructableGraph constructableGraph, constructablePreviewGraph, constructableTaskPreviewGraph;

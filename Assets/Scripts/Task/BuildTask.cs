@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +23,13 @@ public class BuildTask : WorkerTask {
     public override void OnCompletion() {
         TileManager.Instance.RemoveTaskPreview(location);
 
-        TileManager.Instance.Construct(location, constructable);
+        Dictionary<String, object> data;
+        TileManager.Instance.Construct(location, constructable, out data);
+
+        data[Comb.STORAGE_TYPE] = Comb.StorageType.Brood;
+        Dictionary<String, object> broodData = new Dictionary<String, object>();
+        broodData[Comb.BROOD_TIME_LEFT] = 20;
+        data[Comb.BROOD_DATA] = broodData;
     }
 
     public List<Vector2Int> CalculateExteriorPoints() {

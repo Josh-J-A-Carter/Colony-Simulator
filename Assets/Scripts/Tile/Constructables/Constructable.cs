@@ -12,8 +12,6 @@ public class Constructable : ScriptableObject {
 
     public bool isTileEntity { get; protected set; } = false;
 
-    public TileEntityData defaultData { get; protected set; } = null;
-
     public int RowCount() {
         return gridData.Length;
     }
@@ -34,7 +32,11 @@ public class Constructable : ScriptableObject {
     /// For non tile-entities, this function simply returns - but tile entities are derived from classes that 
     /// inherit from Constructable, allowing them to extend this function.
     /// </summary>
-    public virtual void TickTileEntity(Vector2Int position, TileEntityData instance) {}
+    public virtual void TickTileEntity(Vector2Int position, Dictionary<String, object> instance) {}
+
+    public virtual Dictionary<String, object> GenerateDefaultData() {
+        return new Dictionary<string, object>();
+    }
 
 
     /// <summary>

@@ -1,6 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System;
 using UnityEngine;
 
 public class TileEntityStore {
@@ -9,14 +8,14 @@ public class TileEntityStore {
 
     int tick = 0;
     
-    List<(Vector2Int, Constructable, TileEntityData)> tileEntities;
+    List<(Vector2Int, Constructable, Dictionary<String, object>)> tileEntities;
 
-    List<(Vector2Int, Constructable, TileEntityData)> tileEntitiesToAdd;
+    List<(Vector2Int, Constructable, Dictionary<String, object>)> tileEntitiesToAdd;
     List<Vector2Int> tileEntitiesToRemove;
 
     public TileEntityStore() {
-        tileEntities = new List<(Vector2Int, Constructable, TileEntityData)>();
-        tileEntitiesToAdd = new List<(Vector2Int, Constructable, TileEntityData)>();
+        tileEntities = new List<(Vector2Int, Constructable, Dictionary<string, object>)>();
+        tileEntitiesToAdd = new List<(Vector2Int, Constructable, Dictionary<String, object>)>();
         tileEntitiesToRemove = new List<Vector2Int>();
     }
 
@@ -32,22 +31,29 @@ public class TileEntityStore {
         RemovePending();
         AddPending();
 
-
         // Call the tick function for each tile entity
         if (tick >= TICK_RATE) {
             tick = 0;
 
-            foreach ((Vector2Int position, Constructable constructable, TileEntityData data) in tileEntities) {
+            foreach ((Vector2Int position, Constructable constructable, Dictionary<String, object> data) in tileEntities) {
                 constructable.TickTileEntity(position, data);
             }
         }
     }
 
-    public void AddTileEntity(Vector2Int position, Constructable constructable, TileEntityData data) {
-        // Use the default data if none is provided
-        if (data == null) data = constructable.defaultData;
+    public Dictionary<String, object> AddTileEntity(Vector2Int position, Constructable constructable) {
+        Dictionary<String, object> data = constructable.GenerateDefaultData();
 
         tileEntitiesToAdd.Add((position, constructable, data));
+        return data;
+    }
+
+    public Dictionary<String, object> GetTileEntityData(Vector2Int position) {
+        foreach ((Vector2Int pos, _, Dictionary<String, object> data) in tileEntities) {
+            if (pos == position) return data;
+        }
+
+        return null;
     }
 
     public void RemoveTileEntity(Vector2Int position) {

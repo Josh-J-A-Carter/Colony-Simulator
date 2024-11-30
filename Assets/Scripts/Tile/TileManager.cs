@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -55,14 +57,23 @@ public class TileManager : MonoBehaviour {
         return graph.IsUnobstructed(p.x, p.y);
     }
 
-    public bool Construct(Vector2Int startPosition, Constructable constructable, TileEntityData data = null) {
+    /// <summary>
+    /// Build a <c>Constructable</c> into the world tilemap, without obtaining a reference to any tile entity data that is created there.
+    /// </summary>
+    /// <returns>True if the construction takes place, false otherwise; e.g. it is obstructed.</returns>
+    public bool Construct(Vector2Int startPosition, Constructable constructable) {
+        Dictionary<String, object> data;
+        return Construct(startPosition, constructable, out data);
+    }
+
+    /// <summary>
+    /// Build a <c>Constructable</c> into the world tilemap, and obtain a reference to any tile entity data that is created there
+    /// through the <c>data</c> parameter.
+    /// </summary>
+    /// <returns>True if the construction takes place, false otherwise; e.g. it is obstructed.</returns>
+    public bool Construct(Vector2Int startPosition, Constructable constructable, out Dictionary<String, object> data) {
         int x = startPosition.x;
         int y = startPosition.y;
-
-        // If the constructable is a tile entity, make sure to add this
-        if (constructable.isTileEntity) {
-            tileEntityStore.AddTileEntity(startPosition, constructable, data);
-        }
 
         // First, check if the desired area is completely clear.
         for (int row = 0; row < constructable.RowCount() ; row += 1) {
@@ -74,9 +85,17 @@ public class TileManager : MonoBehaviour {
                 if (tc.worldTile == null) continue;
 
                 // Found a non-empty tile
-                if (worldMap.HasTile(new Vector3Int(x + col, y + row, 0))) return false;
+                if (worldMap.HasTile(new Vector3Int(x + col, y + row, 0))) {
+                    data = null;
+                    return false;
+                }
             }
         }
+
+        // If the constructable is a tile entity, make sure to add this
+        if (constructable.isTileEntity) {
+            data = tileEntityStore.AddTileEntity(startPosition, constructable);
+        } else data = null;
 
         // The area is clear, so we may continue with construction
         for (int row = 0; row < constructable.RowCount() ; row += 1) {

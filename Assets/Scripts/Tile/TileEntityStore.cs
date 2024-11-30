@@ -65,8 +65,10 @@ public class TileEntityStore {
             Vector2Int position = tileEntitiesToRemove[i];
 
             for (int j = 0 ; j < tileEntities.Count ; j += 1) {
-                if (tileEntities[j].Item1 == position) tileEntities.RemoveAt(j);
-                break;
+                if (tileEntities[j].Item1 == position) {
+                    tileEntities.RemoveAt(j);
+                    break;
+                }
             }
         }
 

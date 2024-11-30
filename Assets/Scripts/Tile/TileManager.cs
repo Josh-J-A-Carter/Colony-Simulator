@@ -114,6 +114,10 @@ public class TileManager : MonoBehaviour {
         return true;
     }
 
+    public Dictionary<String, object> GetTileEntityData(Vector2Int position) {
+        return tileEntityStore.GetTileEntityData(position);
+    }
+
     public void Destroy(Vector2Int position) {
 
         // Find the beginning of the constructable which covers the desired position

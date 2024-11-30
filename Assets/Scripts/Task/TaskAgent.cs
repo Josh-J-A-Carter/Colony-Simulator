@@ -12,6 +12,10 @@ public interface TaskAgent {
     /// <returns>Returns <c>true</c> if accepted, <c>false</c> otherwise.</returns>
     public abstract bool OfferTask(Task task);
 
+    /// <summary>
+    /// Calling this function allows a task agent to discontinue its current task prematurely.
+    /// This is particularly useful if the agent finds that it has become impossible to fulfill the task.
+    /// </summary>
     public void CancelAssignment() {
         TaskManager.Instance.UnassignAgent(this);
     }

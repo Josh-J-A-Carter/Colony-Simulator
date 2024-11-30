@@ -13,6 +13,10 @@ public class LayTask : QueenTask {
         creationTime = Time.time;
     }
 
+    public Vector2Int GetLocation() {
+        return location;
+    }
+
     public override void OnCompletion() {
 
         Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(location);

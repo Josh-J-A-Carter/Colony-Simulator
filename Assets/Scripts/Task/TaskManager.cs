@@ -38,6 +38,9 @@ public class TaskManager : MonoBehaviour {
     }
 
     void Start() {
+        // 
+        // Remove the code below! This is a hacky solution until tools are updated to create tasks
+        // 
         CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(-6, -5), comb));
     }
 
@@ -56,11 +59,10 @@ public class TaskManager : MonoBehaviour {
         OccupyUnassignedAgents();
     }
 
-    void OccupyUnassignedAgents() {
-        if (workerTasks.Count == 0) return;
-
+    void OccupyUnassignedAgents() {        
         for (int i = 0 ; i < unassignedWorkers.Count ; i += 1) {
             WorkerTask task = (WorkerTask) GetMostUrgent(workerTasks);
+            if (task == null) break;
             WorkerBehaviour worker = unassignedWorkers[i];
 
             if (worker.OfferTask(task)) {
@@ -74,6 +76,7 @@ public class TaskManager : MonoBehaviour {
 
         for (int i = 0 ; i < unassignedQueens.Count ; i += 1) {
             QueenTask task = (QueenTask) GetMostUrgent(queenTasks);
+            if (task == null) break;
             QueenBehaviour queen = unassignedQueens[i];
 
             if (queen.OfferTask(task)) {
@@ -91,7 +94,7 @@ public class TaskManager : MonoBehaviour {
 
         Task mostUrgent = taskList[0];
 
-        foreach (WorkerTask task in taskList) {
+        foreach (Task task in taskList) {
             if (task.priority > mostUrgent.priority) continue;
             else if (task.priority < mostUrgent.priority) {
                 mostUrgent = task;

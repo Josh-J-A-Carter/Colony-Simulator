@@ -26,6 +26,8 @@ public class BuildTask : WorkerTask {
         // Dictionary<String, object> data;
         TileManager.Instance.Construct(location, constructable); //, out data);
 
+        TaskManager.Instance.CreateTask(new LayTask(TaskPriority.Normal, location));
+
         // data[Comb.STORAGE_TYPE] = Comb.StorageType.Brood;
         // Dictionary<String, object> broodData = new Dictionary<String, object>();
         // broodData[Comb.BROOD_TIME_LEFT] = 20;

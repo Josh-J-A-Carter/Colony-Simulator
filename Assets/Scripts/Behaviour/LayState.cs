@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HiveState : State {
+public class LayState : State {
 
     [SerializeField]
-    State Pathfind, Build;
-    BuildTask task => (BuildTask) taskAgent.GetTask();
+    State FindComb, Deposit;
+    LayTask task => (LayTask) taskAgent.GetTask();
 
     const float MAX_IDLE = 2.0f;
     
@@ -25,14 +25,14 @@ public class HiveState : State {
         }
 
         if (child == null) {
-            stateMachine.SetChildState(Pathfind);
+            stateMachine.SetChildState(FindComb);
         }
     }
 
     public override void OnChildExit(State exitingChild, bool success) {
-        if (exitingChild == Pathfind && success) {
-            stateMachine.SetChildState(Build);
-        } else if (exitingChild == Build && success) {
+        if (exitingChild == FindComb && success) {
+            stateMachine.SetChildState(Deposit);
+        } else if (exitingChild == Deposit && success) {
             CompleteState();
         } else if (!success) {
             taskAgent.CancelAssignment();

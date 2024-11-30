@@ -47,8 +47,7 @@ public class Comb : Constructable {
             broodData[BROOD_TIME_LEFT] = timeLeft;
 
             if (timeLeft <= 0) {
-                Debug.Log("Adult now yay!");
-
+                EntityManager.Instance.InstantiateWorker(position);
                 data[STORAGE_TYPE] = StorageType.Empty;
             }
         }

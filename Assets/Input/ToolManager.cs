@@ -19,11 +19,10 @@ public class ToolManager : MonoBehaviour {
 
     void Awake() {
         // Instantiate singleton
-        if (Instance == null) Instance = this;
-        else if (Instance != this) {
+        if (Instance != null) {
             Destroy(this);
             return;
-        }
+        } else Instance = this;
 
         mainCamera = Camera.main;
 

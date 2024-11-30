@@ -20,11 +20,11 @@ public class TaskManager : MonoBehaviour {
 
 
     void Awake() {
-        if (Instance == null) Instance = this;
-        else {
+        // Instantiate singleton
+        if (Instance != null) {
             Destroy(this);
             return;
-        }
+        } else Instance = this;
 
         pendingCompleteTasks = new List<Task>();
 

@@ -37,11 +37,10 @@ public class CameraManager : MonoBehaviour {
 
     void Awake() {
         // Instantiate singleton
-        if (Instance == null) Instance = this;
-        else if (Instance != this) {
+        if (Instance != null) {
             Destroy(this);
             return;
-        }
+        } else Instance = this;
 
         root = gameObject;
 

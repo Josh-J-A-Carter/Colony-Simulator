@@ -33,3 +33,24 @@
     border-color: rgb(47, 47, 47);
     scale: 1.05 1.05;
 }
+
+.test-foldout .unity-base-field--no-label {
+    background-color: rgb(150, 150, 150);
+    margin: 0;
+}
+
+.test-foldout .unity-foldout__content {
+    margin: 0;
+}
+
+#scroll-view .unity-scroll-view__content-and-vertical-scroll-container .unity-scroller .unity-repeat-button {
+    display: none;
+}
+
+#scroll-view .unity-scroll-view__content-and-vertical-scroll-container .unity-scroller .unity-base-slider {
+    margin: 0px;
+}
+
+#scroll-view .unity-scroll-view__content-and-vertical-scroll-container .unity-scroller .unity-base-slider__dragger {
+    margin-top: 2px;
+}

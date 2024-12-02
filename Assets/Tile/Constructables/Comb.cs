@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Comb")]
 public class Comb : TileEntity {
@@ -19,6 +18,13 @@ public class Comb : TileEntity {
     /// <summary>Part of <c>BROOD_DATA</c> attribute. It counts down the remaining number of ticks until the brood becomes an adult.
     /// The attribute's value should be of type <c>int</c>.</summary>
     public const String BROOD_TIME_LEFT = "timeLeft";
+
+    // Visual Variants to display with a change of state
+
+    /// <summary>Variant to display when the comb contains brood.</summary>
+    [SerializeField]
+    public GridRow[] containsBroodVariant;
+
 
     public override Dictionary<String, object> GenerateDefaultData() {
         Dictionary<string, object> data = new Dictionary<string, object>();
@@ -45,6 +51,9 @@ public class Comb : TileEntity {
             if (timeLeft <= 0) {
                 EntityManager.Instance.InstantiateWorker(position);
                 data[STORAGE_TYPE] = StorageType.Empty;
+
+                // Draw the correct variant of the comb
+                TileManager.Instance.DrawVariant(position, gridData);
             }
         }
     }

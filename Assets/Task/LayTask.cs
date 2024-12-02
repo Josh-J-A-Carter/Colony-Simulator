@@ -19,6 +19,13 @@ public class LayTask : QueenTask {
 
     public override void OnCompletion() {
 
+        // Draw the correct variant of the comb
+        (_, Constructable constructable) = TileManager.Instance.GetConstructableAt(location);
+        Comb comb = constructable as Comb;
+
+        TileManager.Instance.DrawVariant(location, comb.containsBroodVariant);
+
+        // Update the tile entity data
         Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(location);
 
         data[Comb.STORAGE_TYPE] = Comb.StorageType.Brood;

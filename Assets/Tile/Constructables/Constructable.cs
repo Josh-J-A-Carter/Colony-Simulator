@@ -8,9 +8,7 @@ using UnityEngine.Tilemaps;
 public class Constructable : ScriptableObject {
 
     [SerializeField]
-    GridRow[] gridData;
-
-    public bool isTileEntity { get; protected set; } = false;
+    protected GridRow[] gridData;
 
     public int RowCount() {
         return gridData.Length;
@@ -25,19 +23,6 @@ public class Constructable : ScriptableObject {
     public void SetData(GridRow[] gridData) {
         this.gridData = gridData;
     }
-
-    /// <summary>
-    /// Pass a tile-entity instance's data to its parent constructable, in order to execute specific behaviour.
-    /// <br></br><br></br>
-    /// For non tile-entities, this function simply returns - but tile entities are derived from classes that 
-    /// inherit from Constructable, allowing them to extend this function.
-    /// </summary>
-    public virtual void TickTileEntity(Vector2Int position, Dictionary<String, object> instance) {}
-
-    public virtual Dictionary<String, object> GenerateDefaultData() {
-        return new Dictionary<string, object>();
-    }
-
 
     /// <summary>
     /// Calculate all the points exterior to this constructable,

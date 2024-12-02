@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -79,9 +80,9 @@ public class TileManager : MonoBehaviour {
             GridRow rowData = constructable.GetRow(row);
 
             for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry tc = rowData.gridEntries[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
+                GridEntry entry = rowData.gridEntries[col];
+                // Ignore empty entries
+                if (entry.worldTile == null) continue;
 
                 // Found a non-empty tile
                 if (worldMap.HasTile(new Vector3Int(x + col, y + row, 0))) {
@@ -92,8 +93,8 @@ public class TileManager : MonoBehaviour {
         }
 
         // If the constructable is a tile entity, make sure to add this
-        if (constructable.isTileEntity) {
-            data = tileEntityStore.AddTileEntity(startPosition, constructable);
+        if (constructable is TileEntity tileEntity) {
+            data = tileEntityStore.AddTileEntity(startPosition, tileEntity);
         } else data = null;
 
         // The area is clear, so we may continue with construction
@@ -101,11 +102,11 @@ public class TileManager : MonoBehaviour {
             GridRow rowData = constructable.GetRow(row);
 
             for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry tc = rowData.gridEntries[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
+                GridEntry entry = rowData.gridEntries[col];
+                // Ignore empty entries
+                if (entry.worldTile == null) continue;
 
-                SetTile(x + col, y + row, tc.worldTile, tc.obstructive);
+                SetTile(x + col, y + row, entry.worldTile, entry.obstructive);
                 constructableGraph.SetConstructable(new Vector2Int(x + col, y + row), (startPosition, constructable));
             }
         }
@@ -115,6 +116,33 @@ public class TileManager : MonoBehaviour {
 
     public Dictionary<String, object> GetTileEntityData(Vector2Int position) {
         return tileEntityStore.GetTileEntityData(position);
+    }
+
+    public List<(Vector2Int, TileEntity, Dictionary<String, object>)> QueryTileEntities<T>() where T: TileEntity {
+        return tileEntityStore.Query<T>();
+    }
+
+    /// <summary>
+    /// This method redraws a constructable to use its variant.
+    /// <br></br><br></br>
+    /// <b>WARNING</b>: This assumes that the constructable at <c>position</c> has already been constructed on the
+    /// world map, and that <c>variantData</c> has the same shape as the original constructable grid data.
+    /// </summary>
+    public void DrawVariant(Vector2Int position, GridRow[] variantData) {
+        int x = position.x;
+        int y = position.y;
+
+        for (int row = 0; row < variantData.Count() ; row += 1) {
+            GridRow rowData = variantData[row];
+
+            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
+                GridEntry entry = rowData.gridEntries[col];
+                // Ignore empty entries
+                if (entry.worldTile == null) continue;
+
+                SetTile(x + col, y + row, entry.worldTile, entry.obstructive);
+            }
+        }
     }
 
     public void Destroy(Vector2Int position) {
@@ -128,7 +156,7 @@ public class TileManager : MonoBehaviour {
         int y = startPos.y;
 
         // If the constructable is a tile entity, make sure to add this
-        if (constructable.isTileEntity) {
+        if (constructable is TileEntity) {
             tileEntityStore.RemoveTileEntity(startPos);
         }
 
@@ -136,9 +164,9 @@ public class TileManager : MonoBehaviour {
             GridRow rowData = constructable.GetRow(row);
 
             for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry tc = rowData.gridEntries[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
+                GridEntry entry = rowData.gridEntries[col];
+                // Ignore empty entries
+                if (entry.worldTile == null) continue;
 
                 SetTile(x + col, y + row, null, false);
                 constructableGraph.RemoveConstructable(new Vector2Int(x + col, y + row));
@@ -154,11 +182,11 @@ public class TileManager : MonoBehaviour {
             GridRow rowData = constructable.GetRow(row);
 
             for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry tc = rowData.gridEntries[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
+                GridEntry entry = rowData.gridEntries[col];
+                // Ignore empty entries
+                if (entry.worldTile == null) continue;
 
-                SetTaskPreviewTile(x + col, y + row, tc.previewTile);
+                SetTaskPreviewTile(x + col, y + row, entry.previewTile);
                 constructableTaskPreviewGraph.SetConstructable(new Vector2Int(x + col, y + row), (startPosition, constructable));
             }
         }
@@ -177,9 +205,9 @@ public class TileManager : MonoBehaviour {
             GridRow rowData = constructable.GetRow(row);
 
             for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry tc = rowData.gridEntries[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
+                GridEntry entry = rowData.gridEntries[col];
+                // Ignore empty entries
+                if (entry.worldTile == null) continue;
 
                 SetTaskPreviewTile(x + col, y + row, null);
                 constructableTaskPreviewGraph.RemoveConstructable(new Vector2Int(x + col, y + row));
@@ -197,11 +225,11 @@ public class TileManager : MonoBehaviour {
             GridRow rowData = constructable.GetRow(row);
 
             for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry tc = rowData.gridEntries[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
+                GridEntry entry = rowData.gridEntries[col];
+                // Ignore empty entries
+                if (entry.worldTile == null) continue;
 
-                SetPreviewTile(x + col, y + row, tc.previewTile);
+                SetPreviewTile(x + col, y + row, entry.previewTile);
                 constructablePreviewGraph.SetConstructable(new Vector2Int(x + col, y + row), (startPosition, constructable));
             }
         }
@@ -220,9 +248,9 @@ public class TileManager : MonoBehaviour {
             GridRow rowData = constructable.GetRow(row);
 
             for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry tc = rowData.gridEntries[col];
-                // Ignore empty constructs
-                if (tc.worldTile == null) continue;
+                GridEntry entry = rowData.gridEntries[col];
+                // Ignore empty entries
+                if (entry.worldTile == null) continue;
 
                 SetPreviewTile(x + col, y + row, null);
                 constructablePreviewGraph.RemoveConstructable(new Vector2Int(x + col, y + row));

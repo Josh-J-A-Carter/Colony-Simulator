@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Comb")]
-public class Comb : Constructable {
+public class Comb : TileEntity {
 
     // Constants for TileEntityData attribute names
 
@@ -20,10 +20,6 @@ public class Comb : Constructable {
     /// The attribute's value should be of type <c>int</c>.</summary>
     public const String BROOD_TIME_LEFT = "timeLeft";
 
-    void OnEnable() {
-        isTileEntity = true;
-    }
-
     public override Dictionary<String, object> GenerateDefaultData() {
         Dictionary<string, object> data = new Dictionary<string, object>();
 
@@ -38,7 +34,7 @@ public class Comb : Constructable {
     /// For non tile-entities, this function simply returns - but tile entities are derived from classes that 
     /// inherit from Constructable, allowing them to extend this function.
     /// </summary>
-    public override void TickTileEntity(Vector2Int position, Dictionary<String, object> data) {
+    public override void TickInstance(Vector2Int position, Dictionary<String, object> data) {
 
         if ((StorageType) data[STORAGE_TYPE] == StorageType.Brood) {
             Dictionary<String, object> broodData = (Dictionary<String, object>) data[BROOD_DATA];

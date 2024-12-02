@@ -8,14 +8,14 @@ public class TileEntityStore {
 
     int tick = 0;
     
-    List<(Vector2Int, Constructable, Dictionary<String, object>)> tileEntities;
+    List<(Vector2Int, TileEntity, Dictionary<String, object>)> tileEntities;
 
-    List<(Vector2Int, Constructable, Dictionary<String, object>)> tileEntitiesToAdd;
+    List<(Vector2Int, TileEntity, Dictionary<String, object>)> tileEntitiesToAdd;
     List<Vector2Int> tileEntitiesToRemove;
 
     public TileEntityStore() {
-        tileEntities = new List<(Vector2Int, Constructable, Dictionary<string, object>)>();
-        tileEntitiesToAdd = new List<(Vector2Int, Constructable, Dictionary<String, object>)>();
+        tileEntities = new List<(Vector2Int, TileEntity, Dictionary<string, object>)>();
+        tileEntitiesToAdd = new List<(Vector2Int, TileEntity, Dictionary<String, object>)>();
         tileEntitiesToRemove = new List<Vector2Int>();
     }
 
@@ -35,16 +35,28 @@ public class TileEntityStore {
         if (tick >= TICK_RATE) {
             tick = 0;
 
-            foreach ((Vector2Int position, Constructable constructable, Dictionary<String, object> data) in tileEntities) {
-                constructable.TickTileEntity(position, data);
+            foreach ((Vector2Int position, TileEntity tileEntity, Dictionary<String, object> data) in tileEntities) {
+                tileEntity.TickInstance(position, data);
             }
         }
     }
 
-    public Dictionary<String, object> AddTileEntity(Vector2Int position, Constructable constructable) {
-        Dictionary<String, object> data = constructable.GenerateDefaultData();
+    public List<(Vector2Int, TileEntity, Dictionary<String, object>)> Query<T>() where T: TileEntity {
+        List<(Vector2Int, TileEntity, Dictionary<String, object>)> queryResult = new List<(Vector2Int, TileEntity, Dictionary<string, object>)>();
 
-        tileEntitiesToAdd.Add((position, constructable, data));
+        foreach ((Vector2Int position, TileEntity tileEntity, Dictionary<String, object> data) in tileEntities) {
+            if (tileEntity is T instanceOfT) {
+                queryResult.Add((position, instanceOfT, data));
+            }
+        }
+
+        return queryResult;
+    }
+
+    public Dictionary<String, object> AddTileEntity(Vector2Int position, TileEntity tileEntity) {
+        Dictionary<String, object> data = tileEntity.GenerateDefaultData();
+
+        tileEntitiesToAdd.Add((position, tileEntity, data));
         return data;
     }
 

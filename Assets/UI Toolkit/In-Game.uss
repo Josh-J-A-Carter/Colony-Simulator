@@ -7,15 +7,11 @@
     max-width: 100%;
     max-height: 15%;
     justify-content: center;
-    padding-top: 20px;
-    padding-right: 20px;
-    padding-bottom: 20px;
-    padding-left: 20px;
 }
 
 .tool {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     background-color: rgb(103, 103, 103);
     border-radius: 6px;
     border-width: 3px;
@@ -36,7 +32,9 @@
 
 .test-foldout .unity-base-field--no-label {
     background-color: rgb(150, 150, 150);
+    border-radius: 2px;
     margin: 0;
+    margin-bottom: 2px;
 }
 
 .test-foldout .unity-foldout__content {
@@ -53,4 +51,5 @@
 
 #scroll-view .unity-scroll-view__content-and-vertical-scroll-container .unity-scroller .unity-base-slider__dragger {
     margin-top: 2px;
+    border-radius: 2px;
 }

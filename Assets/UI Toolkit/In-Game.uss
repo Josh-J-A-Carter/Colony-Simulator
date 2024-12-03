@@ -53,3 +53,11 @@
     margin-top: 2px;
     border-radius: 2px;
 }
+
+
+.cringe {
+    width: 20px;
+    height: 20px;
+
+    
+}

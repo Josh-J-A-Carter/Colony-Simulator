@@ -8,6 +8,9 @@ public class NewBehaviourScript : MonoBehaviour {
 
     VisualElement root;
 
+    [SerializeField]
+    Sprite icon;
+
     List<Button> buttons;
 
     [SerializeField]
@@ -27,6 +30,10 @@ public class NewBehaviourScript : MonoBehaviour {
         select.RegisterCallback<ClickEvent>(ClickedSelectTool);
         root.Q(name: "construct-tool").RegisterCallback<ClickEvent>(ClickedConstructTool);
         root.Q(name: "destroy-tool").RegisterCallback<ClickEvent>(ClickedDestroyTool);
+
+        Preview p = new Preview(icon, "test");
+        root.Q(name: "container").Add(p);
+        p.AddCallback((evt) => { Debug.Log("it works"); });
     }
 
     void DeselectAllButtons() {

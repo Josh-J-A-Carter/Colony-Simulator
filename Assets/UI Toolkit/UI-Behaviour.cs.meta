@@ -4,7 +4,9 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - comb: {fileID: 11400000, guid: c02527c4d84b3324cb21842394ed7f1a, type: 2}
+  - icon: {fileID: 21300000, guid: 9f46950688b65ee44a39c99f38832369, type: 3}
+  - testImage: {fileID: 21300000, guid: 1e0baa0a08e0e9742b9df587c0c7e9e2, type: 3}
+  - comb: {instanceID: 0}
   - pyramid: {fileID: 11400000, guid: 6ddad3f585e895540bebaea43e34b1db, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}

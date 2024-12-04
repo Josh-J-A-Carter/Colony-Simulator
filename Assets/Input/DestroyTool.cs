@@ -19,9 +19,9 @@ public class DestroyTool : Tool {
     }
 
     void Preview(HoverData data) {
-        HoverType type = data.GetType();
+        HoverType type = data.GetHoverType();
 
-        Vector2Int newPreviewPoint = data.GetTileData();
+        Vector2Int newPreviewPoint = data.GetGridPosition();
 
         if (previewActive && type != HoverType.Tile) {
             tm.RemovePreview(previewPoint);
@@ -83,7 +83,7 @@ public class DestroyTool : Tool {
     }
 
     void Destroy(HoverData data) {
-        if (data.GetType() != HoverType.Tile) return;
+        if (data.GetHoverType() != HoverType.Tile) return;
 
         tm.Destroy(previewPoint);
         if (previewActive) {

@@ -13,9 +13,9 @@ public class SelectTool : Tool {
     bool previewActive = false;
 
     public override void Run(HoverData data) {
-        HoverType type = data.GetType();
+        HoverType type = data.GetHoverType();
 
-        Vector2Int newPreviewPoint = data.GetTileData();
+        Vector2Int newPreviewPoint = data.GetGridPosition();
 
         if (previewActive && type != HoverType.Tile) {
             tm.RemovePreview(previewPoint);

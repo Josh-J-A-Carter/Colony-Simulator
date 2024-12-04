@@ -15,28 +15,33 @@ public class HoverData {
     GameObject entityData;
 
     // Tile Data
-    Vector2Int tileData;
+    Vector2Int gridPos;
 
-    public HoverData(VisualElement UIData) {
+    public HoverData(VisualElement UIData, Vector2Int gridPos) {
         this.type = HoverType.UI;
         this.UIData = UIData;
+
+        this.gridPos = gridPos;
     }
 
-    public HoverData(GameObject entity) {
+    public HoverData(GameObject entity, Vector2Int gridPos) {
         this.type = HoverType.Entity;
         this.entityData = entity;
+
+        this.gridPos = gridPos;
     }
 
-    public HoverData(Vector2Int tileData) {
+    public HoverData(Vector2Int gridPos) {
         this.type = HoverType.Tile;
-        this.tileData = tileData;
+        
+        this.gridPos = gridPos;
     }
 
     public HoverData() {
         this.type = HoverType.None;
     }
 
-    public HoverType GetType() {
+    public HoverType GetHoverType() {
         return this.type;
     }
 
@@ -48,7 +53,7 @@ public class HoverData {
         return this.entityData;
     }
 
-    public Vector2Int GetTileData() {
-        return this.tileData;
+    public Vector2Int GetGridPosition() {
+        return this.gridPos;
     }
 }

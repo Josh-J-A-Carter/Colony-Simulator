@@ -62,8 +62,7 @@ public class TileManager : MonoBehaviour {
     /// </summary>
     /// <returns>True if the construction takes place, false otherwise; e.g. it is obstructed.</returns>
     public bool Construct(Vector2Int startPosition, Constructable constructable) {
-        Dictionary<String, object> data;
-        return Construct(startPosition, constructable, out data);
+        return Construct(startPosition, constructable, out _);
     }
 
     /// <summary>
@@ -92,7 +91,7 @@ public class TileManager : MonoBehaviour {
             }
         }
 
-        // If the constructable is a tile entity, make sure to add this
+        // If the constructable is a tile entity, make sure to add this to the list of tile entities
         if (constructable is TileEntity tileEntity) {
             data = tileEntityStore.AddTileEntity(startPosition, tileEntity);
         } else data = null;
@@ -220,6 +219,20 @@ public class TileManager : MonoBehaviour {
     public void SetPreview(Vector2Int startPosition, Constructable constructable) {
         int x = startPosition.x;
         int y = startPosition.y;
+
+        // First, check if the desired area is completely clear.
+        for (int row = 0; row < constructable.RowCount() ; row += 1) {
+            GridRow rowData = constructable.GetRow(row);
+
+            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
+                GridEntry entry = rowData.gridEntries[col];
+                // Ignore empty entries
+                if (entry.worldTile == null) continue;
+
+                // Found a non-empty tile
+                if (previewMap.HasTile(new Vector3Int(x + col, y + row, 0))) return;
+            }
+        }
 
         for (int row = 0; row < constructable.RowCount() ; row += 1) {
             GridRow rowData = constructable.GetRow(row);

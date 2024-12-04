@@ -47115,7 +47115,7 @@ GameObject:
   - component: {fileID: 578470727}
   - component: {fileID: 578470729}
   m_Layer: 5
-  m_Name: UI
+  m_Name: Interface Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47313,7 +47313,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f4efda6d0e8af47a1c4fc56f10d466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  comb: {fileID: 11400000, guid: 928cb5dc22216df48a239ce0372de8fa, type: 2}
 --- !u!4 &989470744
 Transform:
   m_ObjectHideFlags: 0
@@ -47537,7 +47536,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec36991a8605b7e4785ee02a28a34352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentConstructable: {fileID: 11400000, guid: 6ddad3f585e895540bebaea43e34b1db, type: 2}
 --- !u!4 &1138024223
 Transform:
   m_ObjectHideFlags: 0

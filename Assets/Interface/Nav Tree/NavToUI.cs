@@ -1,10 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public static class NavToUI {
+
+    static Sprite backArrowIcon = Resources.Load<Sprite>("Image/ui_back_arrow");
 
     public static void DisplayNavTree(NavNode root, Action<Constructable> callback) {
         SetPage(root, null, callback);
@@ -13,6 +13,17 @@ public static class NavToUI {
     static void SetPage(NavNode currentNode, VisualElement parentPage, Action<Constructable> callback) {
         VisualElement pageContainer = new VisualElement();
         pageContainer.AddToClassList("page-container");
+
+        Button backButton = new Button();
+        backButton.AddToClassList("back-button");
+        pageContainer.Add(backButton);
+        if (parentPage != null) {
+            backButton.style.backgroundImage = new StyleBackground(backArrowIcon);
+            backButton.RegisterCallback<ClickEvent>((_) => {
+                InterfaceManager.Instance.SetConfigurableContainerContent(parentPage);
+            });
+        }
+
 
         if (currentNode is NavBranch navBranch) {
             foreach (NavNode childNode in navBranch.GetChildren()) {

@@ -33,7 +33,7 @@ public class TaskManager : MonoBehaviour {
         unassignedQueens = new List<QueenBehaviour>();
     }
 
-    void Update() {
+    void FixedUpdate() {
 
         // Deal with the queue of tasks that have been marked as complete
         ClearPendingTasks();

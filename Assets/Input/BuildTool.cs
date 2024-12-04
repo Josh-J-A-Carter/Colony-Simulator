@@ -19,11 +19,11 @@ public class BuildTool : Tool {
 
         if (Input.GetKeyDown(KeyCode.Mouse0)) Build(data);
 
-        constructable = parent.currentConstructable;
+        constructable = parent.GetConstructable();
     }
 
     public override void OnEquip() {
-        NavToUI.DisplayNavTree(navTreeRoot);
+        NavToUI.DisplayNavTree(navTreeRoot, parent.SetConstructable);
 
         InterfaceManager.Instance.ShowConfigurableContainer();
     }
@@ -31,7 +31,9 @@ public class BuildTool : Tool {
     void Preview(HoverData data) {
         HoverType type = data.GetType();
 
-        Constructable newConstructable = parent.currentConstructable;
+        Constructable newConstructable = parent.GetConstructable();
+        if (constructable == null && newConstructable == null) return;
+
         Vector2Int newPreviewPoint = data.GetTileData();
 
         if (previewActive && type != HoverType.Tile) {

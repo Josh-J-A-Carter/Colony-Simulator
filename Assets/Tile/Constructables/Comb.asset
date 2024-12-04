@@ -17,6 +17,8 @@ MonoBehaviour:
     - worldTile: {fileID: 11400000, guid: 7a45159e2143dfb489df3c6f62a14b6f, type: 2}
       previewTile: {fileID: 11400000, guid: 87d83be92d6f6284ca82ced5f98a5984, type: 2}
       obstructive: 0
+  name: Brood Comb
+  preview: {fileID: 21300000, guid: 737a9d6e418ba254e98cf671b20851c3, type: 3}
   containsBroodVariant:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: 87d83be92d6f6284ca82ced5f98a5984, type: 2}

@@ -5,10 +5,16 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Constructable")]
-public class Constructable : ScriptableObject {
+public class Constructable : ScriptableObject, Informative {
 
     [SerializeField]
     protected GridRow[] gridData;
+
+    [SerializeField]
+    protected String name;
+
+    [SerializeField]
+    protected Sprite preview;
 
     public int RowCount() {
         return gridData.Length;
@@ -69,6 +75,15 @@ public class Constructable : ScriptableObject {
         }
 
         return exterior.ToList();
+    }
+
+
+    public String GetName() {
+        return name;
+    }
+
+    public Sprite GetPreview() {
+        return preview;
     }
 }
 

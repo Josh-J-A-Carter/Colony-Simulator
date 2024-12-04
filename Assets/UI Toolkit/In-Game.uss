@@ -61,7 +61,7 @@
     height: auto;
     flex-direction: row;
     align-items: flex-start;
-    margin-bottom: 200px;
+    margin-bottom: 20px;
     margin-top: 20px;
 }
 

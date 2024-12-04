@@ -13,9 +13,7 @@ public class ToolManager : MonoBehaviour {
     Tool currentTool;
 
     // Tool selections that should be persistent, even across tool changes
-    [SerializeField]
-    public Constructable currentConstructable;
-
+    Constructable currentConstructable;
 
     void Awake() {
         // Instantiate singleton
@@ -93,6 +91,14 @@ public class ToolManager : MonoBehaviour {
             oldTool.OnDequip();
             currentTool.OnEquip();
         }
+    }
+
+    public Constructable GetConstructable() {
+        return currentConstructable;
+    }
+
+    public void SetConstructable(Constructable constructable) {
+        currentConstructable = constructable;
     }
 }
 

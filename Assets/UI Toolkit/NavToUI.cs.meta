@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: c9eb75d9d65c5f64bbfd323bef9fb044
+guid: 088a404059da9cf408ac934a5b186e77
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - navTreeRoot: {fileID: 11400000, guid: 18ab1f1ed8c65cd4bbab7ba79e4e6cca, type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

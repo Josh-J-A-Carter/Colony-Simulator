@@ -46858,6 +46858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9eb75d9d65c5f64bbfd323bef9fb044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  navTreeRoot: {fileID: 11400000, guid: 18ab1f1ed8c65cd4bbab7ba79e4e6cca, type: 2}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -47163,9 +47164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 323ed042283cc4b448f0853ddea881cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 630be62bc5b57464ebd1bb9345240b2f, type: 3}
-  comb: {fileID: 0}
-  pyramid: {fileID: 0}
 --- !u!1 &787926327
 GameObject:
   m_ObjectHideFlags: 0

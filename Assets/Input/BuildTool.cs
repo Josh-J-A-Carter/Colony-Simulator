@@ -4,7 +4,9 @@ using UnityEngine.Tilemaps;
 
 public class BuildTool : Tool {
 
-    // [SerializeField]
+    [SerializeField]
+    NavNode navTreeRoot;
+
     Constructable constructable;
 
     TileManager tm => TileManager.Instance;
@@ -18,6 +20,12 @@ public class BuildTool : Tool {
         if (Input.GetKeyDown(KeyCode.Mouse0)) Build(data);
 
         constructable = parent.currentConstructable;
+    }
+
+    public override void OnEquip() {
+        NavToUI.DisplayNavTree(navTreeRoot);
+
+        InterfaceManager.Instance.ShowConfigurableContainer();
     }
 
     void Preview(HoverData data) {
@@ -61,6 +69,8 @@ public class BuildTool : Tool {
             tm.RemovePreview(previewPoint);
             previewActive = false;
         }
+
+        InterfaceManager.Instance.HideConfigurableContainer();
     }
 
 }

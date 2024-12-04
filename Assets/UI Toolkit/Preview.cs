@@ -2,29 +2,26 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Preview : VisualElement {
-
-    String name;
+public class Preview : Button {
     Label label;
-
-    Sprite icon;
-    Button button;
+    VisualElement display;
 
     public Preview(Sprite icon, String name) {
-        this.name = name;
         label = new Label(name);
+        label.AddToClassList("preview__label");
 
-        this.icon = icon;
-        button = new Button();
-        button.style.backgroundImage = new StyleBackground(icon);
-        button.style.backgroundColor = new StyleColor(Color.clear);
+        display = new VisualElement();
+        display.style.backgroundImage = new StyleBackground(icon);
+        display.AddToClassList("preview__display");
 
-        Add(button);
+        style.backgroundColor = new StyleColor(Color.clear);
+        AddToClassList("preview");
+
+        Add(display);
         Add(label);
-        AddToClassList("cringe");
     }
 
     public void AddCallback(EventCallback<ClickEvent> callback) {
-        button.RegisterCallback<ClickEvent>(callback);
+        RegisterCallback(callback);
     }
 }

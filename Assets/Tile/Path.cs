@@ -14,6 +14,7 @@ public class Path {
 
     static readonly float DIAGONAL_DISTANCE = 1.414f;
     static readonly float CARDINAL_DISTANCE = 1.0f;
+    static Vector2 TRANSLATION = new Vector2(0.5f, 0.5f);
 
     float[] linearSegments;
     float linearMax;
@@ -111,7 +112,7 @@ public class Path {
     /// distance from (x, y) to (x + 1, y) is 1.0, but distance from (x, y) to (x + 1, y + 1) is sqrt(2).
     /// </summary>
     void CalculateLinearSegments() {
-        linearSegments = new float[this.points.Count];
+        linearSegments = new float[points.Count];
 
         float cumulativeDistance = 0;
 
@@ -171,6 +172,8 @@ public class Path {
             index += 1;
         }
 
+        if (index >= linearSegments.Length - 1) return points.Last() + TRANSLATION;
+
         // So now we know between which two points in the path to linearly interpolate
         // Thus, calculate how far through this sub-path we are (i.e. the path between points[index] and points[index + 1])
         float segmentProgress = normalisedStep - linearSegments[index];
@@ -179,9 +182,8 @@ public class Path {
         float t = segmentProgress / segmentMax; // t is in [0, 1]
 
         // All that remains is to linearly interpolate
-        Vector2 translation = new Vector2(0.5f, 0.5f);
-        Vector2 segmentStart = points.ElementAt(index) + translation;
-        Vector2 segmentEnd = points.ElementAt(index + 1) + translation;
+        Vector2 segmentStart = points.ElementAt(index) + TRANSLATION;
+        Vector2 segmentEnd = points.ElementAt(index + 1) + TRANSLATION;
 
         Vector2 interpolatedPosition = segmentStart + t * (segmentEnd - segmentStart);
 

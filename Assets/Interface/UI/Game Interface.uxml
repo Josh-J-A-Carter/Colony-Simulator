@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Interface/UI/Styles.uss?fileID=7433441132597879392&amp;guid=ed9058af04489d941a8085dce5f0069a&amp;type=3#Styles" />
+    <ui:VisualElement name="container" picking-mode="Ignore" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%; min-width: 100%; min-height: 100%; flex-grow: 0; flex-direction: column-reverse; align-items: stretch; justify-content: space-between; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 6px; padding-right: 6px; padding-bottom: 0; padding-left: 6px;">
+        <ui:Foldout text="Select structure" name="configurable-container-root" value="true" class="display-window">
+            <ui:ScrollView name="scroll-view" horizontal-scroller-visibility="Hidden" class="display-window__scroll-container">
+                <ui:VisualElement name="configurable-container-content-root" style="flex-grow: 1;" />
+            </ui:ScrollView>
+        </ui:Foldout>
+        <ui:VisualElement name="toolbar" picking-mode="Ignore" class="toolbar" style="flex-grow: 1; flex-direction: row; left: 0; justify-content: flex-start; visibility: visible; display: flex;">
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="select-tool" class="tool" style="background-image: url(&quot;project://database/Assets/Interface/img/ui_select.png?fileID=21300000&amp;guid=d0ca6f9f427f17647bc707b1a9c176fd&amp;type=3#ui_select&quot;);" />
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="construct-tool" class="tool" style="background-image: url(&quot;project://database/Assets/Interface/img/ui_construct.png?fileID=21300000&amp;guid=9f46950688b65ee44a39c99f38832369&amp;type=3#ui_construct&quot;);" />
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="destroy-tool" class="tool" style="background-image: url(&quot;project://database/Assets/Interface/img/ui_destroy.png?fileID=21300000&amp;guid=2de7c9d054ac7fb4088d18a1448c52c0&amp;type=3#ui_destroy&quot;);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

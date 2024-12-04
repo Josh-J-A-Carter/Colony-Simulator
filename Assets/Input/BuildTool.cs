@@ -15,11 +15,14 @@ public class BuildTool : Tool {
     bool previewActive = false;
 
     public override void Run(HoverData data) {
+        Constructable newConstructable = parent.GetConstructable();
+        if (newConstructable == null) return;
+
         Preview(data);
 
         if (Input.GetKeyDown(KeyCode.Mouse0)) Build(data);
 
-        constructable = parent.GetConstructable();
+        constructable = newConstructable;
     }
 
     public override void OnEquip() {
@@ -32,8 +35,6 @@ public class BuildTool : Tool {
         HoverType type = data.GetType();
 
         Constructable newConstructable = parent.GetConstructable();
-        if (constructable == null && newConstructable == null) return;
-
         Vector2Int newPreviewPoint = data.GetTileData();
 
         if (previewActive && type != HoverType.Tile) {
@@ -63,7 +64,9 @@ public class BuildTool : Tool {
     void Build(HoverData data) {
         if (data.GetType() != HoverType.Tile) return;
 
-        tm.Construct(previewPoint, constructable);
+        TaskManager.Instance.CreateTask(new BuildTask(TaskPriority.Normal, previewPoint, constructable));
+
+        // tm.Construct(previewPoint, constructable);
     }
 
     public override void OnDequip() {

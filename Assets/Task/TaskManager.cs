@@ -15,10 +15,6 @@ public class TaskManager : MonoBehaviour {
     List<Task> queenTasks;
     List<QueenBehaviour> assignedQueens, unassignedQueens;
 
-    [SerializeField]
-    Constructable comb;
-
-
     void Awake() {
         // Instantiate singleton
         if (Instance != null) {
@@ -35,13 +31,6 @@ public class TaskManager : MonoBehaviour {
         queenTasks = new List<Task>();
         assignedQueens = new List<QueenBehaviour>();
         unassignedQueens = new List<QueenBehaviour>();
-    }
-
-    void Start() {
-        // 
-        // Remove the code below! This is a hacky solution until tools are updated to create tasks
-        // 
-        CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(-6, -5), comb));
     }
 
     void Update() {

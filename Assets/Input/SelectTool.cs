@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -7,50 +8,107 @@ public class SelectTool : Tool {
     [SerializeField]
     Constructable preview;
 
-    TileManager tm => TileManager.Instance;
+    TileManager TM => TileManager.Instance;
+    InterfaceManager IM => InterfaceManager.Instance;
 
-    Vector2Int previewPoint;
-    bool previewActive = false;
+    enum SelectionType { Entity, Tile, None };
+    SelectionType selectionType;
+
+    // Entity preview data
+    GameObject entityPreview;
+    Informative entityPreviewInfo;
+
+    // Tile preview data
+    Vector2Int tilePreview;
+    Constructable tilePreviewConstructable;
+    Dictionary<String, object> tilePreviewData;
 
     public override void Run(HoverData data) {
+        if (Input.GetKeyDown(KeyCode.Mouse0)) UpdateSelection(data);
+    }
+    
+    void UpdateSelection(HoverData data) {
         HoverType type = data.GetHoverType();
 
-        Vector2Int newPreviewPoint = data.GetGridPosition();
+        // Interacting with UI should not remove the selection
+        if (type == HoverType.UI) return;
 
-        if (previewActive && type != HoverType.Tile) {
-            tm.RemovePreview(previewPoint);
-            previewActive = false;
+
+        /// Remove the old selection
+        /// 
+        SelectionType oldSelectionType = selectionType;
+
+        if (selectionType == SelectionType.Entity) {
+            // To be updated
+            // 
+            // 
         }
 
-        // We are still hovering over a tile but the preview has moved; so remove the old and update it
-        else if (previewActive && type == HoverType.Tile && previewPoint != newPreviewPoint) {
-            tm.RemovePreview(previewPoint);
-            previewPoint = newPreviewPoint;
-            tm.SetPreview(previewPoint, preview);
+        else if (selectionType == SelectionType.Tile) {
+            TM.RemovePreview(tilePreview);
         }
 
-        // No active selection, but we need one
-        else if (!previewActive && type == HoverType.Tile) {
-            previewActive = true;
-            previewPoint = newPreviewPoint;
-            tm.SetPreview(previewPoint, preview);
+        /// Set the new selection type
+        ///
+        if (type == HoverType.None) {
+            selectionType = SelectionType.None;
+            IM.HideInfoContainer();
+            return;
         }
-    }
 
-    public override void OnEquip() {
+        if (type == HoverType.Entity) {
+            entityPreview = data.GetEntityData();
+            // Get informative component??? idk man
 
-        InfoToUI.DisplayInfoTree(preview.GetInfoTree());
+            // Show the info tree in the display panel
+            // ...
 
-        InterfaceManager.Instance.ShowInfoContainer();
+            selectionType = SelectionType.Entity;
+        }
+
+        else if (type == HoverType.Tile) {
+            tilePreview = data.GetGridPosition();
+
+            // Careful - there may not even be a tile here
+            (_, tilePreviewConstructable) = TM.GetConstructableAt(tilePreview);
+            if (tilePreviewConstructable == null) {
+                selectionType = SelectionType.None;
+                IM.HideInfoContainer();
+                return;
+            }
+
+            TM.SetPreview(tilePreview, preview);
+
+            if (tilePreviewConstructable is TileEntity) tilePreviewData = TM.GetTileEntityData(tilePreview);
+            else tilePreviewData = null;
+            
+            // Show the info tree in the display panel
+            InfoBranch infoTree = tilePreviewConstructable.GetInfoTree(tilePreviewData);
+            InfoToUI.DisplayInfoTree(infoTree);
+
+            selectionType = SelectionType.Tile;
+        }
+
+        // New selection is not None, but the old one was, so we need to show the info container
+        if (oldSelectionType == SelectionType.None) IM.ShowInfoContainer();
     }
 
     public override void OnDequip() {
-        if (previewActive) {
-            tm.RemovePreview(previewPoint);
-            previewActive = false;
+        if (selectionType == SelectionType.None) return;
+
+        if (selectionType == SelectionType.Entity) {
+            // To be updated
+            // 
+            // 
         }
 
-        InterfaceManager.Instance.HideInfoContainer();
+        else if (selectionType == SelectionType.Tile) {
+            TM.RemovePreview(tilePreview);
+        }
+
+        selectionType = SelectionType.None;
+
+        IM.HideInfoContainer();
     }
 
 }

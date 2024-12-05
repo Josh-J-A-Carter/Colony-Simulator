@@ -11,6 +11,8 @@ public class HiveState : State {
     const float MAX_IDLE = 2.0f;
     
     public override void OnEntry() {
+        Debug.Log($"current child: {child}");
+
         if (task == null) {
             CompleteState();
             return;

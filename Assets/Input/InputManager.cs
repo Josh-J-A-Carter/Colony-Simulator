@@ -3,10 +3,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
-public class ToolManager : MonoBehaviour {
+public class InputManager : MonoBehaviour {
 
-    public static ToolManager Instance { get; private set; }
+    public static InputManager Instance { get; private set; }
     Camera mainCamera;
+
+    CameraManager cameraManager;
 
     // Tool references
     Tool selectTool, buildTool, destroyTool;
@@ -22,8 +24,7 @@ public class ToolManager : MonoBehaviour {
             return;
         } else Instance = this;
 
-        mainCamera = Camera.main;
-
+        // Tool
         selectTool = GetComponentInChildren<SelectTool>();
         buildTool = GetComponentInChildren<BuildTool>();
         destroyTool = GetComponentInChildren<DestroyTool>();
@@ -32,6 +33,10 @@ public class ToolManager : MonoBehaviour {
         destroyTool.SetUp(this);
 
         currentTool = selectTool;
+
+        // Camera
+        cameraManager = GetComponentInChildren<CameraManager>();
+        mainCamera = Camera.main;
     }
 
     public void Update() {
@@ -39,6 +44,12 @@ public class ToolManager : MonoBehaviour {
         HoverData hoverData = GenerateHoverData();
         
         currentTool?.Run(hoverData);
+
+        cameraManager?.Run(hoverData);
+    }
+
+    public void FixedUpdate() {
+        cameraManager?.FixedRun();
     }
 
     HoverData GenerateHoverData() {

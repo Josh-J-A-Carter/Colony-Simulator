@@ -11,7 +11,7 @@ public class InterfaceManager : MonoBehaviour {
     VisualElement configurableContainerRoot, configurableContainerContentRoot;
     List<Button> toolButtons;
 
-    ToolManager tm => ToolManager.Instance;
+    InputManager tm => InputManager.Instance;
 
     void Awake() {
         // Instantiate singleton
@@ -36,7 +36,7 @@ public class InterfaceManager : MonoBehaviour {
 
         // Configurable container
         configurableContainerRoot = containerRoot.Q(name: "configurable-container-root");
-        configurableContainerContentRoot = containerRoot.Q(name: "configurable-container-content-root");
+        configurableContainerContentRoot = containerRoot.Q(name: "configurable-container-content-root");        
     }
 
     public void SetConfigurableContainerContent(VisualElement content) {

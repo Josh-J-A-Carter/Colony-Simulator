@@ -14,6 +14,8 @@ public class PathfindState : State {
 
     public override void OnEntry() {
         TryFindPath();
+
+        Debug.Log($"Begin pathfind, step: {step}");
     }
 
     public override void FixedRun(){
@@ -36,7 +38,10 @@ public class PathfindState : State {
             step += 1;
 
             // Once we reach the end of the path, the state is completed
-            if (step > stepsMax) CompleteState();
+            if (step > stepsMax) {
+                CompleteState();
+                Debug.Log($"Done pathfind, step {step}");
+            }
 
         } else TryFindPath();
     }
@@ -58,7 +63,10 @@ public class PathfindState : State {
         }
 
         // We couldn't find a path to the task location :(
-        if (path == null) CompleteState();
+        if (path == null) {
+            CompleteState(false);
+            Debug.Log("Done pathfind (fail)");
+        }
 
         step = 0;
         stepsMax = path.Count * stepSpeed;

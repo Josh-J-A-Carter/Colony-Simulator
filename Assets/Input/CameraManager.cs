@@ -48,15 +48,17 @@ public class CameraManager : MonoBehaviour {
         cameraSizeDefault = mainCamera.orthographicSize;
     }
 
-    public void Update() {
-        CheckInput();
+    public void Run(HoverData data) {
+        CheckInput(data);
     }
 
-    public void FixedUpdate() {
+    public void FixedRun() {
         ApplyCameraChanges();
     }
 
-    void CheckInput() {
+    void CheckInput(HoverData data) {
+        bool hoverUI = data.GetHoverType() == HoverType.UI;
+
         if (Input.GetAxis("Horizontal") < 0) horizontalInput = HorizontalInput.Left;
         else if (Input.GetAxis("Horizontal") > 0) horizontalInput = HorizontalInput.Right;
         else horizontalInput = HorizontalInput.None;
@@ -66,6 +68,9 @@ public class CameraManager : MonoBehaviour {
         else verticalInput = VerticalInput.None;
 
         // Zoom
+        // Do not enable zoom when hovering over UI!
+        if (hoverUI) return;
+
         float scrollDelta = Input.mouseScrollDelta.y;
         if (scrollDelta < 0 && zoom < zoomMax) zoom = Math.Min(zoomMax, zoom - scrollDelta * zoomEaseFactor(zoom));
         else if (scrollDelta > 0 && zoom > zoomMin) zoom = Math.Max(zoomMin, zoom - scrollDelta * zoomEaseFactor(zoom));

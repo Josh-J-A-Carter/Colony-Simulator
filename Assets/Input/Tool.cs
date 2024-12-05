@@ -4,9 +4,9 @@ using UnityEngine;
 
 public abstract class Tool : MonoBehaviour {
 
-    protected ToolManager parent;
+    protected InputManager parent;
 
-    public void SetUp(ToolManager parent) {
+    public void SetUp(InputManager parent) {
         this.parent = parent;
     }
     

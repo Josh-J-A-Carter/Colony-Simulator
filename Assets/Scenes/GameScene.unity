@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 228560785}
   - component: {fileID: 228560786}
   m_Layer: 0
-  m_Name: SelectTool
+  m_Name: Select Tool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46825,7 +46825,7 @@ GameObject:
   - component: {fileID: 457383676}
   - component: {fileID: 457383677}
   m_Layer: 0
-  m_Name: BuildTool
+  m_Name: Build Tool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47487,13 +47487,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115333796}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.6109807, y: 0.5216552, z: -9.992613}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 519420032}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1138024223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1115333798
 MonoBehaviour:
@@ -47518,7 +47518,7 @@ GameObject:
   - component: {fileID: 1138024223}
   - component: {fileID: 1138024222}
   m_Layer: 0
-  m_Name: Tool Manager
+  m_Name: Input Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47552,6 +47552,7 @@ Transform:
   - {fileID: 228560785}
   - {fileID: 457383676}
   - {fileID: 165163173}
+  - {fileID: 1115333797}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1470879822
@@ -92649,7 +92650,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 999588076}
-  - {fileID: 1115333797}
   - {fileID: 1138024223}
   - {fileID: 578470728}
   - {fileID: 1077591160}

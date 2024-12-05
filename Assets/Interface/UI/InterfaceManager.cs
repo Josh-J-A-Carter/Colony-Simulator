@@ -9,6 +9,9 @@ public class InterfaceManager : MonoBehaviour {
 
     VisualElement containerRoot;
     VisualElement configurableContainerRoot, configurableContainerContentRoot;
+
+    VisualElement infoContainerRoot, infoContainerContentRoot;
+
     List<Button> toolButtons;
 
     InputManager tm => InputManager.Instance;
@@ -19,9 +22,7 @@ public class InterfaceManager : MonoBehaviour {
             Destroy(this);
             return;
         } else Instance = this;
-    }
 
-    void Start() {
         containerRoot = GetComponent<UIDocument>().rootVisualElement;
 
         // Register tool button callbacks
@@ -36,8 +37,13 @@ public class InterfaceManager : MonoBehaviour {
 
         // Configurable container
         configurableContainerRoot = containerRoot.Q(name: "configurable-container-root");
-        configurableContainerContentRoot = containerRoot.Q(name: "configurable-container-content-root");        
+        configurableContainerContentRoot = containerRoot.Q(name: "configurable-container-content-root");
+
+        // Configurable container
+        infoContainerRoot = containerRoot.Q(name: "info-container-root");
+        infoContainerContentRoot = containerRoot.Q(name: "info-container-content-root");
     }
+
 
     public void SetConfigurableContainerContent(VisualElement content) {
         configurableContainerContentRoot.Clear();
@@ -51,6 +57,21 @@ public class InterfaceManager : MonoBehaviour {
 
     public void HideConfigurableContainer() {
         configurableContainerRoot.style.visibility = Visibility.Hidden;
+    }
+
+
+    public void SetInfoContainerContent(VisualElement content) {
+        infoContainerContentRoot.Clear();
+
+        infoContainerContentRoot.Add(content);
+    }
+
+    public void ShowInfoContainer() {
+        infoContainerRoot.style.visibility = Visibility.Visible;
+    }
+
+    public void HideInfoContainer() {
+        infoContainerRoot.style.visibility = Visibility.Hidden;
     }
 
     void DeselectAllButtons() {

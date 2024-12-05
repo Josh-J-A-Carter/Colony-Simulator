@@ -25,14 +25,12 @@ public class StateMachine {
 
         // Exit code down the branch
         oldState?.OnExitRecursive();
-        // Notify parents up the branch that we've exited down the branch
-        state?.OnChildExit(oldState);
 
         activeSince = Time.time;
         this.childState?.OnEntry();
     }
 
-    public void ResetChildState(bool success = true, bool firstCall = false) {
+    public void ResetChildState(bool success = true) {
         // Make sure we change the state BEFORE calling OnChildExit, otherwise we might have an infinite recursion
         State oldState = childState;
 
@@ -40,8 +38,6 @@ public class StateMachine {
 
         // Exit code down the branch
         oldState?.OnExitRecursive();
-        // Notify parents up the branch that we've exited down the branch
-        if (firstCall) state?.OnChildExit(oldState, success);
     }
 
     public bool EmptyState() {

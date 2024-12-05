@@ -39,6 +39,10 @@ public class InputManager : MonoBehaviour {
         mainCamera = Camera.main;
     }
 
+    void Start() {
+        currentTool?.OnEquip();
+    }
+
     public void Update() {
         // calculate hover data
         HoverData hoverData = GenerateHoverData();

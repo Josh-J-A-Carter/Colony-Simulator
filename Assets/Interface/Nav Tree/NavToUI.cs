@@ -43,7 +43,7 @@ public static class NavToUI {
 
         else if (currentNode is NavLeaf navLeaf) {
             foreach (Constructable childNode in navLeaf.GetChildren()) {
-                Sprite sprite = childNode.GetPreview();
+                Sprite sprite = childNode.GetPreviewSprite();
                 String name = childNode.GetName();
 
                 Preview p = new Preview(sprite, name);

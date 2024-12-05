@@ -11,10 +11,10 @@ public class Constructable : ScriptableObject, Informative {
     protected GridRow[] gridData;
 
     [SerializeField]
-    protected String name;
+    protected String infoName, infoDescription;
 
     [SerializeField]
-    protected Sprite preview;
+    protected Sprite previewSprite;
 
     public int RowCount() {
         return gridData.Length;
@@ -79,11 +79,36 @@ public class Constructable : ScriptableObject, Informative {
 
 
     public String GetName() {
-        return name;
+        return infoName;
     }
 
-    public Sprite GetPreview() {
-        return preview;
+    public String GetDescription() {
+        return infoDescription;
+    }
+
+    public Sprite GetPreviewSprite() {
+        return previewSprite;
+    }
+
+    public virtual InfoType GetInfoType() {
+        return InfoType.Structure;
+    }
+
+    public virtual InfoBranch GetInfoTree(object obj = null) {
+
+        InfoBranch genericCategory = new InfoBranch("Generic Properties");
+
+        InfoLeaf nameProperty = new InfoLeaf("Name:", GetName());
+        genericCategory.AddChild(nameProperty);
+
+        InfoLeaf typeProperty = new InfoLeaf("Type:", "Structure");
+        genericCategory.AddChild(typeProperty);
+
+        // Dummy root, since we need a tree structure - this node is thrown away
+        InfoBranch root = new InfoBranch(String.Empty);
+        root.AddChild(genericCategory);
+
+        return root;
     }
 }
 

@@ -37,11 +37,20 @@ public class SelectTool : Tool {
         }
     }
 
+    public override void OnEquip() {
+
+        InfoToUI.DisplayInfoTree(preview.GetInfoTree());
+
+        InterfaceManager.Instance.ShowInfoContainer();
+    }
+
     public override void OnDequip() {
         if (previewActive) {
             tm.RemovePreview(previewPoint);
             previewActive = false;
         }
+
+        InterfaceManager.Instance.HideInfoContainer();
     }
 
 }

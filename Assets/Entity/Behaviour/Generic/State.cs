@@ -31,7 +31,7 @@ public abstract class State : MonoBehaviour {
     public void OnExitRecursive() {
         OnExit();
 
-        stateMachine.ResetChildState(firstCall: false);
+        stateMachine.ResetChildState();
     }
 
     public virtual void OnExit() {}
@@ -40,7 +40,9 @@ public abstract class State : MonoBehaviour {
 
 
     public void CompleteState(bool success = true) {
-        parent.ResetChildState(success: success, firstCall: true);
+        parent.ResetChildState(success: success);
+
+        parent.state?.OnChildExit(this, success);
     }
 
     public void RunRecursive() {

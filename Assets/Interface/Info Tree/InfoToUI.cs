@@ -20,6 +20,7 @@ public static class InfoToUI {
 
             // Style
             foldout.text = category.GetCategoryName();
+            foldout.AddToClassList("sub-foldout");
 
             // Call children
             foreach (InfoNode child in category.GetChildren()) DisplayInfoRecursive(child, foldout);
@@ -29,10 +30,12 @@ public static class InfoToUI {
 
         else if (node is InfoLeaf property) {
             VisualElement row = new VisualElement();
+            row.AddToClassList("foldout__property");
 
             // Style
             Label keyLabel = new Label();
-            keyLabel.text = property.GetCategoryName() + "   " + property.GetValue();
+            keyLabel.text = $"• {property.GetCategoryName()}:    {property.GetValue()}";
+            row.Add(keyLabel);
 
             parentContainer.Add(row);
         }

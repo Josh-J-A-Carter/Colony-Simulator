@@ -98,10 +98,10 @@ public class Constructable : ScriptableObject, Informative {
 
         InfoBranch genericCategory = new InfoBranch("Generic Properties");
 
-        InfoLeaf nameProperty = new InfoLeaf("Name:", GetName());
+        InfoLeaf nameProperty = new InfoLeaf("Name", GetName());
         genericCategory.AddChild(nameProperty);
 
-        InfoLeaf typeProperty = new InfoLeaf("Type:", "Structure");
+        InfoLeaf typeProperty = new InfoLeaf("Type", "Structure");
         genericCategory.AddChild(typeProperty);
 
         // Dummy root, since we need a tree structure - this node is thrown away

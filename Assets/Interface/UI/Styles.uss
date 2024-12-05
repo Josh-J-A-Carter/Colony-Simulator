@@ -32,9 +32,9 @@
 
 .display-window {
     background-color: rgb(228, 228, 228);
-    width: 35%;
+    width: 40%;
     min-width: 20%;
-    max-width: 35%;
+    max-width: 40%;
     height: auto;
     min-height: auto;
     max-height: 30%;
@@ -46,7 +46,7 @@
     border-right-width: 2px;
     border-bottom-width: 2px;
     border-left-width: 2px;
-    font-size: 18px;
+    font-size: 20px;
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
@@ -77,6 +77,28 @@
 .display-window__scroll-container .unity-scroller .unity-base-slider__dragger {
     margin-top: 2px;
     border-radius: 2px;
+}
+
+.sub-foldout {
+    margin-left: 20px;
+    align-items: flex-start;
+}
+
+.sub-foldout .unity-base-field--no-label {
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.foldout__property {
+    white-space: normal;
+    font-size: 16px;
+    margin: 0;
+    margin-left: 20px;
+}
+
+.foldout__property label {
+    white-space: normal;
+    margin: 0;
 }
 
 .page-container {
@@ -112,8 +134,8 @@
 
 .preview__label {
     white-space: normal;
-    height: 30px;
-    width: 60px;
+    height: 40px;
+    width: 80px;
     -unity-text-align: upper-center;
-    font-size: 12px;
+    font-size: 16px;
 }

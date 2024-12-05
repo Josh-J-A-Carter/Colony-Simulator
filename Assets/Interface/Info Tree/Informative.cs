@@ -17,5 +17,5 @@ public interface Informative {
 public enum InfoType {
     Structure,
     Entity,
-    Entity_Structure
+    Item
 }

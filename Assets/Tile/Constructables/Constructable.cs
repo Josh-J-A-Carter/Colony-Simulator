@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -15,6 +17,10 @@ public class Constructable : ScriptableObject, Informative {
 
     [SerializeField]
     protected Sprite previewSprite;
+
+    [SerializeField]
+    protected List<ResourceRequirement> requiredResources;
+    public ReadOnlyCollection<(Item, uint)> requiredResourcesReadOnly;
 
     public int RowCount() {
         return gridData.Length;
@@ -94,9 +100,13 @@ public class Constructable : ScriptableObject, Informative {
         return InfoType.Structure;
     }
 
-    public virtual InfoBranch GetInfoTree(object obj = null) {
+    public InfoBranch GetInfoTree(object instance = null) {
+        // Dummy root, since we need a tree structure - this node is thrown away
+        InfoBranch root = new InfoBranch(String.Empty);
 
+        // Generic info
         InfoBranch genericCategory = new InfoBranch("Generic Properties");
+        root.AddChild(genericCategory);
 
         InfoLeaf nameProperty = new InfoLeaf("Name", GetName());
         genericCategory.AddChild(nameProperty);
@@ -104,11 +114,26 @@ public class Constructable : ScriptableObject, Informative {
         InfoLeaf typeProperty = new InfoLeaf("Type", "Structure");
         genericCategory.AddChild(typeProperty);
 
-        // Dummy root, since we need a tree structure - this node is thrown away
-        InfoBranch root = new InfoBranch(String.Empty);
-        root.AddChild(genericCategory);
+        // Tile Entity info (if applicable)
+        // Note that even if this is a tile entity, the root node may have no children
+        // and thus no information will be added
+        if (this is TileEntity tileEntity) {
+            Dictionary<String, object> data = (Dictionary<String, object>) instance;
+            InfoBranch tileEntityInfoRoot = tileEntity.GetTileEntityInfoTree(data);
+
+            List<InfoNode> children = tileEntityInfoRoot.GetChildren();
+            foreach (InfoNode child in children) root.AddChild(child);
+        }
 
         return root;
+    }
+
+    public ReadOnlyCollection<(Item, uint)> GetRequiredResources() {
+        if (requiredResourcesReadOnly == null) {
+            requiredResourcesReadOnly = requiredResources.Select((resource) => (resource.item, resource.quantity)).ToList().AsReadOnly();
+        }
+
+        return requiredResourcesReadOnly;
     }
 }
 
@@ -122,4 +147,11 @@ public struct GridEntry {
     public TileBase worldTile;
     public TileBase previewTile;
     public bool obstructive;
+}
+
+
+[Serializable]
+public struct ResourceRequirement {
+    public Item item;
+    public uint quantity;
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WorkerBehaviour : MonoBehaviour, TaskAgent {
+public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
 
     [SerializeField]
     State Idle, Hive, Forage;
@@ -11,17 +11,21 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent {
 
     WorkerTask task;
 
+    const uint MAX_INVENTORY_CAPACITY = 20;
+    Inventory inventory;
+
     StateMachine stateMachine;
     State currentState => stateMachine.childState;
 
-    void Start() {
+    public void Start() {
         stateMachine = new StateMachine();
+        inventory = new Inventory(MAX_INVENTORY_CAPACITY);
 
         animator = GetComponent<Animator>();
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
-            child.GetComponent<State>().Setup(gameObject, this, animator, stateMachine);
+            child.GetComponent<State>().Setup(gameObject, this, animator, stateMachine, inventory);
         }
 
         TaskManager.Instance.RegisterAgent(this);
@@ -49,13 +53,13 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent {
         return task;
     }
 
-    void Update() {
+    public void Update() {
         if (stateMachine.EmptyState()) DecideState();
 
         stateMachine.Run();
     }
 
-    void FixedUpdate() {
+    public void FixedUpdate() {
         stateMachine.FixedRun();
     }
 
@@ -73,5 +77,25 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent {
         }
 
         stateMachine.SetChildState(Idle);
+    }
+
+    public Sprite GetPreviewSprite() {
+        throw new NotImplementedException();
+    }
+
+    public string GetName() {
+        return "Worker Bee 43";
+    }
+
+    public string GetDescription() {
+        return "Worker bee; Girl power";
+    }
+
+    public InfoBranch GetInfoTree(object _ = null) {
+        throw new NotImplementedException();
+    }
+
+    public InfoType GetInfoType() {
+        return InfoType.Entity;
     }
 }

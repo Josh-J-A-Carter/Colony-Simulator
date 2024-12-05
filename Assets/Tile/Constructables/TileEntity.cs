@@ -21,4 +21,16 @@ public abstract class TileEntity : Constructable {
         TileManager.Instance.DrawVariant(position, variantData);
     }
 
+    public InfoBranch GetTileEntityInfoTree(Dictionary<String, object> instance) {
+
+        InfoBranch root = new InfoBranch(String.Empty);
+
+        if (this is Storage storage) {
+            InfoBranch inventoryCategory = storage.GetInventory(instance).GetInfoTree();
+            root.AddChild(inventoryCategory);
+        }
+        
+        return root;
+    }
+
 }

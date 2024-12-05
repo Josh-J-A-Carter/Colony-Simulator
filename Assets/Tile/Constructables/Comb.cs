@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Comb")]
-public class Comb : TileEntity {
+public class Comb : TileEntity, Storage {
 
     // Constants for TileEntityData attribute names
 
@@ -18,6 +18,10 @@ public class Comb : TileEntity {
     /// <summary>Part of <c>BROOD_DATA</c> attribute. It counts down the remaining number of ticks until the brood becomes an adult.
     /// The attribute's value should be of type <c>int</c>.</summary>
     public const String BROOD_TIME_LEFT = "timeLeft";
+
+    /// <summary>Path leading to the inventory field. The value should be of type <c>Inventory</c></summary>
+    const String INVENTORY = "inventory";
+    const int MAX_CAPACITY = 100;
 
     // Visual Variants to display with a change of state
 
@@ -56,6 +60,16 @@ public class Comb : TileEntity {
                 TileManager.Instance.DrawVariant(position, gridData);
             }
         }
+    }
+
+    public Inventory GetInventory(Dictionary<String, object> instance) {
+        Inventory inventory;
+
+        object value;
+        if (instance.TryGetValue(INVENTORY, out value)) inventory = (Inventory) value;
+        else inventory = new Inventory(MAX_CAPACITY);
+
+        return inventory;
     }
 }
 

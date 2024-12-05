@@ -18,8 +18,12 @@ MonoBehaviour:
       previewTile: {fileID: 11400000, guid: 87d83be92d6f6284ca82ced5f98a5984, type: 2}
       obstructive: 0
   infoName: Brood Comb
-  infoDescription: 
+  infoDescription: Comb made of beeswax, capable of storing many things, including
+    worker brood
   previewSprite: {fileID: 21300000, guid: 737a9d6e418ba254e98cf671b20851c3, type: 3}
+  requiredResources:
+  - item: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
+    quantity: 3
   containsBroodVariant:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: d10a014ad64b9cc4ba1be13e5b4ac3bf, type: 2}

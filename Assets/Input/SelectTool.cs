@@ -12,7 +12,7 @@ public class SelectTool : Tool {
     InterfaceManager IM => InterfaceManager.Instance;
 
     enum SelectionType { Entity, Tile, None };
-    SelectionType selectionType;
+    SelectionType selectionType = SelectionType.None;
 
     // Entity preview data
     GameObject entityPreview;
@@ -59,9 +59,18 @@ public class SelectTool : Tool {
         if (type == HoverType.Entity) {
             entityPreview = data.GetEntityData();
             // Get informative component??? idk man
+            entityPreviewInfo = entityPreview.GetComponent<Informative>();
+
+            // If it turns out that this entity does not have a component implementing Informative, reset selection
+            if (entityPreviewInfo == null) {
+                selectionType = SelectionType.None;
+                IM.HideInfoContainer();
+                return;
+            }
 
             // Show the info tree in the display panel
             // ...
+            InfoToUI.DisplayInfoTree(entityPreviewInfo.GetInfoTree());
 
             selectionType = SelectionType.Entity;
         }

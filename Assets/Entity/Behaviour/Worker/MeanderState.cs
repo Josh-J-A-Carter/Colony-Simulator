@@ -16,14 +16,14 @@ public class MeanderState : State {
 
     Path path;
 
-    static readonly int stepSpeed = 10;
+    static readonly int stepSpeed = 15;
 
     int stepsMax;
 
     int step;
 
     public override void OnEntry() {
-        this.animator.Play(anim.name);
+        animator.Play(anim.name);
 
         ChooseTarget();
     }

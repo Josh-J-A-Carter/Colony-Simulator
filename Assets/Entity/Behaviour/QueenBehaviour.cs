@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QueenBehaviour : MonoBehaviour, TaskAgent {
+public class QueenBehaviour : MonoBehaviour, TaskAgent, Informative {
     
     [SerializeField]
     State Idle, Lay;
@@ -10,6 +11,8 @@ public class QueenBehaviour : MonoBehaviour, TaskAgent {
     QueenTask task;
     StateMachine stateMachine;
     State currentState => stateMachine.childState;
+
+    String nameInfo;
 
     void Start() {
         stateMachine = new StateMachine();
@@ -68,5 +71,44 @@ public class QueenBehaviour : MonoBehaviour, TaskAgent {
         }
 
         stateMachine.SetChildState(Idle);
+    }
+
+    public Sprite GetPreviewSprite() {
+        throw new System.NotImplementedException();
+    }
+
+    public string GetName() {
+        return nameInfo;
+    }
+
+    public void SetName(String name) {
+        nameInfo = name;
+    }
+
+    public string GetDescription() {
+        throw new System.NotImplementedException();
+    }
+
+    public InfoBranch GetInfoTree(object obj = null) {
+        InfoBranch root = new InfoBranch(String.Empty);
+
+        // Generic
+        InfoBranch genericCategory = new InfoBranch("Generic Properties");
+        root.AddChild(genericCategory);
+
+        InfoLeaf nameProperty = new InfoLeaf("Name", nameInfo);
+        genericCategory.AddChild(nameProperty);
+
+        InfoLeaf typeProperty = new InfoLeaf("Type", "Entity");
+        genericCategory.AddChild(typeProperty);
+        
+        // Task
+
+
+        return root;
+    }
+
+    public InfoType GetInfoType() {
+        return InfoType.Entity;
     }
 }

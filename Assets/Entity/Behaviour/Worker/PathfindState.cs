@@ -9,9 +9,14 @@ public class PathfindState : State {
 
     int step, stepsMax;
 
-    static readonly int stepSpeed = 10;
+    static readonly int stepSpeed = 15;
+
+    [SerializeField]
+    AnimationClip anim;
 
     public override void OnEntry() {
+        animator.Play(anim.name);
+
         TryFindPath();
     }
 

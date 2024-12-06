@@ -18,19 +18,10 @@ public class LayTask : QueenTask {
     }
 
     public override void OnCompletion() {
-
-        // Draw the correct variant of the comb
         (_, Constructable constructable) = TileManager.Instance.GetConstructableAt(location);
-        Comb comb = constructable as Comb;
+        BroodComb comb = constructable as BroodComb;
 
-        TileManager.Instance.DrawVariant(location, comb.containsBroodVariant);
-
-        // Update the tile entity data
-        Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(location);
-
-        data[Comb.STORAGE_TYPE] = Comb.StorageType.Brood;
-        Dictionary<String, object> broodData = new Dictionary<String, object>();
-        broodData[Comb.BROOD_TIME_LEFT] = 20;
-        data[Comb.BROOD_DATA] = broodData;
+        if (comb == null) return;
+        comb.TryLayEgg(location, BroodComb.BroodType.Worker);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -32,9 +33,10 @@ public static class InfoToUI {
             VisualElement row = new VisualElement();
             row.AddToClassList("foldout__property");
 
-            // Style
-            Label keyLabel = new Label();
-            keyLabel.text = $"• {property.GetCategoryName()}:    {property.GetValue()}";
+            String labelText = $"• {property.GetCategoryName()}";
+            if (property.GetValue() != null) labelText = labelText + $":    {property.GetValue()}";
+            
+            Label keyLabel = new Label(labelText);
             row.Add(keyLabel);
 
             parentContainer.Add(row);

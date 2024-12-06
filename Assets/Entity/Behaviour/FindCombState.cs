@@ -10,9 +10,14 @@ public class FindCombState : State {
 
     int step, stepsMax;
 
-    static readonly int stepSpeed = 10;
+    static readonly int stepSpeed = 15;
+
+    [SerializeField]
+    AnimationClip anim;
 
     public override void OnEntry() {
+        animator.Play(anim.name);
+
         TryFindPath();
     }
 
@@ -42,25 +47,12 @@ public class FindCombState : State {
     }
 
     void TryFindPath() {
-        Vector2Int location = task.GetLocation();
-        int x = location.x, y = location.y;
-        List<Vector2Int> exterior = new List<Vector2Int>() {
-            new Vector2Int(x, y + 1), new Vector2Int(x, y - 1),
-            new Vector2Int(x + 1, y), new Vector2Int(x - 1, y)
-        };
-
+        Vector2Int destination = task.GetLocation();
+        
         Vector2 pos = entity.transform.position;
         Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
-        List<Vector2Int> orderedExterior = exterior.OrderBy(tile => Math.Pow(tile.x - gridPos.x, 2) + Math.Pow(tile.y - gridPos.y, 2)).ToList();
 
-        foreach (Vector2Int destination in orderedExterior) {
-            Path possiblePath = Pathfind.FindPath(gridPos, destination);
-
-            if (possiblePath == null) continue;
-
-            path = possiblePath;
-            break;
-        }
+        path = Pathfind.FindPath(gridPos, destination);
 
         // We couldn't find a path to the task location :(
         if (path == null) CompleteState();
@@ -68,5 +60,4 @@ public class FindCombState : State {
         step = 0;
         stepsMax = path.Count * stepSpeed;
     }
-
 }

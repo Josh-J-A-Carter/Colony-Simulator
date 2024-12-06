@@ -17,6 +17,8 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
     StateMachine stateMachine;
     State currentState => stateMachine.childState;
 
+    String nameInfo;
+
     public void Start() {
         stateMachine = new StateMachine();
         inventory = new Inventory(MAX_INVENTORY_CAPACITY);
@@ -83,16 +85,39 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
         throw new NotImplementedException();
     }
 
-    public string GetName() {
-        return "Worker Bee 43";
+    public String GetName() {
+        return nameInfo;
     }
 
-    public string GetDescription() {
+    public void SetName(String name) {
+        nameInfo = name;
+    }
+
+    public String GetDescription() {
         return "Worker bee; Girl power";
     }
 
     public InfoBranch GetInfoTree(object _ = null) {
-        throw new NotImplementedException();
+        InfoBranch root = new InfoBranch(String.Empty);
+
+        // Generic
+        InfoBranch genericCategory = new InfoBranch("Generic Properties");
+        root.AddChild(genericCategory);
+
+        InfoLeaf nameProperty = new InfoLeaf("Name", nameInfo);
+        genericCategory.AddChild(nameProperty);
+
+        InfoLeaf typeProperty = new InfoLeaf("Type", "Entity");
+        genericCategory.AddChild(typeProperty);
+        
+        // Inventory
+        InfoBranch inventoryCategory = inventory.GetInfoTree();
+        root.AddChild(inventoryCategory);
+
+        // Task
+
+
+        return root;
     }
 
     public InfoType GetInfoType() {

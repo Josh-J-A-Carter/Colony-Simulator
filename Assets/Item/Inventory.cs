@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -166,16 +167,20 @@ public class Inventory {
     public InfoBranch GetInfoTree() {
         InfoBranch root = new InfoBranch("Inventory");
 
-        InfoLeaf maxCapacityProperty = new InfoLeaf("Max Capacity", maxCapacity.ToString());
+        InfoLeaf maxCapacityProperty = new InfoLeaf("Max Capacity", value: maxCapacity + " item(s)");
         root.AddChild(maxCapacityProperty);
-        InfoLeaf carryingProperty = new InfoLeaf("Carrying", carrying.ToString());
+
+        InfoLeaf carryingProperty = new InfoLeaf("Carrying", value: carrying + " item(s)");
         root.AddChild(carryingProperty);
 
+        // Only try display contents if there are any to show
+        if (contents.Count == 0) return root;
+        
         InfoBranch contentsCategory = new InfoBranch("Contents");
         root.AddChild(contentsCategory);
 
         foreach ((Item item, uint quantity) in contents) {
-            InfoLeaf itemProperty = new InfoLeaf(item.GetName(), quantity.ToString());
+            InfoLeaf itemProperty = new InfoLeaf(item.GetName(), value: quantity.ToString());
             contentsCategory.AddChild(itemProperty);
         }
 

@@ -108,10 +108,10 @@ public class Constructable : ScriptableObject, Informative {
         InfoBranch genericCategory = new InfoBranch("Generic Properties");
         root.AddChild(genericCategory);
 
-        InfoLeaf nameProperty = new InfoLeaf("Name", GetName());
+        InfoLeaf nameProperty = new InfoLeaf("Name", value: GetName());
         genericCategory.AddChild(nameProperty);
 
-        InfoLeaf typeProperty = new InfoLeaf("Type", "Structure");
+        InfoLeaf typeProperty = new InfoLeaf("Type", value: "Structure");
         genericCategory.AddChild(typeProperty);
 
         // Tile Entity info (if applicable)

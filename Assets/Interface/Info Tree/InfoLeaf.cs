@@ -5,18 +5,23 @@ using UnityEngine;
 
 public class InfoLeaf : InfoNode {
 
-    String value;
+    String value, description;
 
     bool hasWarning;
 
-    public InfoLeaf(String categoryName, String value, bool hasWarning = false) {
+    public InfoLeaf(String categoryName, String value = null, String description = null, bool hasWarning = false) {
         this.categoryName = categoryName;
         this.value = value;
+        this.description = description;
         this.hasWarning = hasWarning;
     }
 
     public String GetValue() {
         return value;
+    }
+
+    public String GetDescription() {
+        return description;
     }
 
     /// <summary>

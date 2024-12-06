@@ -6,6 +6,13 @@ using UnityEngine.AI;
 public class BuildState : State {
     BuildTask task => (BuildTask) taskAgent.GetTask();
 
+    [SerializeField]
+    AnimationClip anim;
+
+    public override void OnEntry() {
+        animator.Play(anim.name);
+    }
+
     public override void FixedRun(){
         if (task == null) return;
 

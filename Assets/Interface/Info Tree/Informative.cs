@@ -9,7 +9,7 @@ public interface Informative {
 
     public abstract String GetDescription();
 
-    public abstract InfoBranch GetInfoTree(object obj);
+    public abstract InfoBranch GetInfoTree(object obj = null);
 
     public abstract InfoType GetInfoType();
 }

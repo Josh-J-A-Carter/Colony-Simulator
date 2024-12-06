@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  anim: {fileID: 7400000, guid: 3b4c03d35203b7149be8b3489c3c1e29, type: 2}
 --- !u!1 &2460118735792134336
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,6 +237,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  anim: {fileID: 7400000, guid: 0df9a517ebcd66d4b8eebff399f7673d, type: 2}
 --- !u!1 &7181809681829478707
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,7 +370,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.5, y: 1.5}
   m_EdgeRadius: 0
 --- !u!114 &2673368875071362562
 MonoBehaviour:

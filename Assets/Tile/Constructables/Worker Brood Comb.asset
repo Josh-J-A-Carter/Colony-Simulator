@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b002a6ec99a46224db011f2d8f8c29b4, type: 3}
-  m_Name: Comb
+  m_Name: Worker Brood Comb
   m_EditorClassIdentifier: 
   gridData:
   - gridEntries:
@@ -24,8 +24,20 @@ MonoBehaviour:
   requiredResources:
   - item: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
     quantity: 3
-  containsBroodVariant:
+  maxCapacity: 100
+  broodCombSize: 0
+  containsEggVariant:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: d10a014ad64b9cc4ba1be13e5b4ac3bf, type: 2}
+      previewTile: {fileID: 0}
+      obstructive: 0
+  containsLarvaVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 0828e044b988cd64ab2a9fb1a37f0236, type: 2}
+      previewTile: {fileID: 0}
+      obstructive: 0
+  containsPupaVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 87d83be92d6f6284ca82ced5f98a5984, type: 2}
       previewTile: {fileID: 0}
       obstructive: 0

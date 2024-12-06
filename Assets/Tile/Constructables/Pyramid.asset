@@ -52,6 +52,7 @@ MonoBehaviour:
     - worldTile: {fileID: 11400000, guid: 6742fc94df1878744a975a2ebe39c0f3, type: 2}
       previewTile: {fileID: 11400000, guid: 04b085c990805f74e90b7188be5e9e18, type: 2}
       obstructive: 1
-  infoName: Pyramid
-  infoDescription: 
+  nameInfo: Pyramid
+  descriptionInfo: egyptians or smth
   previewSprite: {fileID: -1985186948, guid: 5900a359c52506d40a5ba53400b05c74, type: 3}
+  requiredResources: []

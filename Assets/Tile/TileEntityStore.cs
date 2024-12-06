@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TileEntityStore {
 
-    const int TICK_RATE = 25;
+    public const int TICK_RATE = 25;
 
-    int tick = 0;
+    public int tick { get; private set; } = 0;
     
     List<(Vector2Int, TileEntity, Dictionary<String, object>)> tileEntities;
 

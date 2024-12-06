@@ -20,7 +20,13 @@ public class TileManager : MonoBehaviour {
 
     TileEntityStore tileEntityStore;
 
-    void Awake() {
+    public const int TICK_RATE = 25;
+    public const int FIXED_FRAME_RATE = 50;
+    public const float TICKS_TO_SECONDS = (float) TICK_RATE / FIXED_FRAME_RATE;
+
+    public int GetTileEntityTick() { return tileEntityStore.tick; }
+
+    public void Awake() {
         // Instantiate singleton
         if (Instance != null) {
             Destroy(this);
@@ -37,7 +43,7 @@ public class TileManager : MonoBehaviour {
         tileEntityStore = new TileEntityStore();
     }
 
-    void FixedUpdate() {
+    public void FixedUpdate() {
         tileEntityStore.Tick();
     }
 

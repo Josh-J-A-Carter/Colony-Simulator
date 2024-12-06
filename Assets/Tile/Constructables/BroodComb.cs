@@ -31,7 +31,7 @@ public class BroodComb : TileEntity, Storage {
         /// see <c>BroodStage</c>. The attribute's value should be of type <c>int</c>.</summary>
         public const String BROOD_DATA__TIME_LEFT = "broodData__timeLeft";
 
-        const int EGG_STAGE_DURATION = 20, LARVA_STAGE_DURATION = 40, PUPA_STAGE_DURATION = 60;
+        const int EGG_STAGE_DURATION = 40, LARVA_STAGE_DURATION = 80, PUPA_STAGE_DURATION = 120;
 
 
     /// <summary>Path leading to the inventory field. The value should be of type <c>Inventory</c></summary>
@@ -148,6 +148,73 @@ public class BroodComb : TileEntity, Storage {
         data[BROOD_DATA] = broodData;
 
         return true;
+    }
+
+
+    public override InfoBranch GetTileEntityInfoTree(Dictionary<String, object> instance) {
+        InfoBranch root = new InfoBranch(String.Empty);
+
+        // Generic brood comb data
+        InfoBranch combCategory = new InfoBranch("Comb properties");
+        root.AddChild(combCategory);
+
+        String contentsValue = instance[CURRENT_STORAGE_TYPE] switch {
+            StorageType.Brood => "Brood",
+            StorageType.Empty => "Nothing",
+            StorageType.Fermentable => "Fermentable resources",
+            StorageType.Item => "Items",
+            _ => "Unknown"
+        };
+
+        InfoLeaf contentsProperty = new InfoLeaf("Currently contains", value: contentsValue);
+        combCategory.AddChild(contentsProperty);
+
+        InfoLeaf canStoreBroodProperty = new InfoLeaf("Can store brood", instance[CAN_STORE_BROOD].ToString());
+        combCategory.AddChild(canStoreBroodProperty);
+
+        InfoLeaf canStoreFermentablesProperty = new InfoLeaf("Can store fermentables", instance[CAN_STORE_FERMENTABLE].ToString());
+        combCategory.AddChild(canStoreFermentablesProperty);
+
+        InfoLeaf canStoreItemsProperty = new InfoLeaf("Can store items", instance[CAN_STORE_ITEM].ToString());
+        combCategory.AddChild(canStoreItemsProperty);
+
+
+        // Brood data
+        if ((StorageType) instance[CURRENT_STORAGE_TYPE] == StorageType.Brood) {
+            InfoBranch broodCategory = new InfoBranch("Brood properties");
+            root.AddChild(broodCategory);
+
+            Dictionary<String, object> broodData = (Dictionary<String, object>) instance[BROOD_DATA];
+
+            String casteValue = broodData[BROOD_DATA__TYPE] switch {
+                BroodType.Worker => "Worker (Honey Bee)",
+                BroodType.Queen => "Queen (Honey Bee)",
+                BroodType.Drone => "Drone (Honey Bee)",
+                _ => "Unknown"
+            };
+            InfoLeaf casteProperty = new InfoLeaf("Caste", casteValue);
+            broodCategory.AddChild(casteProperty);
+
+            String stageValue = broodData[BROOD_DATA__BROOD_STAGE] switch {
+                BroodStage.Egg => "Egg",
+                BroodStage.Larva => "Larva",
+                BroodStage.Pupa => "Pupa",
+                _ => "Unknown"
+            };
+            InfoLeaf stageProperty = new InfoLeaf("Life stage", stageValue);
+            broodCategory.AddChild(stageProperty);
+
+            int timeLeft = (int) (TileManager.TICKS_TO_SECONDS * (int) broodData[BROOD_DATA__TIME_LEFT]);
+            InfoLeaf timeProperty = new InfoLeaf("Time to next stage", timeLeft + "s");
+            broodCategory.AddChild(timeProperty);
+        }
+
+
+        // Inventory data
+        InfoBranch inventoryCategory = GetInventory(instance).GetInfoTree();
+        root.AddChild(inventoryCategory);
+        
+        return root;
     }
 }
 

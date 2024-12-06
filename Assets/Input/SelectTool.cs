@@ -11,6 +11,9 @@ public class SelectTool : Tool {
     TileManager TM => TileManager.Instance;
     InterfaceManager IM => InterfaceManager.Instance;
 
+    int tick;
+    const int MAX_TICKS = TileManager.TICK_RATE;
+
     enum SelectionType { Entity, Tile, None };
     SelectionType selectionType = SelectionType.None;
 
@@ -23,8 +26,35 @@ public class SelectTool : Tool {
     Constructable tilePreviewConstructable;
     Dictionary<String, object> tilePreviewData;
 
+    public override void OnEquip() {
+        tick = TileManager.Instance.GetTileEntityTick();
+    }
+
     public override void Run(HoverData data) {
         if (Input.GetKeyDown(KeyCode.Mouse0)) UpdateSelection(data);
+    }
+
+    public override void FixedRun() {
+        tick += 1;
+
+        if (tick >= MAX_TICKS) {
+            tick = 0;
+
+            if (selectionType != SelectionType.None) UpdateInfo();
+        }
+    }
+
+    void UpdateInfo() {
+        if (selectionType == SelectionType.Tile) {
+            // Not a tile entity, so don't need to update the data constantly
+            if (tilePreviewData == null) return;
+
+            InfoToUI.DisplayInfoTree(tilePreviewConstructable.GetInfoTree(tilePreviewData));
+        }
+
+        else if (selectionType == SelectionType.Entity) {
+            InfoToUI.DisplayInfoTree(entityPreviewInfo.GetInfoTree());
+        }
     }
     
     void UpdateSelection(HoverData data) {

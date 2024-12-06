@@ -17,6 +17,7 @@ MonoBehaviour:
     - worldTile: {fileID: 11400000, guid: 04b085c990805f74e90b7188be5e9e18, type: 2}
       previewTile: {fileID: 11400000, guid: 04b085c990805f74e90b7188be5e9e18, type: 2}
       obstructive: 0
-  infoName: meow meow meow meow
-  infoDescription: 
+  nameInfo: 
+  descriptionInfo: 
   previewSprite: {fileID: 0}
+  requiredResources: []

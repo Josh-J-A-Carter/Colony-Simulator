@@ -13,7 +13,7 @@ public class Constructable : ScriptableObject, Informative {
     protected GridRow[] gridData;
 
     [SerializeField]
-    protected String infoName, infoDescription;
+    protected String nameInfo, descriptionInfo;
 
     [SerializeField]
     protected Sprite previewSprite;
@@ -85,11 +85,11 @@ public class Constructable : ScriptableObject, Informative {
 
 
     public String GetName() {
-        return infoName;
+        return nameInfo;
     }
 
     public String GetDescription() {
-        return infoDescription;
+        return descriptionInfo;
     }
 
     public Sprite GetPreviewSprite() {
@@ -108,11 +108,12 @@ public class Constructable : ScriptableObject, Informative {
         InfoBranch genericCategory = new InfoBranch("Generic Properties");
         root.AddChild(genericCategory);
 
-        InfoLeaf nameProperty = new InfoLeaf("Name", value: GetName());
-        genericCategory.AddChild(nameProperty);
-
         InfoLeaf typeProperty = new InfoLeaf("Type", value: "Structure");
         genericCategory.AddChild(typeProperty);
+
+        InfoLeaf nameProperty = new InfoLeaf("Name", value: nameInfo);
+        genericCategory.AddChild(nameProperty);
+
 
         // Tile Entity info (if applicable)
         // Note that even if this is a tile entity, the root node may have no children

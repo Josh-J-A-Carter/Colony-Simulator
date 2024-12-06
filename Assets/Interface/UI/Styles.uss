@@ -134,7 +134,7 @@
 
 .preview__label {
     white-space: normal;
-    height: 40px;
+    height: 60px;
     width: 80px;
     -unity-text-align: upper-center;
     font-size: 16px;

@@ -17,7 +17,7 @@ public class InputManager : MonoBehaviour {
     // Tool selections that should be persistent, even across tool changes
     Constructable currentConstructable;
 
-    void Awake() {
+    public void Awake() {
         // Instantiate singleton
         if (Instance != null) {
             Destroy(this);
@@ -39,7 +39,7 @@ public class InputManager : MonoBehaviour {
         mainCamera = Camera.main;
     }
 
-    void Start() {
+    public void Start() {
         currentTool?.OnEquip();
     }
 
@@ -53,6 +53,8 @@ public class InputManager : MonoBehaviour {
     }
 
     public void FixedUpdate() {
+        currentTool?.FixedRun();
+        
         cameraManager?.FixedRun();
     }
 

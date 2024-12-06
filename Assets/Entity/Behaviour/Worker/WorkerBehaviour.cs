@@ -104,11 +104,11 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
         InfoBranch genericCategory = new InfoBranch("Generic Properties");
         root.AddChild(genericCategory);
 
+        InfoLeaf typeProperty = new InfoLeaf("Type", "Worker Honey Bee (Entity)");
+        genericCategory.AddChild(typeProperty);
+
         InfoLeaf nameProperty = new InfoLeaf("Name", nameInfo);
         genericCategory.AddChild(nameProperty);
-
-        InfoLeaf typeProperty = new InfoLeaf("Type", "Entity");
-        genericCategory.AddChild(typeProperty);
         
         // Inventory
         InfoBranch inventoryCategory = inventory.GetInfoTree();

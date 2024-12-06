@@ -14,6 +14,8 @@ public abstract class Tool : MonoBehaviour {
 
     public virtual void OnDequip() {}
 
-    public abstract void Run(HoverData hoverData);
+    public virtual void Run(HoverData hoverData) {}
+
+    public virtual void FixedRun() {}
 
 }

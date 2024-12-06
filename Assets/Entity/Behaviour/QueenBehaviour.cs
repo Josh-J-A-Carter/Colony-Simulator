@@ -96,11 +96,12 @@ public class QueenBehaviour : MonoBehaviour, TaskAgent, Informative {
         InfoBranch genericCategory = new InfoBranch("Generic Properties");
         root.AddChild(genericCategory);
 
+        InfoLeaf typeProperty = new InfoLeaf("Type", "Queen Honey Bee (Entity)");
+        genericCategory.AddChild(typeProperty);
+
         InfoLeaf nameProperty = new InfoLeaf("Name", nameInfo);
         genericCategory.AddChild(nameProperty);
 
-        InfoLeaf typeProperty = new InfoLeaf("Type", "Entity");
-        genericCategory.AddChild(typeProperty);
         
         // Task
 

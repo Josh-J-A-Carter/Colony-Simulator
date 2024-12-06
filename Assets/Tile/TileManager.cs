@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -63,6 +64,14 @@ public class TileManager : MonoBehaviour {
         return graph.IsUnobstructed(p.x, p.y);
     }
 
+    public Dictionary<String, object> GetTileEntityData(Vector2Int position) {
+        return tileEntityStore.GetTileEntityData(position);
+    }
+
+    public List<(Vector2Int, TileEntity, Dictionary<String, object>)> QueryTileEntities<T>() where T: TileEntity {
+        return tileEntityStore.Query<T>();
+    }
+
     /// <summary>
     /// Build a <c>Constructable</c> into the world tilemap, without obtaining a reference to any tile entity data that is created there.
     /// </summary>
@@ -77,23 +86,11 @@ public class TileManager : MonoBehaviour {
     /// </summary>
     /// <returns>True if the construction takes place, false otherwise; e.g. it is obstructed.</returns>
     public bool Construct(Vector2Int startPosition, Constructable constructable, out Dictionary<String, object> data) {
-        int x = startPosition.x;
-        int y = startPosition.y;
-
         // First, check if the desired area is completely clear.
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            GridRow rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry entry = rowData.gridEntries[col];
-                // Ignore empty entries
-                if (entry.worldTile == null) continue;
-
-                // Found a non-empty tile
-                if (worldMap.HasTile(new Vector3Int(x + col, y + row, 0))) {
-                    data = null;
-                    return false;
-                }
+        foreach (Vector2Int pos in constructable.GetInteriorPoints()) {
+            if (worldMap.HasTile((Vector3Int) (startPosition + pos))) {
+                data = null;
+                return false;
             }
         }
 
@@ -103,178 +100,100 @@ public class TileManager : MonoBehaviour {
         } else data = null;
 
         // The area is clear, so we may continue with construction
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            GridRow rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry entry = rowData.gridEntries[col];
-                // Ignore empty entries
-                if (entry.worldTile == null) continue;
-
-                SetTile(x + col, y + row, entry.worldTile, entry.obstructive);
-                constructableGraph.SetConstructable(new Vector2Int(x + col, y + row), (startPosition, constructable));
-            }
+        bool obstructive = constructable.IsObstructive();
+        foreach (Vector2Int pos in constructable.GetInteriorPoints()) {
+            SetTile(startPosition + pos, constructable.GetTileAt(pos), obstructive);
+            constructableGraph.SetConstructable(startPosition + pos, (startPosition, constructable));
         }
 
         return true;
     }
 
-    public Dictionary<String, object> GetTileEntityData(Vector2Int position) {
-        return tileEntityStore.GetTileEntityData(position);
-    }
-
-    public List<(Vector2Int, TileEntity, Dictionary<String, object>)> QueryTileEntities<T>() where T: TileEntity {
-        return tileEntityStore.Query<T>();
-    }
-
     /// <summary>
-    /// This method redraws a constructable to use its variant.
-    /// <br></br><br></br>
-    /// <b>WARNING</b>: This assumes that the constructable at <c>position</c> has already been constructed on the
-    /// world map, and that <c>variantData</c> has the same shape as the original constructable grid data.
+    /// This method redraws a constructable to use its variant. Fails if the constructable at this position is not
+    /// equal to the supplied parameter, <c>constructable</c>, or if the structure has a different starting position. Otherwise, succeeds.
     /// </summary>
-    public void DrawVariant(Vector2Int position, GridRow[] variantData) {
-        int x = position.x;
-        int y = position.y;
+    /// <param name="variantGenerator">Generate the corresponding tile variant for a given point, 
+    /// given in <c>constructable</c>'s interior coordinate space
+    /// </param>
+    public bool DrawVariant(Vector2Int startPosition, Constructable constructable, Func<Vector2Int, TileBase> variantGenerator) {
+        (Vector2Int existingStart, Constructable existingConstructable) = GetConstructableAt(startPosition);
+        if (existingConstructable != constructable || existingStart != startPosition) return false;
+        
+        bool obstructive = constructable.IsObstructive();
+        foreach (Vector2Int pos in constructable.GetInteriorPoints()) SetTile(startPosition + pos, variantGenerator(pos), obstructive);
 
-        for (int row = 0; row < variantData.Count() ; row += 1) {
-            GridRow rowData = variantData[row];
-
-            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry entry = rowData.gridEntries[col];
-                // Ignore empty entries
-                if (entry.worldTile == null) continue;
-
-                SetTile(x + col, y + row, entry.worldTile, entry.obstructive);
-            }
-        }
+        return true;
     }
 
-    public void Destroy(Vector2Int position) {
+    public bool Destroy(Vector2Int position) {
 
         // Find the beginning of the constructable which covers the desired position
-        (Vector2Int startPos, Constructable constructable) = GetConstructableAt(position);
+        (Vector2Int startPosition, Constructable constructable) = GetConstructableAt(position);
 
-        if (constructable == null) return;
-
-        int x = startPos.x;
-        int y = startPos.y;
+        if (constructable == null) return false;
 
         // If the constructable is a tile entity, make sure to add this
-        if (constructable is TileEntity) {
-            tileEntityStore.RemoveTileEntity(startPos);
+        if (constructable is TileEntity) tileEntityStore.RemoveTileEntity(startPosition);
+
+        foreach (Vector2Int pos in constructable.GetInteriorPoints()) {
+            SetTile(startPosition + pos, null, false);
+            constructableGraph.RemoveConstructable(startPosition + pos);
         }
 
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            GridRow rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry entry = rowData.gridEntries[col];
-                // Ignore empty entries
-                if (entry.worldTile == null) continue;
-
-                SetTile(x + col, y + row, null, false);
-                constructableGraph.RemoveConstructable(new Vector2Int(x + col, y + row));
-            }
-        }
+        return true;
     }
 
-    public void SetTaskPreview(Vector2Int startPosition, Constructable constructable) {
-        int x = startPosition.x;
-        int y = startPosition.y;
-
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            GridRow rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry entry = rowData.gridEntries[col];
-                // Ignore empty entries
-                if (entry.worldTile == null) continue;
-
-                SetTaskPreviewTile(x + col, y + row, entry.previewTile);
-                constructableTaskPreviewGraph.SetConstructable(new Vector2Int(x + col, y + row), (startPosition, constructable));
-            }
+    public bool SetTaskPreview(Vector2Int startPosition, Constructable constructable) {
+        foreach (Vector2Int pos in constructable.GetInteriorPoints()) {
+            SetTaskPreviewTile(startPosition + pos, constructable.GetPreviewTileAt(pos));
+            constructableTaskPreviewGraph.SetConstructable(startPosition + pos, (startPosition, constructable));
         }
+
+        return true;
     }
 
-    public void RemoveTaskPreview(Vector2Int position) {
+    public bool RemoveTaskPreview(Vector2Int position) {
 
-        (Vector2Int startPos, Constructable constructable) = GetConstructableTaskPreviewAt(position);
+        (Vector2Int startPosition, Constructable constructable) = GetConstructableTaskPreviewAt(position);
 
-        if (constructable == null) return;
+        if (constructable == null) return false;
 
-        int x = startPos.x;
-        int y = startPos.y;
-
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            GridRow rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry entry = rowData.gridEntries[col];
-                // Ignore empty entries
-                if (entry.worldTile == null) continue;
-
-                SetTaskPreviewTile(x + col, y + row, null);
-                constructableTaskPreviewGraph.RemoveConstructable(new Vector2Int(x + col, y + row));
-            }
+        foreach (Vector2Int pos in constructable.GetInteriorPoints()) {
+            SetTaskPreviewTile(startPosition + pos, null);
+            constructableTaskPreviewGraph.RemoveConstructable(startPosition + pos);
         }
+
+        return true;
     }
 
 
 
-    public void SetPreview(Vector2Int startPosition, Constructable constructable) {
-        int x = startPosition.x;
-        int y = startPosition.y;
-
+    public bool SetPreview(Vector2Int startPosition, Constructable constructable) {
         // First, check if the desired area is completely clear.
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            GridRow rowData = constructable.GetRow(row);
+        foreach (Vector2Int pos in constructable.GetInteriorPoints()) if (previewMap.HasTile((Vector3Int) (startPosition + pos))) return false;
 
-            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry entry = rowData.gridEntries[col];
-                // Ignore empty entries
-                if (entry.worldTile == null) continue;
-
-                // Found a non-empty tile
-                if (previewMap.HasTile(new Vector3Int(x + col, y + row, 0))) return;
-            }
+        // The area is clear, so we may continue with construction
+        foreach (Vector2Int pos in constructable.GetInteriorPoints()) {
+            SetPreviewTile(startPosition + pos, constructable.GetPreviewTileAt(pos));
+            constructablePreviewGraph.SetConstructable(startPosition + pos, (startPosition, constructable));
         }
 
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            GridRow rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry entry = rowData.gridEntries[col];
-                // Ignore empty entries
-                if (entry.worldTile == null) continue;
-
-                SetPreviewTile(x + col, y + row, entry.previewTile);
-                constructablePreviewGraph.SetConstructable(new Vector2Int(x + col, y + row), (startPosition, constructable));
-            }
-        }
+        return true;
     }
 
-    public void RemovePreview(Vector2Int position) {
+    public bool RemovePreview(Vector2Int position) {
 
-        (Vector2Int startPos, Constructable constructable) = GetConstructablePreviewAt(position);
+        (Vector2Int startPosition, Constructable constructable) = GetConstructablePreviewAt(position);
 
-        if (constructable == null) return;
+        if (constructable == null) return false;
 
-        int x = startPos.x;
-        int y = startPos.y;
-
-        for (int row = 0; row < constructable.RowCount() ; row += 1) {
-            GridRow rowData = constructable.GetRow(row);
-
-            for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
-                GridEntry entry = rowData.gridEntries[col];
-                // Ignore empty entries
-                if (entry.worldTile == null) continue;
-
-                SetPreviewTile(x + col, y + row, null);
-                constructablePreviewGraph.RemoveConstructable(new Vector2Int(x + col, y + row));
-            }
+        foreach (Vector2Int pos in constructable.GetInteriorPoints()) {
+            SetPreviewTile(startPosition + pos, null);
+            constructablePreviewGraph.RemoveConstructable(startPosition + pos);
         }
+
+        return true;
     }
 
     public (Vector2Int, Constructable) GetConstructableAt(Vector2Int position) {
@@ -289,20 +208,19 @@ public class TileManager : MonoBehaviour {
         return constructableTaskPreviewGraph.GetConstructable(position);
     }
 
-    void SetPreviewTile(int x, int y, TileBase t) {
-        previewMap.SetTile(new Vector3Int(x, y, 0), t);
+    void SetPreviewTile(Vector2Int pos, TileBase t) {
+        previewMap.SetTile((Vector3Int) pos, t);
     }
 
-    void SetTaskPreviewTile(int x, int y, TileBase t) {
-        taskPreviewMap.SetTile(new Vector3Int(x, y, 0), t);
+    void SetTaskPreviewTile(Vector2Int pos, TileBase t) {
+        taskPreviewMap.SetTile((Vector3Int) pos, t);
     }
 
-    void SetTile(int x, int y, TileBase t, bool obstructive) {
-        Vector3Int pos = new Vector3Int(x, y, 0);
-        worldMap.SetTile(pos, t);
+    void SetTile(Vector2Int pos, TileBase t, bool obstructive) {
+        worldMap.SetTile((Vector3Int) pos, t);
 
-        if (obstructive) obstacleMap.SetTile(pos, obstacleTile);
-        else obstacleMap.SetTile(pos, null);
+        if (obstructive) obstacleMap.SetTile((Vector3Int) pos, obstacleTile);
+        else obstacleMap.SetTile((Vector3Int) pos, null);
 
         graph.SetObstructed(pos.x, pos.y, obstructive);
     }

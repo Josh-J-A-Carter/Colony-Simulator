@@ -52,35 +52,35 @@ public class DestroyTool : Tool {
         }
 
         previewActive = true;
-        Constructable newConstructable = CreateDestroyPreviewConstructable(oldConstructable);
-        tm.SetPreview(startPos, newConstructable);
+        // Constructable newConstructable = CreateDestroyPreviewConstructable(oldConstructable);
+        // tm.SetPreview(startPos, newConstructable);
     }
 
-    Constructable CreateDestroyPreviewConstructable(Constructable oldConstructable) {
-        Constructable newConstructable = (Constructable) ScriptableObject.CreateInstance(typeof(Constructable));
+    // Constructable CreateDestroyPreviewConstructable(Constructable oldConstructable) {
+    //     Constructable newConstructable = (Constructable) ScriptableObject.CreateInstance(typeof(Constructable));
 
-        GridRow[] rows = new GridRow[oldConstructable.RowCount()];
+    //     GridRow[] rows = new GridRow[oldConstructable.RowCount()];
 
-        for (int row = 0 ; row < rows.Length ; row += 1) {
-            GridEntry[] originalRow = oldConstructable.GetRow(row).gridEntries;
+    //     for (int row = 0 ; row < rows.Length ; row += 1) {
+    //         GridEntry[] originalRow = oldConstructable.GetRow(row).gridEntries;
 
-            GridEntry[] newRow = new GridEntry[originalRow.Length];
+    //         GridEntry[] newRow = new GridEntry[originalRow.Length];
 
-            for (int col = 0 ; col < newRow.Length ; col += 1) {
-                if (originalRow[col].worldTile == null) {
-                    newRow[col] = new GridEntry { worldTile = null, previewTile = null, obstructive = false };
-                } else {
-                    newRow[col] = new GridEntry { worldTile = previewTile, previewTile = previewTile, obstructive = false };
-                }
-            }
+    //         for (int col = 0 ; col < newRow.Length ; col += 1) {
+    //             if (originalRow[col].worldTile == null) {
+    //                 newRow[col] = new GridEntry { worldTile = null, previewTile = null, obstructive = false };
+    //             } else {
+    //                 newRow[col] = new GridEntry { worldTile = previewTile, previewTile = previewTile, obstructive = false };
+    //             }
+    //         }
 
-            rows[row] = new GridRow { gridEntries = newRow };
-        }
+    //         rows[row] = new GridRow { gridEntries = newRow };
+    //     }
 
-        newConstructable.SetData(rows);
+    //     newConstructable.SetData(rows);
 
-        return newConstructable;
-    }
+    //     return newConstructable;
+    // }
 
     void Destroy(HoverData data) {
         if (data.GetHoverType() != HoverType.Tile) return;

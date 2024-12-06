@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class BuildTask : WorkerTask {
+public class BuildTask : WorkerTask, Locative {
     
     Constructable constructable;
-    Vector2Int location;
+    Vector2Int startPos;
 
-    public BuildTask(TaskPriority priority, Vector2Int location, Constructable constructable) {
+    ReadOnlyCollection<Vector2Int> exteriorPoints;
+    ReadOnlyCollection<Vector2Int> interiorPoints;
+
+    public BuildTask(TaskPriority priority, Vector2Int startPos, Constructable constructable) {
         this.priority = priority;
-        this.location = location;
+        this.startPos = startPos;
         this.constructable = constructable;
 
         creationTime = Time.time;
@@ -17,25 +21,39 @@ public class BuildTask : WorkerTask {
     }
 
     public override void OnCreation() {
-        TileManager.Instance.SetTaskPreview(location, constructable);
+        TileManager.Instance.SetTaskPreview(startPos, constructable);
     }
 
     public override void OnCompletion() {
-        TileManager.Instance.RemoveTaskPreview(location);
+        TileManager.Instance.RemoveTaskPreview(startPos);
 
-        TileManager.Instance.Construct(location, constructable);
+        TileManager.Instance.Construct(startPos, constructable);
 
-        TaskManager.Instance.CreateTask(new LayTask(TaskPriority.Normal, location));
+        TaskManager.Instance.CreateTask(new LayTask(TaskPriority.Normal, startPos));
     }
 
-    public List<Vector2Int> CalculateExteriorPoints() {
-        List<Vector2Int> exterior = constructable.CalculateExteriorPoints();
-
-        for (int i = 0 ; i < exterior.Count ; i += 1) {
-            exterior[i] += location;
+    public ReadOnlyCollection<Vector2Int> GetExteriorPoints() {
+        if (exteriorPoints == null) {
+            List<Vector2Int> exteriorTemp = new List<Vector2Int>();
+            foreach (Vector2Int pos in constructable.GetExteriorPoints()) exteriorTemp.Add(pos + startPos);
+            exteriorPoints = exteriorTemp.AsReadOnly();
         }
 
-        return exterior;
+        return exteriorPoints;
+    }
+
+    public ReadOnlyCollection<Vector2Int> GetInteriorPoints() {
+        if (exteriorPoints == null) {
+            List<Vector2Int> interiorTemp = new List<Vector2Int>();
+            foreach (Vector2Int pos in constructable.GetInteriorPoints()) interiorTemp.Add(pos + startPos);
+            interiorPoints = interiorTemp.AsReadOnly();
+        }
+
+        return interiorPoints;
+    }
+
+    public Vector2Int GetStartPosition() {
+        return startPos;
     }
 
 }

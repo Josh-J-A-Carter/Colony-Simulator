@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
@@ -46,7 +47,7 @@ public class PathfindState : State {
     }
 
     void TryFindPath() {
-        List<Vector2Int> exterior = task.CalculateExteriorPoints();
+        ReadOnlyCollection<Vector2Int> exterior = task.GetExteriorPoints();
 
         Vector2 pos = entity.transform.position;
         Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));

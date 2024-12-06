@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public abstract class TileEntity : Constructable {
 
@@ -17,8 +18,8 @@ public abstract class TileEntity : Constructable {
         return new Dictionary<String, object>();
     }
 
-    public void DrawVariant(Vector2Int position, GridRow[] variantData) {
-        TileManager.Instance.DrawVariant(position, variantData);
+    public void DrawVariant(Vector2Int position, Func<Vector2Int, TileBase> variantGenerator) {
+        TileManager.Instance.DrawVariant(position, this, variantGenerator);
     }
 
     public virtual InfoBranch GetTileEntityInfoTree(Dictionary<String, object> instance) {

@@ -13,6 +13,9 @@ public class Constructable : ScriptableObject, Informative {
     protected GridRow[] gridData;
 
     [SerializeField]
+    protected bool obstructive;
+
+    [SerializeField]
     protected String nameInfo, descriptionInfo;
 
     [SerializeField]
@@ -20,27 +23,39 @@ public class Constructable : ScriptableObject, Informative {
 
     [SerializeField]
     protected List<ResourceRequirement> requiredResources;
-    public ReadOnlyCollection<(Item, uint)> requiredResourcesReadOnly;
 
-    public int RowCount() {
-        return gridData.Length;
+    ReadOnlyCollection<(Item, uint)> requiredResourcesReadOnly;
+    ReadOnlyCollection<Vector2Int> exteriorPoints;
+    ReadOnlyCollection<Vector2Int> interiorPoints;
+
+    public bool IsObstructive() {
+        return obstructive;
     }
 
-    public GridRow GetRow(int index) {
-        if (index < 0 || index >= RowCount()) throw new Exception($"No row with index {index} in this Constructable, {this}.");
+    public TileBase GetTileAt(Vector2Int pos) {
+        int col = pos.x;
+        int row = pos.y;
 
-        return gridData[index];
+        return gridData[row].gridEntries[col].worldTile;
     }
 
-    public void SetData(GridRow[] gridData) {
+    public TileBase GetPreviewTileAt(Vector2Int pos) {
+        int col = pos.x;
+        int row = pos.y;
+
+        return gridData[row].gridEntries[col].previewTile;
+    }
+
+    public void SetData(GridRow[] gridData, bool obstructive) {
         this.gridData = gridData;
+        this.obstructive = obstructive;
     }
 
     /// <summary>
     /// Calculate all the points exterior to this constructable,
     /// in relation to the bottom-left corner point of this constructable (NOT the world origin)
     /// </summary>
-    public List<Vector2Int> CalculateExteriorPoints() {
+    void CalculateExteriorPoints() {
         // We need to consider all the y-levels present in the constructable, plus the one underneath,
         // and the one above it
         int lengthY = gridData.Length + 2;
@@ -80,7 +95,43 @@ public class Constructable : ScriptableObject, Informative {
             }
         }
 
-        return exterior.ToList();
+        exteriorPoints = exterior.ToList().AsReadOnly();
+    }
+
+    public ReadOnlyCollection<Vector2Int> GetExteriorPoints() {
+        if (exteriorPoints == null) CalculateExteriorPoints();
+
+        return exteriorPoints;
+    }
+
+    public ReadOnlyCollection<Vector2Int> GetInteriorPoints() {
+        if (interiorPoints == null) {
+            List<Vector2Int> interiorTemp = new List<Vector2Int>();
+
+            for (int row = 0; row < gridData.Length ; row += 1) {
+                GridRow rowData = gridData[row];
+
+                for (int col = 0; col < rowData.gridEntries.Length; col += 1) {
+                    GridEntry entry = rowData.gridEntries[col];
+                    // Ignore empty entries
+                    if (entry.worldTile == null) continue;
+
+                    interiorTemp.Add(new Vector2Int(col, row));
+                }
+            }
+
+            interiorPoints = interiorTemp.AsReadOnly();
+        }
+
+        return interiorPoints;
+    }
+
+    public ReadOnlyCollection<(Item, uint)> GetRequiredResources() {
+        if (requiredResourcesReadOnly == null) {
+            requiredResourcesReadOnly = requiredResources.Select((resource) => (resource.item, resource.quantity)).ToList().AsReadOnly();
+        }
+
+        return requiredResourcesReadOnly;
     }
 
 
@@ -128,14 +179,6 @@ public class Constructable : ScriptableObject, Informative {
 
         return root;
     }
-
-    public ReadOnlyCollection<(Item, uint)> GetRequiredResources() {
-        if (requiredResourcesReadOnly == null) {
-            requiredResourcesReadOnly = requiredResources.Select((resource) => (resource.item, resource.quantity)).ToList().AsReadOnly();
-        }
-
-        return requiredResourcesReadOnly;
-    }
 }
 
 [Serializable]
@@ -147,7 +190,6 @@ public struct GridRow {
 public struct GridEntry {
     public TileBase worldTile;
     public TileBase previewTile;
-    public bool obstructive;
 }
 
 

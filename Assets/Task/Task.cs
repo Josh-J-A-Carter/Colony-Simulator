@@ -8,6 +8,8 @@ public abstract class Task {
 
     bool complete = false;
 
+    bool pending = true;
+
     public TaskPriority priority { get; protected set; }
 
     public float creationTime { get; protected set; }
@@ -22,6 +24,14 @@ public abstract class Task {
             TaskManager.Instance.MarkComplete(this);
             complete = true;
         }
+    }
+
+    public bool IsPending() {
+        return pending;
+    }
+
+    public void Confirm() {
+        pending = false;
     }
 
     public void IncrementAssignment() {
@@ -39,6 +49,8 @@ public abstract class Task {
     public virtual void OnCreation() {}
 
     public virtual void OnCompletion() {}
+
+    public virtual void OnCancellation() {}
 
 }
 

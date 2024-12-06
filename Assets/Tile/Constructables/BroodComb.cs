@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Comb")]
 public class BroodComb : TileEntity, Storage {
@@ -91,7 +92,7 @@ public class BroodComb : TileEntity, Storage {
             broodData[BROOD_DATA__TIME_LEFT] = LARVA_STAGE_DURATION;
             broodData[BROOD_DATA__BROOD_STAGE] = BroodStage.Larva;
 
-            TileManager.Instance.DrawVariant(position, containsLarvaVariant);
+            DrawVariant(position, GetTileAt__ContainsLarvaVariant);
         }
 
         // Larva -> Pupa
@@ -99,7 +100,7 @@ public class BroodComb : TileEntity, Storage {
             broodData[BROOD_DATA__TIME_LEFT] = PUPA_STAGE_DURATION;
             broodData[BROOD_DATA__BROOD_STAGE] = BroodStage.Pupa;
             
-            TileManager.Instance.DrawVariant(position, containsPupaVariant);
+            DrawVariant(position, GetTileAt__ContainsPupaVariant);
         }
 
         // Pupa -> Adult
@@ -107,8 +108,29 @@ public class BroodComb : TileEntity, Storage {
             EntityManager.Instance.InstantiateWorker(position);
             data[CURRENT_STORAGE_TYPE] = StorageType.Empty;
 
-            TileManager.Instance.DrawVariant(position, gridData);
+            TileManager.Instance.DrawVariant(position, this, GetTileAt);
         }
+    }
+
+    public TileBase GetTileAt__ContainsEggVariant(Vector2Int pos) {
+        int col = pos.x;
+        int row = pos.y;
+
+        return containsEggVariant[row].gridEntries[col].worldTile;
+    }
+
+    public TileBase GetTileAt__ContainsLarvaVariant(Vector2Int pos) {
+        int col = pos.x;
+        int row = pos.y;
+
+        return containsLarvaVariant[row].gridEntries[col].worldTile;
+    }
+
+    public TileBase GetTileAt__ContainsPupaVariant(Vector2Int pos) {
+        int col = pos.x;
+        int row = pos.y;
+
+        return containsPupaVariant[row].gridEntries[col].worldTile;
     }
 
     public Inventory GetInventory(Dictionary<String, object> instance) {
@@ -137,7 +159,7 @@ public class BroodComb : TileEntity, Storage {
         Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(location);
         if (CanStoreBrood(location, data) == false) return false;
         
-        TileManager.Instance.DrawVariant(location, containsEggVariant);
+        DrawVariant(location, GetTileAt__ContainsEggVariant);
 
         data[CURRENT_STORAGE_TYPE] = StorageType.Brood;
 

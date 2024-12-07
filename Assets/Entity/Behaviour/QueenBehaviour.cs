@@ -44,18 +44,24 @@ public class QueenBehaviour : MonoBehaviour, TaskAgent, Informative {
             this.task = queenTask;
         }
     }
+    
+    public void CancelTask() {
+        stateMachine.ResetChildState();
+    }
 
     public Task GetTask() {
         return task;
     }
 
-    void Update() {
+
+
+    public void Update() {
         if (stateMachine.EmptyState()) DecideState();
 
         stateMachine.Run();
     }
 
-    void FixedUpdate() {
+    public void FixedUpdate() {
         stateMachine.FixedRun();
     }
 

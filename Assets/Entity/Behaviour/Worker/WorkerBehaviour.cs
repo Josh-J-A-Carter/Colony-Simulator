@@ -51,6 +51,10 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
         }
     }
 
+    public void CancelTask() {
+        stateMachine.ResetChildState();
+    }
+
     public Task GetTask() {
         return task;
     }

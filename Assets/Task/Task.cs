@@ -8,7 +8,7 @@ public abstract class Task {
 
     bool complete = false;
 
-    bool pending = true;
+    bool pendingConfirmation = true;
 
     public TaskPriority priority { get; protected set; }
 
@@ -26,12 +26,22 @@ public abstract class Task {
         }
     }
 
-    public bool IsPending() {
-        return pending;
+    /// <summary>
+    /// Before the task is confirmed, this method is called to decide whether the task should be
+    /// aborted, or if it can be continued with.
+    /// </summary>
+    public virtual bool MustAbort() {
+        return false;
+    }
+
+    public bool IsPendingConfirmation() {
+        return pendingConfirmation;
     }
 
     public void Confirm() {
-        pending = false;
+        pendingConfirmation = false;
+        
+        OnConfirmation();
     }
 
     public void IncrementAssignment() {
@@ -46,7 +56,7 @@ public abstract class Task {
         return complete;
     }
 
-    public virtual void OnCreation() {}
+    public virtual void OnConfirmation() {}
 
     public virtual void OnCompletion() {}
 

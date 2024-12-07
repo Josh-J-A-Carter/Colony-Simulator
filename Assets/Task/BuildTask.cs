@@ -20,7 +20,21 @@ public class BuildTask : WorkerTask, Locative {
         category = WorkerTaskType.Hive;
     }
 
-    public override void OnCreation() {
+    public override bool MustAbort() {
+        // If there is already something in the world map at any of the necessary positions, abort
+        foreach (Vector2Int pos in GetInteriorPoints()) {
+            (_, Constructable existingConstructable) =  TileManager.Instance.GetConstructableAt(pos);
+            if (existingConstructable != null) return true;
+        }
+
+        return false;
+    }
+
+    public override void OnCancellation() {
+        TileManager.Instance.RemoveTaskPreview(startPos);
+    }
+
+    public override void OnConfirmation() {
         TileManager.Instance.SetTaskPreview(startPos, constructable);
     }
 
@@ -43,7 +57,7 @@ public class BuildTask : WorkerTask, Locative {
     }
 
     public ReadOnlyCollection<Vector2Int> GetInteriorPoints() {
-        if (exteriorPoints == null) {
+        if (interiorPoints == null) {
             List<Vector2Int> interiorTemp = new List<Vector2Int>();
             foreach (Vector2Int pos in constructable.GetInteriorPoints()) interiorTemp.Add(pos + startPos);
             interiorPoints = interiorTemp.AsReadOnly();

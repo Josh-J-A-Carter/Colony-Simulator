@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
@@ -7,37 +8,45 @@ public class TaskManager : MonoBehaviour {
 
     public static TaskManager Instance { get; private set; }
 
-    List<Task> pendingCompleteTasks;
+    LocativeTaskStore locativeTaskStore;
 
-    List<Task> workerTasks;
+    List<Task> pendingCompletionTasks;
+    List<Task> pendingAdditionTasks;
+
+    List<WorkerTask> workerTasks;
     List<WorkerBehaviour> assignedWorkers, unassignedWorkers;
 
-    List<Task> queenTasks;
+    List<QueenTask> queenTasks;
     List<QueenBehaviour> assignedQueens, unassignedQueens;
 
-    void Awake() {
+    public void Awake() {
         // Instantiate singleton
         if (Instance != null) {
             Destroy(this);
             return;
         } else Instance = this;
 
-        pendingCompleteTasks = new List<Task>();
+        locativeTaskStore = new LocativeTaskStore();
 
-        workerTasks = new List<Task>();
+        pendingCompletionTasks = new List<Task>();
+        pendingAdditionTasks = new List<Task>();
+
+        workerTasks = new List<WorkerTask>();
         assignedWorkers = new List<WorkerBehaviour>();
         unassignedWorkers = new List<WorkerBehaviour>();
 
-        queenTasks = new List<Task>();
+        queenTasks = new List<QueenTask>();
         assignedQueens = new List<QueenBehaviour>();
         unassignedQueens = new List<QueenBehaviour>();
     }
 
-    void FixedUpdate() {
+    public void FixedUpdate() {
 
         // Deal with the queue of tasks that have been marked as complete
-        ClearPendingTasks();
+        ClearPendingCompletion();
 
+        // Deal with the queue of tasks that are waiting to be added
+        ClearPendingAddition();
 
         // 
         // To do: Deal with urgent tasks or something
@@ -50,7 +59,7 @@ public class TaskManager : MonoBehaviour {
 
     void OccupyUnassignedAgents() {        
         for (int i = 0 ; i < unassignedWorkers.Count ; i += 1) {
-            WorkerTask task = (WorkerTask) GetMostUrgent(workerTasks);
+            WorkerTask task = GetMostUrgent(workerTasks);
             if (task == null) break;
             WorkerBehaviour worker = unassignedWorkers[i];
 
@@ -64,7 +73,7 @@ public class TaskManager : MonoBehaviour {
         }
 
         for (int i = 0 ; i < unassignedQueens.Count ; i += 1) {
-            QueenTask task = (QueenTask) GetMostUrgent(queenTasks);
+            QueenTask task = GetMostUrgent(queenTasks);
             if (task == null) break;
             QueenBehaviour queen = unassignedQueens[i];
 
@@ -78,12 +87,12 @@ public class TaskManager : MonoBehaviour {
         }
     }
 
-    Task GetMostUrgent(List<Task> taskList) {
+    T GetMostUrgent<T>(List<T> taskList) where T: Task {
         if (taskList.Count == 0) return null;
 
-        Task mostUrgent = taskList[0];
+        T mostUrgent = taskList[0];
 
-        foreach (Task task in taskList) {
+        foreach (T task in taskList) {
             if (task.priority > mostUrgent.priority) continue;
             else if (task.priority < mostUrgent.priority) {
                 mostUrgent = task;
@@ -106,8 +115,8 @@ public class TaskManager : MonoBehaviour {
         return mostUrgent;
     }
 
-    void ClearPendingTasks() {
-        foreach (Task task in pendingCompleteTasks) {
+    void ClearPendingCompletion() {
+        foreach (Task task in pendingCompletionTasks) {
             if (task is WorkerTask workerTask) {
                 // Tell the task that it is complete
                 workerTask.OnCompletion();
@@ -124,11 +133,9 @@ public class TaskManager : MonoBehaviour {
                     assignedWorkers.RemoveAt(i);
                     i -= 1;
                 }
-
-                continue;
             }
 
-            if (task is QueenTask queenTask) {
+            else if (task is QueenTask queenTask) {
                 // Tell the task that it is complete
                 queenTask.OnCompletion();
 
@@ -144,12 +151,103 @@ public class TaskManager : MonoBehaviour {
                     assignedQueens.RemoveAt(i);
                     i -= 1;
                 }
+            }
 
-                continue;
+            else throw new System.Exception("Task type not implemented in ClearPendingCompletion function");
+
+            // Unset locative task store!
+            if (task is Locative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
+        }
+
+        pendingCompletionTasks.Clear();
+
+    }
+
+    void ClearPendingAddition() {
+        List<Task> toConfirm = new List<Task>();
+
+        foreach (Task task in pendingAdditionTasks) {
+            bool success = ResolveConflicts(task);
+
+            if (success) {
+                // Add the task to the correct list, depending on its type
+                if (task is WorkerTask workerTask) workerTasks.Add(workerTask);
+                else if (task is QueenTask queenTask) queenTasks.Add(queenTask);
+                else throw new System.Exception("Task pending addition by TaskManager; task-type unrecognised.");
+
+                toConfirm.Add(task);
+                // Pre-emptively add to the locative task store;
+                // can't quite set it to be confirmed yet, as this will remove the pending status,
+                // allowing other pending tasks (added at the same time) to override this,
+                // when in reality they have the same age
+                if (task is Locative locativeTask) locativeTaskStore.SetTask(locativeTask);
+            }
+        }
+        
+        // Need to add them to a confirmation queue; two pending tasks might be added at the same time and overlap
+        foreach (Task task in toConfirm) task.Confirm();
+
+        pendingAdditionTasks.Clear();
+    }
+
+    bool ResolveConflicts(Task task) {
+        if (task.MustAbort()) return false;
+
+        if (task is Locative locative) {
+            List<Task> conflicts = locativeTaskStore.GetConflictingTasks(locative);
+
+            // Look for a reason to cancel the new task (i.e. conflicts with another pending task)
+            foreach (Task conflict in conflicts) if (conflict.IsPendingConfirmation()) return false;
+
+            // No other pending tasks conflict with this one; therefore, all the other
+            // conflicting tasks must be older than this one, and can thus be destroyed
+            foreach (Task conflict in conflicts) CancelTask(conflict);
+        }
+ 
+        return true;
+    }
+
+    void CancelTask(Task task) {
+        if (task is WorkerTask workerTask) {
+            // Tell the task that it has been cancelled
+            workerTask.OnCancellation();
+
+            // Remove the task from the list
+            workerTasks.Remove(workerTask);
+
+            // Reset all those agents whose task is set to this one
+            for (int i = 0 ; i < assignedWorkers.Count ; i += 1) {
+                if (assignedWorkers[i].GetTask() != workerTask) continue;
+
+                assignedWorkers[i].CancelTask();
+                unassignedWorkers.Add(assignedWorkers[i]);
+                assignedWorkers.RemoveAt(i);
+                i -= 1;
             }
         }
 
-        pendingCompleteTasks.Clear();
+        else if (task is QueenTask queenTask) {
+            // Tell the task that it is complete
+            queenTask.OnCancellation();
+
+            // Remove the task from the list
+            queenTasks.Remove(queenTask);
+
+            // Reset all those agents whose task is set to this one
+            for (int i = 0 ; i < assignedQueens.Count ; i += 1) {
+                if (assignedQueens[i].GetTask() != queenTask) continue;
+
+                assignedQueens[i].CancelTask();
+                unassignedQueens.Add(assignedQueens[i]);
+                assignedQueens.RemoveAt(i);
+                i -= 1;
+            }
+        }
+
+        else throw new System.Exception("Task type not implemented in CancelTask function");
+
+        // Unset locative task store!
+        if (task is Locative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
     }
 
     public void RegisterAgent(TaskAgent agent) {
@@ -195,14 +293,10 @@ public class TaskManager : MonoBehaviour {
         if (task == null) return;
 
         // Add the task to the correct list, depending on its type
-        if (task is WorkerTask workerTask) workerTasks.Add(workerTask);
-        else if (task is QueenTask queenTask) queenTasks.Add(queenTask);
-
-        task.OnCreation();
+        pendingAdditionTasks.Add(task);
     }
 
     public void MarkComplete(Task task) {
-        pendingCompleteTasks.Add(task);
+        pendingCompletionTasks.Add(task);
     }
 }
-

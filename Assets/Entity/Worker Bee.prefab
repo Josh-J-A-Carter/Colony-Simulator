@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
 --- !u!1 &994044572249963573
 GameObject:
@@ -93,6 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &1384241947847165291
 GameObject:
@@ -140,6 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &1825384299220627439
 GameObject:
@@ -189,6 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   Pathfind: {fileID: 2535051914071567500}
   Build: {fileID: 6110178386457755492}
 --- !u!1 &4430628740495362487
@@ -204,6 +208,7 @@ GameObject:
   - component: {fileID: 5114259265025303363}
   - component: {fileID: 8629193414152886075}
   - component: {fileID: 6462901615722084809}
+  - component: {fileID: 8531101069963779304}
   m_Layer: 0
   m_Name: Worker Bee
   m_TagString: Untagged
@@ -361,6 +366,19 @@ MonoBehaviour:
   Idle: {fileID: 6182527956614853536}
   Hive: {fileID: 1349295415884959015}
   Forage: {fileID: 0}
+--- !u!114 &8531101069963779304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4430628740495362487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 026cbdc21ed218142bc438d5343f0a32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCapacity: 20
 --- !u!1 &4983428824839234900
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,6 +425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
 --- !u!1 &8122973212392184058
 GameObject:
@@ -456,5 +475,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   Stall: {fileID: 4775182616876843219}
   Meander: {fileID: 3244078409357102006}

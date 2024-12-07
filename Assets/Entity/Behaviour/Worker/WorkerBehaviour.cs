@@ -11,8 +11,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
 
     WorkerTask task;
 
-    const uint MAX_INVENTORY_CAPACITY = 20;
-    Inventory inventory;
+    InventoryManager inventory;
 
     StateMachine stateMachine;
     State currentState => stateMachine.childState;
@@ -21,8 +20,8 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
 
     public void Start() {
         stateMachine = new StateMachine();
-        inventory = new Inventory(MAX_INVENTORY_CAPACITY);
-
+        
+        inventory = GetComponent<InventoryManager>();
         animator = GetComponent<Animator>();
 
         // Recursively set up the states

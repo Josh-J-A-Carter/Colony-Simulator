@@ -47586,6 +47586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   workerBeePrefab: {fileID: 4430628740495362487, guid: 76ba290e052d71a409f568b201c9502a, type: 3}
   queenBeePrefab: {fileID: 7181809681829478707, guid: 72f91655bd35fe74a81d223f4fb4f501, type: 3}
+  itemEntityPrefab: {fileID: 0}
 --- !u!4 &1470879824
 Transform:
   m_ObjectHideFlags: 0

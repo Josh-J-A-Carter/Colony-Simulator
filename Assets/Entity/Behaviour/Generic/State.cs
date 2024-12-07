@@ -11,9 +11,9 @@ public abstract class State : MonoBehaviour {
     public TaskAgent taskAgent;
     public Animator animator;
     public GameObject entity;
-    public Inventory inventory;
+    public InventoryManager inventory;
 
-    public void Setup(GameObject entity, TaskAgent taskAgent, Animator animator, StateMachine parent, Inventory inventory = null) {
+    public void Setup(GameObject entity, TaskAgent taskAgent, Animator animator, StateMachine parent, InventoryManager inventory = null) {
         stateMachine = new StateMachine(this);
 
         this.entity = entity;

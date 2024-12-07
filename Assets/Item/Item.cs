@@ -26,6 +26,6 @@ public class Item : ScriptableObject, Informative {
     }
 
     public InfoBranch GetInfoTree(object _ = null) {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class BuildTask : WorkerTask, Locative {
+public class BuildTask : WorkerTask, Locative, Consumer {
     
     Constructable constructable;
     Vector2Int startPos;
 
     ReadOnlyCollection<Vector2Int> exteriorPoints;
     ReadOnlyCollection<Vector2Int> interiorPoints;
+
+
+    InventoryManager allocator;
+
+    bool hasAllocation = false;
 
     public BuildTask(TaskPriority priority, Vector2Int startPos, Constructable constructable) {
         this.priority = priority;
@@ -70,4 +75,25 @@ public class BuildTask : WorkerTask, Locative {
         return startPos;
     }
 
+
+    public ReadOnlyCollection<(Item, uint)> GetRequiredResources() {
+        return constructable.GetRequiredResources();
+    }
+
+    public bool HasAllocation() {
+        return hasAllocation;
+    }
+
+    public void Allocate(InventoryManager allocator) {
+        this.allocator = allocator;
+        hasAllocation = true;
+    }
+
+    public InventoryManager GetAllocator() {
+        return allocator;
+    }
+
+    public Vector2Int GetDefaultDeallocationPosition() {
+        return startPos;
+    }
 }

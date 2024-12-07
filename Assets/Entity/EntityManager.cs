@@ -8,7 +8,7 @@ public class EntityManager : MonoBehaviour {
     public static EntityManager Instance { get; private set; }
 
     [SerializeField]
-    GameObject workerBeePrefab, queenBeePrefab;
+    GameObject workerBeePrefab, queenBeePrefab, itemEntityPrefab;
 
 
     String[] awesomeWorkerBeeNames = new String[] {
@@ -36,8 +36,8 @@ public class EntityManager : MonoBehaviour {
         InstantiateQueen(new Vector2Int(4, -4));
     }
 
-    public GameObject InstantiateWorker(Vector2Int pos) {
-        GameObject obj = Object.Instantiate(workerBeePrefab, new Vector3Int(pos.x, pos.y, zIndex), Quaternion.identity, transform);
+    public GameObject InstantiateWorker(Vector2 pos) {
+        GameObject obj = Object.Instantiate(workerBeePrefab, new Vector3(pos.x, pos.y, zIndex), Quaternion.identity, transform);
         TaskManager.Instance.RegisterAgent(obj.GetComponent<WorkerBehaviour>());
 
         WorkerBehaviour worker = obj.GetComponent<WorkerBehaviour>();
@@ -47,8 +47,8 @@ public class EntityManager : MonoBehaviour {
         return obj;
     }
 
-    public GameObject InstantiateQueen(Vector2Int pos) {
-        GameObject obj = Object.Instantiate(queenBeePrefab, new Vector3Int(pos.x, pos.y, zIndex), Quaternion.identity, transform);
+    public GameObject InstantiateQueen(Vector2 pos) {
+        GameObject obj = Object.Instantiate(queenBeePrefab, new Vector3(pos.x, pos.y, zIndex), Quaternion.identity, transform);
         TaskManager.Instance.RegisterAgent(obj.GetComponent<QueenBehaviour>());
 
         QueenBehaviour queen = obj.GetComponent<QueenBehaviour>();
@@ -67,6 +67,15 @@ public class EntityManager : MonoBehaviour {
 
         String name = $"Queen {baseName} {genName}";
         queen.SetName(name);
+
+        return obj;
+    }
+
+    public GameObject InstantiateItemEntity(Vector2 pos, Item item, uint quantity) {
+        GameObject obj = Instantiate(itemEntityPrefab, new Vector3(pos.x, pos.y, zIndex), Quaternion.identity, transform);
+
+        ItemEntity itemEntity = obj.GetComponent<ItemEntity>();
+        itemEntity.Setup(item, quantity);
 
         return obj;
     }

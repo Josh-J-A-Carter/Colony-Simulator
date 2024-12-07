@@ -215,6 +215,9 @@ public class TaskManager : MonoBehaviour {
             // Remove the task from the list
             workerTasks.Remove(workerTask);
 
+            // If applicable, de-allocate the task's resources (i.e. items needed for its completion)
+            if (task is Consumer consumer) Deallocate(consumer);
+
             // Reset all those agents whose task is set to this one
             for (int i = 0 ; i < assignedWorkers.Count ; i += 1) {
                 if (assignedWorkers[i].GetTask() != workerTask) continue;
@@ -233,6 +236,9 @@ public class TaskManager : MonoBehaviour {
             // Remove the task from the list
             queenTasks.Remove(queenTask);
 
+            // If applicable, de-allocate the task's resources (i.e. items needed for its completion)
+            if (task is Consumer consumer) Deallocate(consumer);
+
             // Reset all those agents whose task is set to this one
             for (int i = 0 ; i < assignedQueens.Count ; i += 1) {
                 if (assignedQueens[i].GetTask() != queenTask) continue;
@@ -248,6 +254,32 @@ public class TaskManager : MonoBehaviour {
 
         // Unset locative task store!
         if (task is Locative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
+    }
+
+    public void Allocate(Consumer consumer, InventoryManager inventory) {
+        if (consumer.HasAllocation()) return;
+
+        foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) if (!inventory.Has(item, quantity)) return;
+
+        consumer.Allocate(inventory);
+        
+        foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) inventory.Take(item, quantity);
+    }
+
+    void Deallocate(Consumer consumer) {
+        if (!consumer.HasAllocation()) return;
+
+        InventoryManager inventory = consumer.GetAllocator();
+
+        if (inventory) {
+            inventory.Give(consumer.GetRequiredResources().ToList());
+            return;
+        }
+
+        Vector2Int pos = consumer.GetDefaultDeallocationPosition();
+        foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) {
+            EntityManager.Instance.InstantiateItemEntity(pos, item, quantity);
+        }
     }
 
     public void RegisterAgent(TaskAgent agent) {
@@ -297,6 +329,9 @@ public class TaskManager : MonoBehaviour {
     }
 
     public void MarkComplete(Task task) {
+        // Require that the task have its resources supplied before completion
+        if (task is Consumer consumer && !consumer.HasAllocation()) return;
+
         pendingCompletionTasks.Add(task);
     }
 }

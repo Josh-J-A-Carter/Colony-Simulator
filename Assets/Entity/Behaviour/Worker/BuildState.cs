@@ -11,6 +11,8 @@ public class BuildState : State {
 
     public override void OnEntry() {
         animator.Play(anim.name);
+
+        TaskManager.Instance.Allocate(task, inventory);
     }
 
     public override void FixedRun(){

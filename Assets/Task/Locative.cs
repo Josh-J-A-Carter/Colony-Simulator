@@ -7,6 +7,8 @@ public interface Locative {
 
     public abstract ReadOnlyCollection<Vector2Int> GetInteriorPoints();
 
+    public abstract ReadOnlyCollection<Vector2Int> GetExteriorPoints();
+
     public abstract Vector2Int GetStartPosition();
 
 }

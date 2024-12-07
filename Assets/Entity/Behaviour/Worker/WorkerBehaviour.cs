@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
@@ -33,8 +34,35 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
     }
 
     public bool OfferTask(Task task) {
+        // *Prefer* continuing with the current task
+        if (this.task != null) return false;
+
+        // Check resource requirements. If they aren't met, can't help
+        if (task is Consumer consumer) {
+
+            bool missingRequirement = false;
+            foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) {
+                if (!inventory.Has(item, quantity)) missingRequirement = true;
+            }
+
+            if (missingRequirement && !consumer.HasAllocation()) return false;
+        }
+
+        // Make sure pathfinding to the task is possible, if applicable
+        if (task is Locative locative) {
+            bool foundPath = false;
+            ReadOnlyCollection<Vector2Int> exterior = locative.GetExteriorPoints();
+            foreach (Vector2Int destination in exterior) {
+                Path path = Pathfind.FindPath(transform.position, destination);
+                if (path != null) foundPath = true;
+            }
+            
+            if (!foundPath) return false;
+        }
+
         if (task is WorkerTask workerTask) {
             this.task = workerTask;
+            stateMachine.ResetChildState();
             return true;
         } else return false;
     }
@@ -47,10 +75,13 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
 
         if (task is WorkerTask workerTask) {
             this.task = workerTask;
-        }
+        } else throw new Exception("Cannot accept the task as it is not of type WorkerTask");
+
+        stateMachine.ResetChildState();
     }
 
-    public void CancelTask() {
+    public void OnTaskCancellation() {
+        task = null;
         stateMachine.ResetChildState();
     }
 

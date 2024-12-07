@@ -21,6 +21,8 @@ public abstract class Task {
         progress += 1;
 
         if (progress >= MAX_PROGRESS) {
+            // Only allow for completion once resources have been allocated (if applicable)
+            if (this is Consumer consumer && !consumer.HasAllocation()) return;
             TaskManager.Instance.MarkComplete(this);
             complete = true;
         }
@@ -40,7 +42,7 @@ public abstract class Task {
 
     public void Confirm() {
         pendingConfirmation = false;
-        
+
         OnConfirmation();
     }
 

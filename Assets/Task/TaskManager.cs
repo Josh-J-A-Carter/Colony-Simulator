@@ -222,7 +222,7 @@ public class TaskManager : MonoBehaviour {
             for (int i = 0 ; i < assignedWorkers.Count ; i += 1) {
                 if (assignedWorkers[i].GetTask() != workerTask) continue;
 
-                assignedWorkers[i].CancelTask();
+                assignedWorkers[i].OnTaskCancellation();
                 unassignedWorkers.Add(assignedWorkers[i]);
                 assignedWorkers.RemoveAt(i);
                 i -= 1;

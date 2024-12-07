@@ -378,7 +378,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 026cbdc21ed218142bc438d5343f0a32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCapacity: 20
+  maxCapacity: 10
+  passivelyProducedItems:
+  - item: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
+    minQuantity: 0
+    maxQuantity: 1
+    minDelaySeconds: 60
+    maxDelaySeconds: 180
 --- !u!1 &4983428824839234900
 GameObject:
   m_ObjectHideFlags: 0

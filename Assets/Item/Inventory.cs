@@ -145,7 +145,7 @@ public class Inventory {
         if (quantity + carrying > maxCapacity) return false;
 
         // It must be that quantity == 0, so we don't need to do any work
-        if (carrying == maxCapacity) return true;
+        if (quantity == 0) return true;
 
         // See if the item is already in the inventory
         int index = contents.FindIndex(0, (tuple) => tuple.Item1 == item);
@@ -180,7 +180,7 @@ public class Inventory {
         root.AddChild(contentsCategory);
 
         foreach ((Item item, uint quantity) in contents) {
-            InfoLeaf itemProperty = new InfoLeaf(item.GetName(), value: quantity.ToString());
+            InfoLeaf itemProperty = new InfoLeaf(item.GetName(), value: quantity + " unit(s)");
             contentsCategory.AddChild(itemProperty);
         }
 

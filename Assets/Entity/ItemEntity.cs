@@ -28,6 +28,13 @@ public class ItemEntity : MonoBehaviour, Informative {
     }
 
     public InfoBranch GetInfoTree(object _ = null) {
-        return item.GetInfoTree();
+        InfoBranch root = item.GetInfoTree();
+
+        InfoBranch genericCategory = (InfoBranch) root.GetChildren()[0];
+
+        InfoLeaf quantityProperty = new InfoLeaf("Quantity", value: quantity + " unit(s)");
+        genericCategory.AddChild(quantityProperty);
+
+        return root;
     }
 }

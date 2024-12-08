@@ -70,6 +70,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
     public void SetTask(Task task) {
         if (task == null) {
             this.task = null;
+            stateMachine.ResetChildState();
             return;
         }
 
@@ -105,14 +106,17 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
             return;
         }
 
-        switch (task.category) {
-            case WorkerTaskType.Hive: {
-                stateMachine.SetChildState(Build);
-                return;
-            }
+        if (task is BuildTask) {
+            stateMachine.SetChildState(Build);
         }
 
-        stateMachine.SetChildState(Idle);
+        else if (task is NurseTask) {
+            stateMachine.SetChildState(Nurse);
+        }
+
+        else {
+            throw new Exception("Unknown task type");
+        }
     }
 
     public Sprite GetPreviewSprite() {

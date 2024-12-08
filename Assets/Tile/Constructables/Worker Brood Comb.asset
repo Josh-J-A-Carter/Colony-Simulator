@@ -25,6 +25,8 @@ MonoBehaviour:
     quantity: 1
   maxCapacity: 100
   broodCombSize: 0
+  beeswax: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
+  royalJelly: {fileID: 11400000, guid: e51afdb714c6eb346b5ad286646c97ca, type: 2}
   containsEggVariant:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: d10a014ad64b9cc4ba1be13e5b4ac3bf, type: 2}
@@ -33,7 +35,7 @@ MonoBehaviour:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: 7a9704f1ea7611147ac873a49d89fe51, type: 2}
       previewTile: {fileID: 0}
-  containsPupaVariant:
+  sealedVariant:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: 88eb7b16781d5564bafdc8d4e33767ae, type: 2}
       previewTile: {fileID: 0}

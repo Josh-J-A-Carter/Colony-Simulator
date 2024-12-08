@@ -32,7 +32,8 @@ public class BroodComb : TileEntity, Storage {
         /// see <c>BroodStage</c>. The attribute's value should be of type <c>int</c>.</summary>
         public const String BROOD_DATA__TIME_LEFT = "broodData__timeLeft";
 
-        const int EGG_STAGE_DURATION = 40, LARVA_STAGE_DURATION = 80, PUPA_STAGE_DURATION = 120;
+        const int EGG_STAGE_DURATION = 80, LARVA_STAGE_DURATION = 160, PUPA_STAGE_DURATION = 160;
+        const int LARVA_FEED = LARVA_STAGE_DURATION - 20, LARVA_SEAL = LARVA_STAGE_DURATION - 80;
 
 
     /// <summary>Path leading to the inventory field. The value should be of type <c>Inventory</c></summary>
@@ -45,16 +46,19 @@ public class BroodComb : TileEntity, Storage {
     uint maxCapacity = 100;
 
     [SerializeField]
-    public BroodCombSize broodCombSize = BroodCombSize.Worker;
+    BroodCombSize broodCombSize = BroodCombSize.Worker;
 
     [Serializable]
     public enum BroodCombSize { Worker, Drone, Queen };
+
+    [SerializeField]
+    Item beeswax, royalJelly;
 
     // Visual Variants to display with a change of state
 
     /// <summary>Variants to display when the comb contains brood of differing life stages.</summary>
     [SerializeField]
-    public GridRow[] containsEggVariant, containsLarvaVariant, containsPupaVariant;
+    GridRow[] containsEggVariant, containsLarvaVariant, sealedVariant;
 
     public override Dictionary<String, object> GenerateDefaultData() {
         Dictionary<String, object> data = new Dictionary<String, object>();
@@ -85,10 +89,24 @@ public class BroodComb : TileEntity, Storage {
         int timeLeft = (int) broodData[BROOD_DATA__TIME_LEFT] - 1;
         broodData[BROOD_DATA__TIME_LEFT] = timeLeft;
 
+        BroodStage broodStage = (BroodStage) broodData[BROOD_DATA__BROOD_STAGE];
+
+        // Developmental events
+        if (broodStage == BroodStage.Larva) {
+            if (timeLeft == LARVA_FEED) {
+                TaskManager.Instance.CreateTask(new NurseTask(TaskPriority.Important, position, this, royalJelly, 1));
+            }
+
+            else if (timeLeft == LARVA_SEAL) {
+                TaskManager.Instance.CreateTask(new NurseTask(TaskPriority.Important, position, this, beeswax, 1));
+            }
+        }
+
+        // Changing life-stages
         if (timeLeft > 0) return;
 
         // Egg -> Larva
-        if ((BroodStage) broodData[BROOD_DATA__BROOD_STAGE] == BroodStage.Egg) {
+        if (broodStage == BroodStage.Egg) {
             broodData[BROOD_DATA__TIME_LEFT] = LARVA_STAGE_DURATION;
             broodData[BROOD_DATA__BROOD_STAGE] = BroodStage.Larva;
 
@@ -96,11 +114,9 @@ public class BroodComb : TileEntity, Storage {
         }
 
         // Larva -> Pupa
-        else if ((BroodStage) broodData[BROOD_DATA__BROOD_STAGE] == BroodStage.Larva) {
+        else if (broodStage == BroodStage.Larva) {
             broodData[BROOD_DATA__TIME_LEFT] = PUPA_STAGE_DURATION;
             broodData[BROOD_DATA__BROOD_STAGE] = BroodStage.Pupa;
-            
-            DrawVariant(position, GetTileAt__ContainsPupaVariant);
         }
 
         // Pupa -> Adult
@@ -112,25 +128,34 @@ public class BroodComb : TileEntity, Storage {
         }
     }
 
-    public TileBase GetTileAt__ContainsEggVariant(Vector2Int pos) {
+    TileBase GetTileAt__ContainsEggVariant(Vector2Int pos) {
         int col = pos.x;
         int row = pos.y;
 
         return containsEggVariant[row].gridEntries[col].worldTile;
     }
 
-    public TileBase GetTileAt__ContainsLarvaVariant(Vector2Int pos) {
+    TileBase GetTileAt__ContainsLarvaVariant(Vector2Int pos) {
         int col = pos.x;
         int row = pos.y;
 
         return containsLarvaVariant[row].gridEntries[col].worldTile;
     }
 
-    public TileBase GetTileAt__ContainsPupaVariant(Vector2Int pos) {
+    TileBase GetTileAt__SealedVariant(Vector2Int pos) {
         int col = pos.x;
         int row = pos.y;
 
-        return containsPupaVariant[row].gridEntries[col].worldTile;
+        return sealedVariant[row].gridEntries[col].worldTile;
+    }
+
+    public void GiveBrood(Vector2Int position, Dictionary<String, object> data, Item item, uint quantity) {
+
+        if (item == beeswax) {
+            DrawVariant(position, GetTileAt__SealedVariant);
+        }
+
+        else Debug.Log("Fed!");
     }
 
     public Inventory GetInventory(Dictionary<String, object> instance) {

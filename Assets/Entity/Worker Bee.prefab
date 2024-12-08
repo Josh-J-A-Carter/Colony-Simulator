@@ -195,6 +195,57 @@ MonoBehaviour:
   inventory: {fileID: 0}
   pathfind: {fileID: 2535051914071567500}
   construct: {fileID: 6110178386457755492}
+--- !u!1 &3428250340048907298
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3823887132889052590}
+  - component: {fileID: 315169292399443832}
+  m_Layer: 0
+  m_Name: Nurse
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3823887132889052590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428250340048907298}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 979454546215716982}
+  - {fileID: 1967809900614994323}
+  m_Father: {fileID: 5405411461827431291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &315169292399443832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428250340048907298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e59b6ba2f01c3c4e943831236100e03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  pathfind: {fileID: 8694058030150903680}
+  administer: {fileID: 2143918346329946397}
 --- !u!1 &4430628740495362487
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,6 +282,7 @@ Transform:
   m_Children:
   - {fileID: 3746921529533459712}
   - {fileID: 5358696641301294066}
+  - {fileID: 3823887132889052590}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &333776470971658172
@@ -365,7 +417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Idle: {fileID: 6182527956614853536}
   Build: {fileID: 1349295415884959015}
-  Nurse: {fileID: 0}
+  Nurse: {fileID: 315169292399443832}
   Forage: {fileID: 0}
 --- !u!114 &8531101069963779304
 MonoBehaviour:
@@ -385,7 +437,12 @@ MonoBehaviour:
     minQuantity: 0
     maxQuantity: 1
     minDelaySeconds: 5
-    maxDelaySeconds: 20
+    maxDelaySeconds: 10
+  - item: {fileID: 11400000, guid: e51afdb714c6eb346b5ad286646c97ca, type: 2}
+    minQuantity: 0
+    maxQuantity: 1
+    minDelaySeconds: 5
+    maxDelaySeconds: 10
 --- !u!1 &4983428824839234900
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,6 +485,102 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ee8a83b5016dea438a201f5e0144f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
+--- !u!1 &5114106759502051238
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 979454546215716982}
+  - component: {fileID: 8694058030150903680}
+  m_Layer: 0
+  m_Name: Nurse__Pathfind
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &979454546215716982
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5114106759502051238}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3823887132889052590}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8694058030150903680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5114106759502051238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84319336ddb259342bdc9b76e327049c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+--- !u!1 &6964715422792913627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1967809900614994323}
+  - component: {fileID: 2143918346329946397}
+  m_Layer: 0
+  m_Name: Nurse__Administer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1967809900614994323
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6964715422792913627}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3823887132889052590}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2143918346329946397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6964715422792913627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c15794f835144647a5f73f12eaf27ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}

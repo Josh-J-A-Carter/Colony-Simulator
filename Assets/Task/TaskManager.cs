@@ -68,7 +68,6 @@ public class TaskManager : MonoBehaviour {
                 unassignedWorkers.RemoveAt(i);
                 task.IncrementAssignment();
                 i -= 1;
-                continue;
             }
         }
 
@@ -82,7 +81,6 @@ public class TaskManager : MonoBehaviour {
                 unassignedQueens.RemoveAt(i);
                 task.IncrementAssignment();
                 i -= 1;
-                continue;
             }
         }
     }
@@ -331,9 +329,6 @@ public class TaskManager : MonoBehaviour {
     }
 
     public void MarkComplete(Task task) {
-        // Require that the task have its resources supplied before completion
-        if (task is Consumer consumer && !consumer.HasAllocation()) return;
-
         pendingCompletionTasks.Add(task);
     }
 }

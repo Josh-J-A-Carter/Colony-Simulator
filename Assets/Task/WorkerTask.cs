@@ -1,9 +1,9 @@
 public abstract class WorkerTask : Task {
-    public WorkerTaskType category { get; protected set; }
+    public abstract WorkerTaskType GetCategory();
 }
 
 public enum WorkerTaskType {
-    Hive,
+    House,
     Forage,
     Nurse
 }

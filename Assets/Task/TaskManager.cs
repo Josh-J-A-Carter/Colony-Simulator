@@ -257,6 +257,8 @@ public class TaskManager : MonoBehaviour {
     }
 
     public void Allocate(Consumer consumer, InventoryManager inventory) {
+        if (consumer == null || !inventory) return;
+
         if (consumer.HasAllocation()) return;
 
         foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) if (!inventory.Has(item, quantity)) return;

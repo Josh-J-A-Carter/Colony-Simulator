@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LayState : State {
+public class Lay : State {
 
     [SerializeField]
-    State FindComb, Deposit;
+    State pathfind, deposit;
     LayTask task => (LayTask) taskAgent.GetTask();
 
     const float MAX_IDLE = 2.0f;
@@ -25,14 +25,14 @@ public class LayState : State {
         }
 
         if (child == null) {
-            stateMachine.SetChildState(FindComb);
+            stateMachine.SetChildState(pathfind);
         }
     }
 
     public override void OnChildExit(State exitingChild, bool success) {
-        if (exitingChild == FindComb && success) {
-            stateMachine.SetChildState(Deposit);
-        } else if (exitingChild == Deposit && success) {
+        if (exitingChild == pathfind && success) {
+            stateMachine.SetChildState(deposit);
+        } else if (exitingChild == deposit && success) {
             CompleteState();
         } else if (!success) {
             taskAgent.CancelAssignment();

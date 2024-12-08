@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class MeanderState : State {
+public class Idle__Pathfind : State {
 
     [SerializeField]
     /// Maximum/minimum distances to meander, from the current position

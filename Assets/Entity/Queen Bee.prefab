@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6076275593677150260}
   - component: {fileID: 802129630331084643}
   m_Layer: 0
-  m_Name: DepositState
+  m_Name: Lay__Deposit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 3b4c03d35203b7149be8b3489c3c1e29, type: 2}
 --- !u!1 &2460118735792134336
 GameObject:
@@ -58,7 +59,7 @@ GameObject:
   - component: {fileID: 318671876019231392}
   - component: {fileID: 29767822843929400}
   m_Layer: 0
-  m_Name: MeanderState
+  m_Name: Idle__Pathfind
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,6 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 0df9a517ebcd66d4b8eebff399f7673d, type: 2}
 --- !u!1 &2650003497700141771
 GameObject:
@@ -105,7 +107,7 @@ GameObject:
   - component: {fileID: 2577928444480583222}
   - component: {fileID: 1501111766138377873}
   m_Layer: 0
-  m_Name: StallState
+  m_Name: Idle__Stall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,6 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 3b4c03d35203b7149be8b3489c3c1e29, type: 2}
 --- !u!1 &4567495716145480177
 GameObject:
@@ -152,7 +155,7 @@ GameObject:
   - component: {fileID: 3986393524429092539}
   - component: {fileID: 130078228764303220}
   m_Layer: 0
-  m_Name: LayState
+  m_Name: Lay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -189,8 +192,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  FindComb: {fileID: 1696603738857855655}
-  Deposit: {fileID: 802129630331084643}
+  inventory: {fileID: 0}
+  pathfind: {fileID: 1696603738857855655}
+  deposit: {fileID: 802129630331084643}
 --- !u!1 &5876493878549738289
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +206,7 @@ GameObject:
   - component: {fileID: 3311481002093438135}
   - component: {fileID: 1696603738857855655}
   m_Layer: 0
-  m_Name: FindCombState
+  m_Name: Lay__Pathfind
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -237,6 +241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
+  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 0df9a517ebcd66d4b8eebff399f7673d, type: 2}
 --- !u!1 &7181809681829478707
 GameObject:
@@ -418,7 +423,7 @@ GameObject:
   - component: {fileID: 1948069892244224119}
   - component: {fileID: 5732011557964731672}
   m_Layer: 0
-  m_Name: IdleState
+  m_Name: Idle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,5 +460,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  Stall: {fileID: 1501111766138377873}
-  Meander: {fileID: 29767822843929400}
+  inventory: {fileID: 0}
+  stall: {fileID: 1501111766138377873}
+  pathfind: {fileID: 29767822843929400}

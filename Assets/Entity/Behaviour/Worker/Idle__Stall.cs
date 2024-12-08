@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class StallState : State {
+public class Idle__Stall : State {
 
     [SerializeField]
     AnimationClip anim;

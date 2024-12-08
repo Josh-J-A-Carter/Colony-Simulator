@@ -7,7 +7,7 @@ using UnityEngine;
 public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
 
     [SerializeField]
-    State Idle, Hive, Forage;
+    State Idle, Build, Nurse, Forage;
     Animator animator;
 
     WorkerTask task;
@@ -107,7 +107,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative {
 
         switch (task.category) {
             case WorkerTaskType.Hive: {
-                stateMachine.SetChildState(Hive);
+                stateMachine.SetChildState(Build);
                 return;
             }
         }

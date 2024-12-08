@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : State {
+public class Idle : State {
 
     [SerializeField]
-    State Stall, Meander;
+    State stall, pathfind;
 
     Task task => taskAgent.GetTask();
 
     public override void OnEntry() {
-        stateMachine.SetChildState(Meander);
+        stateMachine.SetChildState(pathfind);
     }
 
     public override void OnChildExit(State exitingChild, bool _) {
         if (task != null) CompleteState();
 
-        if (exitingChild == Stall) {
-            stateMachine.SetChildState(Meander);
-        } else if (exitingChild == Meander) {
-            stateMachine.SetChildState(Stall);
+        if (exitingChild == stall) {
+            stateMachine.SetChildState(pathfind);
+        } else if (exitingChild == pathfind) {
+            stateMachine.SetChildState(stall);
         }
     }
 }

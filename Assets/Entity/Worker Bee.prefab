@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2093992626412701842}
   - component: {fileID: 6110178386457755492}
   m_Layer: 0
-  m_Name: BuildState
+  m_Name: Build__Construct
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 5508806898524508659}
   - component: {fileID: 2535051914071567500}
   m_Layer: 0
-  m_Name: PathfindState
+  m_Name: Build__Pathfind
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 6078178060472455934}
   - component: {fileID: 3244078409357102006}
   m_Layer: 0
-  m_Name: MeanderState
+  m_Name: Idle__Pathfind
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 5358696641301294066}
   - component: {fileID: 1349295415884959015}
   m_Layer: 0
-  m_Name: HiveState
+  m_Name: Build
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -193,8 +193,8 @@ MonoBehaviour:
   animator: {fileID: 0}
   entity: {fileID: 0}
   inventory: {fileID: 0}
-  Pathfind: {fileID: 2535051914071567500}
-  Build: {fileID: 6110178386457755492}
+  pathfind: {fileID: 2535051914071567500}
+  construct: {fileID: 6110178386457755492}
 --- !u!1 &4430628740495362487
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +364,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Idle: {fileID: 6182527956614853536}
-  Hive: {fileID: 1349295415884959015}
+  Build: {fileID: 1349295415884959015}
+  Nurse: {fileID: 0}
   Forage: {fileID: 0}
 --- !u!114 &8531101069963779304
 MonoBehaviour:
@@ -396,7 +397,7 @@ GameObject:
   - component: {fileID: 5800758195169016155}
   - component: {fileID: 4775182616876843219}
   m_Layer: 0
-  m_Name: StallState
+  m_Name: Idle__Stall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -444,7 +445,7 @@ GameObject:
   - component: {fileID: 3746921529533459712}
   - component: {fileID: 6182527956614853536}
   m_Layer: 0
-  m_Name: IdleState
+  m_Name: Idle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -482,5 +483,5 @@ MonoBehaviour:
   animator: {fileID: 0}
   entity: {fileID: 0}
   inventory: {fileID: 0}
-  Stall: {fileID: 4775182616876843219}
-  Meander: {fileID: 3244078409357102006}
+  stall: {fileID: 4775182616876843219}
+  pathfind: {fileID: 3244078409357102006}

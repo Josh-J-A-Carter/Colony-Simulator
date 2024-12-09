@@ -41,8 +41,8 @@ public class TileEntityStore {
         }
     }
 
-    public List<(Vector2Int, TileEntity, Dictionary<String, object>)> Query<T>() where T: TileEntity {
-        List<(Vector2Int, TileEntity, Dictionary<String, object>)> queryResult = new List<(Vector2Int, TileEntity, Dictionary<string, object>)>();
+    public List<(Vector2Int, T, Dictionary<String, object>)> Query<T>() {
+        List<(Vector2Int, T, Dictionary<String, object>)> queryResult = new List<(Vector2Int, T, Dictionary<string, object>)>();
 
         foreach ((Vector2Int position, TileEntity tileEntity, Dictionary<String, object> data) in tileEntities) {
             if (tileEntity is T instanceOfT) {
@@ -78,6 +78,8 @@ public class TileEntityStore {
 
             for (int j = 0 ; j < tileEntities.Count ; j += 1) {
                 if (tileEntities[j].Item1 == position) {
+                    (Vector2Int pos, TileEntity tileEntity, Dictionary<String, object> data) = tileEntities[j];
+                    // tileEntity.Destroy(pos, tileEntities[j].Item3);
                     tileEntities.RemoveAt(j);
                     break;
                 }
@@ -89,7 +91,9 @@ public class TileEntityStore {
 
     void AddPending() {
         for (int i = 0 ; i < tileEntitiesToAdd.Count ; i += 1) {
-            tileEntities.Add(tileEntitiesToAdd[i]);
+            (Vector2Int pos, TileEntity tileEntity, Dictionary<String, object> data) = tileEntitiesToAdd[i];
+            tileEntities.Add((pos, tileEntity, data));
+            // tileEntity.Create(pos, data);
         }
 
         tileEntitiesToAdd.Clear();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -9,6 +10,8 @@ public class EntityManager : MonoBehaviour {
 
     [SerializeField]
     GameObject workerBeePrefab, queenBeePrefab, itemEntityPrefab;
+
+    List<ItemEntity> itemEntities;
 
 
     String[] awesomeWorkerBeeNames = new String[] {
@@ -29,15 +32,19 @@ public class EntityManager : MonoBehaviour {
             Destroy(this);
             return;
         } else Instance = this;
+
+        itemEntities = new();
     }
 
     public void Start() {
         InstantiateWorker(new Vector2Int(2, 2));
+        InstantiateWorker(new Vector2Int(3, 2));
+        InstantiateWorker(new Vector2Int(-2, 4));
         InstantiateQueen(new Vector2Int(4, -4));
     }
 
     public GameObject InstantiateWorker(Vector2 pos) {
-        GameObject obj = Object.Instantiate(workerBeePrefab, new Vector3(pos.x, pos.y, zIndex), Quaternion.identity, transform);
+        GameObject obj = Instantiate(workerBeePrefab, new Vector3(pos.x, pos.y, zIndex), Quaternion.identity, transform);
         TaskManager.Instance.RegisterAgent(obj.GetComponent<WorkerBehaviour>());
 
         WorkerBehaviour worker = obj.GetComponent<WorkerBehaviour>();
@@ -48,7 +55,7 @@ public class EntityManager : MonoBehaviour {
     }
 
     public GameObject InstantiateQueen(Vector2 pos) {
-        GameObject obj = Object.Instantiate(queenBeePrefab, new Vector3(pos.x, pos.y, zIndex), Quaternion.identity, transform);
+        GameObject obj = Instantiate(queenBeePrefab, new Vector3(pos.x, pos.y, zIndex), Quaternion.identity, transform);
         TaskManager.Instance.RegisterAgent(obj.GetComponent<QueenBehaviour>());
 
         QueenBehaviour queen = obj.GetComponent<QueenBehaviour>();
@@ -77,6 +84,33 @@ public class EntityManager : MonoBehaviour {
         ItemEntity itemEntity = obj.GetComponent<ItemEntity>();
         itemEntity.Setup(item, quantity);
 
+        itemEntities.Add(itemEntity);
+
         return obj;
+    }
+
+    public void DestroyEntity(Entity entity) {
+        if (entity is ItemEntity itemEntity) {
+            itemEntities.Remove(itemEntity);
+        }
+
+        Destroy(entity.GetGameObject());
+    }
+
+    public bool FindItemEntities(Item item, uint quantity, out List<ItemEntity> result) {
+        result = new();
+        int target = (int) quantity;
+        
+        foreach (ItemEntity entity in itemEntities) {
+            if (entity.item != item) continue;
+
+            result.Add(entity);
+            target -= (int) entity.quantity;
+
+            // Return early if we already reach the target
+            if (target <= 0) return true;
+        }
+
+        return false;
     }
 }

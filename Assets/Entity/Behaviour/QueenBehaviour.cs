@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QueenBehaviour : MonoBehaviour, TaskAgent, Informative {
+public class QueenBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
     
     [SerializeField]
     State Idle, Lay;
@@ -14,7 +14,11 @@ public class QueenBehaviour : MonoBehaviour, TaskAgent, Informative {
 
     String nameInfo;
 
-    void Start() {
+    public GameObject GetGameObject() {
+        return gameObject;
+    }
+
+    public void Start() {
         stateMachine = new StateMachine();
 
         animator = GetComponent<Animator>();

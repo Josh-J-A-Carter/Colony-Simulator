@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -158,7 +159,9 @@ public class BroodComb : TileEntity, Storage {
         else Debug.Log("Fed!");
     }
 
-    public Inventory GetInventory(Dictionary<String, object> instance) {
+
+
+    Inventory GetInventory(Dictionary<String, object> instance) {
         Inventory inventory;
 
         object value;
@@ -168,9 +171,61 @@ public class BroodComb : TileEntity, Storage {
         return inventory;
     }
 
-    public bool CanStoreBrood(Vector2Int location, Dictionary<String, object> data = null) {
-        if (data == null) data = TileManager.Instance.GetTileEntityData(location);
+    public uint CountItem(Dictionary<String, object> instance, Item item) {
+        return GetInventory(instance).CountItem(item);
+    }
 
+    public void Give(Vector2Int defaultLocation, Dictionary<String, object> instance, Item item, uint quantity) {
+        if (!IsAvailableStorage(instance)) return;
+
+        Inventory inventory = GetInventory(instance);
+        uint space = inventory.MaxCapacity() - inventory.Carrying();
+
+        if (space >= quantity) {
+            inventory.AddAtomic(item, quantity);
+        }
+
+        else {
+            inventory.AddAtomic(item, space);
+            uint remaining = quantity - space;
+
+            EntityManager.Instance.InstantiateItemEntity(defaultLocation, item, remaining);            
+        }
+
+        instance[CURRENT_STORAGE_TYPE] = StorageType.Item;
+    }
+
+
+    public bool Take(Dictionary<String, object> instance, Item item, uint quantity) {
+        if ((StorageType) instance[CURRENT_STORAGE_TYPE] != StorageType.Item) return false;
+
+        Inventory inventory = GetInventory(instance);
+        bool success = inventory.RemoveAtomic(item, quantity);
+
+        if (success && inventory.Carrying() == 0) instance[CURRENT_STORAGE_TYPE] = StorageType.Empty;
+
+        return success;
+    }
+
+    public uint RemainingCapacity(Dictionary<String, object> instance) {
+        Inventory inventory = GetInventory(instance);
+
+        return inventory.MaxCapacity() - inventory.Carrying();
+    }
+
+
+    public bool IsAvailableStorage(Dictionary<String, object> instance) {
+        bool success = (StorageType) instance[CURRENT_STORAGE_TYPE] == StorageType.Empty || 
+               (StorageType) instance[CURRENT_STORAGE_TYPE] == StorageType.Item;
+
+        if (!success) return false;
+
+        if (RemainingCapacity(instance) == 0) return false;
+
+        return true;
+    }
+
+    public bool CanStoreBrood(Dictionary<String, object> data) {
         if (data == null) return false;
 
         if ((StorageType) data[CURRENT_STORAGE_TYPE] != StorageType.Empty) return false;
@@ -182,7 +237,7 @@ public class BroodComb : TileEntity, Storage {
 
         // Get the tile entity data & check we can store brood here
         Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(location);
-        if (CanStoreBrood(location, data) == false) return false;
+        if (CanStoreBrood(data) == false) return false;
         
         DrawVariant(location, GetTileAt__ContainsEggVariant);
 

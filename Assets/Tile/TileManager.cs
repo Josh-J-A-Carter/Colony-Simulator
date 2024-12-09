@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -68,8 +69,35 @@ public class TileManager : MonoBehaviour {
         return tileEntityStore.GetTileEntityData(position);
     }
 
-    public List<(Vector2Int, TileEntity, Dictionary<String, object>)> QueryTileEntities<T>() where T: TileEntity {
+    public List<(Vector2Int, T, Dictionary<String, object>)> QueryTileEntities<T>() {
         return tileEntityStore.Query<T>();
+    }
+
+    public bool FindItemInStorage(Item item, uint quantity, out List<Vector2Int> result) {
+        result = new();
+        int target = (int) quantity;
+        
+        foreach ((Vector2Int pos, Storage storage, Dictionary<String, object> data) in QueryTileEntities<Storage>()) {
+            uint contribution = storage.CountItem(data, item);
+            
+            if (contribution == 0) continue;
+
+            result.Add(pos);
+            target -= (int) contribution;
+
+            // Return early if we already reach the target
+            if (target <= 0) return true;
+        }
+
+        return false;
+    }
+
+    public List<(Vector2Int, Storage, Dictionary<String, object>)> FindAvailableStorage() {
+        return tileEntityStore
+                        .Query<Storage>()
+                        .Where(tuple => tuple.Item2.IsAvailableStorage(tuple.Item3))
+                        .OrderBy(tuple => tuple.Item2.RemainingCapacity(tuple.Item3))
+                        .ToList();
     }
 
     /// <summary>

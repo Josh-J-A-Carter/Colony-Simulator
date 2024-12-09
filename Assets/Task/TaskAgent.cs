@@ -20,6 +20,8 @@ public interface TaskAgent {
         TaskManager.Instance.UnassignAgent(this);
     }
 
+    public virtual void OnTaskCancellation() {}
+
     /// <summary>
     /// Forcibly set the task of the agent. This is always accepted by the agent,
     //  as opposed to <c>OfferTask</c> which can be declined.

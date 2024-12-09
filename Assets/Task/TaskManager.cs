@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,11 +14,8 @@ public class TaskManager : MonoBehaviour {
     List<Task> pendingCompletionTasks;
     List<Task> pendingAdditionTasks;
 
-    List<WorkerTask> workerTasks;
-    List<WorkerBehaviour> assignedWorkers, unassignedWorkers;
-
-    List<QueenTask> queenTasks;
-    List<QueenBehaviour> assignedQueens, unassignedQueens;
+    List<Task> tasks;
+    List<TaskAgent> assignedAgents, unassignedAgents;
 
     public void Awake() {
         // Instantiate singleton
@@ -26,18 +24,14 @@ public class TaskManager : MonoBehaviour {
             return;
         } else Instance = this;
 
-        locativeTaskStore = new LocativeTaskStore();
+        locativeTaskStore = new();
 
-        pendingCompletionTasks = new List<Task>();
-        pendingAdditionTasks = new List<Task>();
+        pendingCompletionTasks = new();
+        pendingAdditionTasks = new();
 
-        workerTasks = new List<WorkerTask>();
-        assignedWorkers = new List<WorkerBehaviour>();
-        unassignedWorkers = new List<WorkerBehaviour>();
-
-        queenTasks = new List<QueenTask>();
-        assignedQueens = new List<QueenBehaviour>();
-        unassignedQueens = new List<QueenBehaviour>();
+        tasks = new();
+        assignedAgents = new();
+        unassignedAgents = new();
     }
 
     public void FixedUpdate() {
@@ -57,108 +51,94 @@ public class TaskManager : MonoBehaviour {
         OccupyUnassignedAgents();
     }
 
-    void OccupyUnassignedAgents() {        
-        for (int i = 0 ; i < unassignedWorkers.Count ; i += 1) {
-            WorkerTask task = GetMostUrgent(workerTasks);
-            if (task == null) break;
-            WorkerBehaviour worker = unassignedWorkers[i];
+    void OccupyUnassignedAgents() {
+        for (int i = 0 ; i < unassignedAgents.Count ; i += 1) {
+            TaskAgent agent = unassignedAgents[i];
+            SortTasksByUrgency();
 
-            if (worker.OfferTask(task)) {
-                assignedWorkers.Add(worker);
-                unassignedWorkers.RemoveAt(i);
-                task.IncrementAssignment();
-                i -= 1;
-            }
-        }
+            // String str = "";
+            // foreach (Task task in tasks) str = $"{str}   ({task.priority}, {task.assignment}, {task.creationTime})";
+            // Debug.Log(str);
 
-        for (int i = 0 ; i < unassignedQueens.Count ; i += 1) {
-            QueenTask task = GetMostUrgent(queenTasks);
-            if (task == null) break;
-            QueenBehaviour queen = unassignedQueens[i];
-
-            if (queen.OfferTask(task)) {
-                assignedQueens.Add(queen);
-                unassignedQueens.RemoveAt(i);
-                task.IncrementAssignment();
-                i -= 1;
+            foreach (Task task in tasks) {
+                if (agent.OfferTask(task)) {
+                    assignedAgents.Add(agent);
+                    unassignedAgents.RemoveAt(i);
+                    task.IncrementAssignment();
+                    i -= 1;
+                    break;
+                }
             }
         }
     }
 
-    T GetMostUrgent<T>(List<T> taskList) where T: Task {
-        if (taskList.Count == 0) return null;
+    void SortTasksByUrgency() {
+        tasks.Sort((t1, t2) => {
+            if (t1.priority > t2.priority) return 1;
+            if (t1.priority < t2.priority) return -1;
 
-        T mostUrgent = taskList[0];
+            if (t1.assignment > t2.assignment) return 1;
+            if (t1.assignment < t2.assignment) return -1;
 
-        foreach (T task in taskList) {
-            if (task.priority > mostUrgent.priority) continue;
-            else if (task.priority < mostUrgent.priority) {
-                mostUrgent = task;
-                continue;
-            }
+            if (t1.creationTime > t2.creationTime) return 1;
+            if (t1.creationTime < t2.creationTime) return -1;
 
-            if (task.assignment > mostUrgent.assignment) continue;
-            else if (task.assignment < mostUrgent.assignment) {
-                mostUrgent = task;
-                continue;
-            }
-
-            if (task.creationTime > mostUrgent.creationTime) continue;
-            else if (task.creationTime < mostUrgent.creationTime) {
-                mostUrgent = task;
-                continue;
-            }
-        }
-
-        return mostUrgent;
+            return 0;
+        });
     }
+
+    // Task GetMostUrgent() {
+    //     if (tasks.Count == 0) return null;
+
+    //     Task mostUrgent = tasks[0];
+
+    //     foreach (Task task in tasks) {
+    //         if (task.priority > mostUrgent.priority) continue;
+    //         else if (task.priority < mostUrgent.priority) {
+    //             mostUrgent = task;
+    //             continue;
+    //         }
+
+    //         if (task.assignment > mostUrgent.assignment) continue;
+    //         else if (task.assignment < mostUrgent.assignment) {
+    //             mostUrgent = task;
+    //             continue;
+    //         }
+
+    //         if (task.creationTime > mostUrgent.creationTime) continue;
+    //         else if (task.creationTime < mostUrgent.creationTime) {
+    //             mostUrgent = task;
+    //             continue;
+    //         }
+    //     }
+
+    //     return mostUrgent;
+    // }
 
     void ClearPendingCompletion() {
         foreach (Task task in pendingCompletionTasks) {
-            if (task is WorkerTask workerTask) {
-                // Tell the task that it is complete
-                workerTask.OnCompletion();
+            
+            // Tell the task that it is complete
+            task.OnCompletion();
 
-                // Remove the task from the list
-                workerTasks.Remove(workerTask);
+            // Remove the task from the list
+            tasks.Remove(task);
 
-                // Reset all those agents whose task is set to this one
-                for (int i = 0 ; i < assignedWorkers.Count ; i += 1) {
-                    if (assignedWorkers[i].GetTask() != workerTask) continue;
+            // Reset all those agents whose task is set to this one
+            for (int i = 0 ; i < assignedAgents.Count ; i += 1) {
+                if (assignedAgents[i].GetTask() != task) continue;
 
-                    assignedWorkers[i].SetTask(null);
-                    unassignedWorkers.Add(assignedWorkers[i]);
-                    assignedWorkers.RemoveAt(i);
-                    i -= 1;
-                }
+                assignedAgents[i].SetTask(null);
+                unassignedAgents.Add(assignedAgents[i]);
+                assignedAgents.RemoveAt(i);
+                i -= 1;
             }
-
-            else if (task is QueenTask queenTask) {
-                // Tell the task that it is complete
-                queenTask.OnCompletion();
-
-                // Remove the task from the list
-                queenTasks.Remove(queenTask);
-
-                // Reset all those agents whose task is set to this one
-                for (int i = 0 ; i < assignedQueens.Count ; i += 1) {
-                    if (assignedQueens[i].GetTask() != queenTask) continue;
-
-                    assignedQueens[i].SetTask(null);
-                    unassignedQueens.Add(assignedQueens[i]);
-                    assignedQueens.RemoveAt(i);
-                    i -= 1;
-                }
-            }
-
-            else throw new System.Exception("Task type not implemented in ClearPendingCompletion function");
 
             // Unset locative task store!
             if (task is Locative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
         }
 
         pendingCompletionTasks.Clear();
-
     }
 
     void ClearPendingAddition() {
@@ -168,16 +148,12 @@ public class TaskManager : MonoBehaviour {
             bool success = ResolveConflicts(task);
 
             if (success) {
-                // Add the task to the correct list, depending on its type
-                if (task is WorkerTask workerTask) workerTasks.Add(workerTask);
-                else if (task is QueenTask queenTask) queenTasks.Add(queenTask);
-                else throw new System.Exception("Task pending addition by TaskManager; task-type unrecognised.");
-
-                toConfirm.Add(task);
-                // Pre-emptively add to the locative task store;
-                // can't quite set it to be confirmed yet, as this will remove the pending status,
+                // Add the task to the list, & add to the locative task store;
+                // Can't quite set it to be confirmed yet, as this will remove the pending status,
                 // allowing other pending tasks (added at the same time) to override this,
                 // when in reality they have the same age
+                tasks.Add(task);
+                toConfirm.Add(task);
                 if (task is Locative locativeTask) locativeTaskStore.SetTask(locativeTask);
             }
         }
@@ -206,50 +182,26 @@ public class TaskManager : MonoBehaviour {
     }
 
     void CancelTask(Task task) {
-        if (task is WorkerTask workerTask) {
-            // Tell the task that it has been cancelled
-            workerTask.OnCancellation();
+        
+        // Tell the task that it has been cancelled
+        task.OnCancellation();
 
-            // Remove the task from the list
-            workerTasks.Remove(workerTask);
+        // Remove the task from the list
+        tasks.Remove(task);
 
-            // If applicable, de-allocate the task's resources (i.e. items needed for its completion)
-            if (task is Consumer consumer) Deallocate(consumer);
+        // If applicable, de-allocate the task's resources (i.e. items needed for its completion)
+        if (task is Consumer consumer) Deallocate(consumer);
 
-            // Reset all those agents whose task is set to this one
-            for (int i = 0 ; i < assignedWorkers.Count ; i += 1) {
-                if (assignedWorkers[i].GetTask() != workerTask) continue;
+        // Reset all those agents whose task is set to this one
+        for (int i = 0 ; i < assignedAgents.Count ; i += 1) {
+            if (assignedAgents[i].GetTask() != task) continue;
 
-                assignedWorkers[i].OnTaskCancellation();
-                unassignedWorkers.Add(assignedWorkers[i]);
-                assignedWorkers.RemoveAt(i);
-                i -= 1;
-            }
+            assignedAgents[i].OnTaskCancellation();
+            unassignedAgents.Add(assignedAgents[i]);
+            assignedAgents.RemoveAt(i);
+            i -= 1;
         }
-
-        else if (task is QueenTask queenTask) {
-            // Tell the task that it is complete
-            queenTask.OnCancellation();
-
-            // Remove the task from the list
-            queenTasks.Remove(queenTask);
-
-            // If applicable, de-allocate the task's resources (i.e. items needed for its completion)
-            if (task is Consumer consumer) Deallocate(consumer);
-
-            // Reset all those agents whose task is set to this one
-            for (int i = 0 ; i < assignedQueens.Count ; i += 1) {
-                if (assignedQueens[i].GetTask() != queenTask) continue;
-
-                assignedQueens[i].CancelTask();
-                unassignedQueens.Add(assignedQueens[i]);
-                assignedQueens.RemoveAt(i);
-                i -= 1;
-            }
-        }
-
-        else throw new System.Exception("Task type not implemented in CancelTask function");
-
+        
         // Unset locative task store!
         if (task is Locative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
     }
@@ -283,42 +235,24 @@ public class TaskManager : MonoBehaviour {
     }
 
     public void RegisterAgent(TaskAgent agent) {
-        if (agent is WorkerBehaviour worker) unassignedWorkers.Add(worker);
-        else if (agent is QueenBehaviour queen) unassignedQueens.Add(queen);
+        unassignedAgents.Add(agent);
     }
 
     public void DeregisterAgent(TaskAgent agent) {
-        if (agent is WorkerBehaviour worker) {
-            if (unassignedWorkers.Remove(worker)) return;
+        if (unassignedAgents.Remove(agent)) return;
 
-            worker.GetTask().DecrementAssignment();
-            worker.SetTask(null);
-            assignedWorkers.Remove(worker);
-        } else if (agent is QueenBehaviour queen) {
-            if (unassignedQueens.Remove(queen)) return;
-
-            queen.GetTask().DecrementAssignment();
-            queen.SetTask(null);
-            assignedQueens.Remove(queen);
-        }
+        agent.GetTask().DecrementAssignment();
+        agent.SetTask(null);
+        assignedAgents.Remove(agent);
     }
 
     public void UnassignAgent(TaskAgent agent) {
-        if (agent is WorkerBehaviour worker) {
-            // Remove from assigned workers list. If it wasn't there, then don't continue with this function
-            if (!assignedWorkers.Remove(worker)) return;
+        // Remove from assigned workers list. If it wasn't there, then don't continue with this function
+        if (!assignedAgents.Remove(agent)) return;
 
-            worker.GetTask().DecrementAssignment();
-            worker.SetTask(null);
-            unassignedWorkers.Add(worker);
-        } else if (agent is QueenBehaviour queen) {
-            // Remove from assigned workers list. If it wasn't there, then don't continue with this function
-            if (!assignedQueens.Remove(queen)) return;
-
-            queen.GetTask().DecrementAssignment();
-            queen.SetTask(null);
-            unassignedQueens.Add(queen);
-        }
+        agent.GetTask().DecrementAssignment();
+        agent.SetTask(null);
+        unassignedAgents.Add(agent);
     }
 
     public void CreateTask(Task task) {

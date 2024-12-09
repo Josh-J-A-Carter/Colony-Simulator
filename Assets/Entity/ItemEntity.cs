@@ -1,15 +1,38 @@
 using UnityEngine;
 
-public class ItemEntity : MonoBehaviour, Informative {
+public class ItemEntity : MonoBehaviour, Informative, Entity {
 
     public Item item { get; private set; }
     public uint quantity { get; private set; }
+
+    public GameObject GetGameObject() {
+        return gameObject;
+    }
 
     public void Setup(Item item, uint quantity) {
         this.item = item;
         this.quantity = quantity;
 
         GetComponent<SpriteRenderer>().sprite = item.GetPreviewSprite();
+
+        // ResourceManager.Instance.Register(this);
+    }
+
+    public void Collect(InventoryManager inventory) {
+        if (inventory.RemainingCapacity() >= quantity) {
+            inventory.Give(item, quantity);
+            // ResourceManager.Instance.Deregister(this);
+            EntityManager.Instance.DestroyEntity(this);
+            return;
+        }
+
+        // Can't collect the entire item, so just take part of it
+        uint remaining = inventory.RemainingCapacity();
+
+        inventory.Give(item, remaining);
+        quantity -= remaining;
+
+        // ResourceManager.Instance.UpdateCount(item, (int) -remaining);
     }
 
     public string GetDescription() {

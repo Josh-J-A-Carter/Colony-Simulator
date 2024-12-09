@@ -12,7 +12,14 @@ public class Build__Construct : State {
     public override void OnEntry() {
         animator.Play(anim.name);
 
-        TaskManager.Instance.Allocate(task, inventory);
+        // Make sure we can actually complete the task lol
+        if (!task.HasAllocation()) {
+            foreach ((Item item, uint quantity) in task.GetRequiredResources()) {
+                if (!inventory.Has(item, quantity)) CompleteState(false);
+            }
+
+            TaskManager.Instance.Allocate(task, inventory);
+        }
     }
 
     public override void FixedRun(){

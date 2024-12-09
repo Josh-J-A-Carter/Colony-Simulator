@@ -6,7 +6,7 @@ using UnityEngine;
 public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
 
     [SerializeField]
-    State Idle, Build, Nurse, Forage;
+    State Idle, Build, Nurse, Tidy;
     Animator animator;
 
     WorkerTask task;
@@ -48,7 +48,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
 
         if (task is WorkerTask workerTask) {
             this.task = workerTask;
-            stateMachine.ResetChildState();
+            // if (currentState == Idle) stateMachine.ResetChildState();
             return true;
         } else return false;
     }
@@ -70,10 +70,10 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
             if (inventory.Has(item, quantity)) continue;
 
             // ItemEntities have it?
-            if (EntityManager.Instance.FindItemEntities(item, quantity, out _)) continue;
+            // if (EntityManager.Instance.FindItemEntities(item, quantity, out _)) continue;
 
             // Storage has it?
-            if (TileManager.Instance.FindItemInStorage(item, quantity, out _)) continue;
+            // if (TileManager.Instance.FindItemInStorage(item, quantity, out _)) continue;
 
             // Nothing in the nest has it readily accessible
             return false;
@@ -117,7 +117,20 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
 
     void DecideState() {
         if (task == null) {
-            stateMachine.SetChildState(Idle);
+            
+            // If inventory full or random items around, AND available storage, then tidy
+            bool invFull = inventory.RemainingCapacity() <= inventory.MaxCapacity() / 5;
+            ReadOnlyCollection<ItemEntity> itemEntities = EntityManager.Instance.GetItemEntities();
+            List<(Vector2Int, Storage, Dictionary<String, object>)> storage = TileManager.Instance.FindAvailableStorage();
+
+            if ((invFull || itemEntities.Count > 0) && storage.Count > 0) {
+                stateMachine.SetChildState(Tidy);
+            }
+
+            else {
+                stateMachine.SetChildState(Idle);
+            }
+
             return;
         }
 
@@ -130,7 +143,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
         }
 
         else {
-            throw new Exception("Unknown task type");
+            throw new Exception("Unknown/incompatible task type");
         }
     }
 

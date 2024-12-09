@@ -246,6 +246,54 @@ MonoBehaviour:
   inventory: {fileID: 0}
   pathfind: {fileID: 8694058030150903680}
   administer: {fileID: 2143918346329946397}
+--- !u!1 &3549341296443011130
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6352880570718983482}
+  - component: {fileID: 1432687605925642583}
+  m_Layer: 0
+  m_Name: Tidy__Collect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6352880570718983482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3549341296443011130}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4354941086093276931}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1432687605925642583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3549341296443011130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f9d0e5499c478498e5cdf4015548e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &4430628740495362487
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,6 +331,7 @@ Transform:
   - {fileID: 3746921529533459712}
   - {fileID: 5358696641301294066}
   - {fileID: 3823887132889052590}
+  - {fileID: 4354941086093276931}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &333776470971658172
@@ -418,7 +467,7 @@ MonoBehaviour:
   Idle: {fileID: 6182527956614853536}
   Build: {fileID: 1349295415884959015}
   Nurse: {fileID: 315169292399443832}
-  Forage: {fileID: 0}
+  Tidy: {fileID: 5819586312370582743}
 --- !u!114 &8531101069963779304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,8 +490,8 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: e51afdb714c6eb346b5ad286646c97ca, type: 2}
     minQuantity: 0
     maxQuantity: 1
-    minDelaySeconds: 5
-    maxDelaySeconds: 10
+    minDelaySeconds: 15
+    maxDelaySeconds: 30
 --- !u!1 &4983428824839234900
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,6 +588,54 @@ MonoBehaviour:
   entity: {fileID: 0}
   inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+--- !u!1 &6780914768193794047
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6374725141639333648}
+  - component: {fileID: 5766766275175161628}
+  m_Layer: 0
+  m_Name: Tidy__Store
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6374725141639333648
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6780914768193794047}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4354941086093276931}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5766766275175161628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6780914768193794047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5919d1075834e314199fff2bdb4cc98b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &6964715422792913627
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,6 +684,57 @@ MonoBehaviour:
   entity: {fileID: 0}
   inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
+--- !u!1 &7068056815192042691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4354941086093276931}
+  - component: {fileID: 5819586312370582743}
+  m_Layer: 0
+  m_Name: Tidy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4354941086093276931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7068056815192042691}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6352880570718983482}
+  - {fileID: 6374725141639333648}
+  m_Father: {fileID: 5405411461827431291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5819586312370582743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7068056815192042691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d3ae8ef51f04e478b48d2b5a6475b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  Collect: {fileID: 1432687605925642583}
+  Store: {fileID: 5766766275175161628}
 --- !u!1 &8122973212392184058
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -24,7 +25,8 @@ public class EntityManager : MonoBehaviour {
         "Maria", "Christina", "Victoria", "Mathilde", "Caterina", "Nefertiti", "Lady Jane"
     };
 
-    int zIndex = -1;
+    int zIndex = -2;
+    int zIndexItem = -1;
 
     public void Awake() {
         // Instantiate singleton
@@ -79,7 +81,7 @@ public class EntityManager : MonoBehaviour {
     }
 
     public GameObject InstantiateItemEntity(Vector2 pos, Item item, uint quantity) {
-        GameObject obj = Instantiate(itemEntityPrefab, new Vector3(pos.x, pos.y, zIndex), Quaternion.identity, transform);
+        GameObject obj = Instantiate(itemEntityPrefab, new Vector3(pos.x, pos.y, zIndexItem), Quaternion.identity, transform);
 
         ItemEntity itemEntity = obj.GetComponent<ItemEntity>();
         itemEntity.Setup(item, quantity);
@@ -112,5 +114,9 @@ public class EntityManager : MonoBehaviour {
         }
 
         return false;
+    }
+
+    public ReadOnlyCollection<ItemEntity> GetItemEntities() {
+        return itemEntities.AsReadOnly();
     }
 }

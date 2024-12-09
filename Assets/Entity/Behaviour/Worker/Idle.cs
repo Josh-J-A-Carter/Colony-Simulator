@@ -17,7 +17,8 @@ public class Idle : State {
         if (task != null) CompleteState();
 
         if (exitingChild == stall) {
-            stateMachine.SetChildState(pathfind);
+            // A good idea to leave this state every now and then
+            CompleteState();
         } else if (exitingChild == pathfind) {
             stateMachine.SetChildState(stall);
         }

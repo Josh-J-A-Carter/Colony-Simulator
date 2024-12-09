@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 using UnityEngine;
+using System.Collections.ObjectModel;
 
 public class InventoryManager : MonoBehaviour {
     Inventory inventory;
@@ -43,8 +44,20 @@ public class InventoryManager : MonoBehaviour {
         }
     }
 
+    public ReadOnlyCollection<(Item, uint)> GetContents() {
+        return inventory.GetContents();
+    }
+
     public uint RemainingCapacity() {
         return inventory.MaxCapacity() - inventory.Carrying();
+    }
+
+    public uint MaxCapacity() {
+        return inventory.MaxCapacity();
+    }
+
+    public uint Carrying() {
+        return inventory.Carrying();
     }
 
     public bool Has(Item item, uint quantity = 1) {

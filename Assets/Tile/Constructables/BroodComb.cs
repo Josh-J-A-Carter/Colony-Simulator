@@ -166,7 +166,10 @@ public class BroodComb : TileEntity, Storage {
 
         object value;
         if (instance.TryGetValue(INVENTORY, out value)) inventory = (Inventory) value;
-        else inventory = new Inventory(maxCapacity);
+        else {
+            inventory = new Inventory(maxCapacity);
+            instance[INVENTORY] = inventory;
+        }
 
         return inventory;
     }
@@ -215,6 +218,8 @@ public class BroodComb : TileEntity, Storage {
 
 
     public bool IsAvailableStorage(Dictionary<String, object> instance) {
+        if ((bool) instance[CAN_STORE_ITEM] == false) return false;
+
         bool success = (StorageType) instance[CURRENT_STORAGE_TYPE] == StorageType.Empty || 
                (StorageType) instance[CURRENT_STORAGE_TYPE] == StorageType.Item;
 

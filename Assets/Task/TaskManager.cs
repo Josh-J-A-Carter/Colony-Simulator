@@ -7,7 +7,11 @@ using UnityEngine;
 
 public class TaskManager : MonoBehaviour {
 
+    const int ASSIGNMENT_RATE = 50;
     public static TaskManager Instance { get; private set; }
+
+
+    int tick;
 
     LocativeTaskStore locativeTaskStore;
 
@@ -23,6 +27,8 @@ public class TaskManager : MonoBehaviour {
             Destroy(this);
             return;
         } else Instance = this;
+
+        tick = 0;
 
         locativeTaskStore = new();
 
@@ -48,17 +54,18 @@ public class TaskManager : MonoBehaviour {
 
 
         // Deal with agents that currently are not assigned a task
-        OccupyUnassignedAgents();
+        tick += 1;
+
+        if (tick == ASSIGNMENT_RATE) {
+            tick = 0;
+            OccupyUnassignedAgents();
+        }
     }
 
     void OccupyUnassignedAgents() {
         for (int i = 0 ; i < unassignedAgents.Count ; i += 1) {
             TaskAgent agent = unassignedAgents[i];
             SortTasksByUrgency();
-
-            // String str = "";
-            // foreach (Task task in tasks) str = $"{str}   ({task.priority}, {task.assignment}, {task.creationTime})";
-            // Debug.Log(str);
 
             foreach (Task task in tasks) {
                 if (agent.OfferTask(task)) {

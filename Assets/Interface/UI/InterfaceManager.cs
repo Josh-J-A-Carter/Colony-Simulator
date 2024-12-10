@@ -10,6 +10,8 @@ public class InterfaceManager : MonoBehaviour {
     VisualElement containerRoot;
     VisualElement configurableContainerRoot, configurableContainerContentRoot;
 
+    VisualElement configInfoContainerRoot, configInfoContainerContentRoot;
+
     VisualElement infoContainerRoot, infoContainerContentRoot;
 
     List<Button> toolButtons;
@@ -38,6 +40,9 @@ public class InterfaceManager : MonoBehaviour {
         // Configurable container
         configurableContainerRoot = containerRoot.Q(name: "configurable-container-root");
         configurableContainerContentRoot = containerRoot.Q(name: "configurable-container-content-root");
+        // Config info (goes beside config container when a selection is made)
+        configInfoContainerRoot = containerRoot.Q(name: "config-info-container-root");
+        configInfoContainerContentRoot = containerRoot.Q(name: "config-info-container-content-root");
 
         // Configurable container
         infoContainerRoot = containerRoot.Q(name: "info-container-root");
@@ -59,6 +64,20 @@ public class InterfaceManager : MonoBehaviour {
         configurableContainerRoot.style.visibility = Visibility.Hidden;
     }
 
+
+    public void ShowConfigInfoContainer() {
+        configInfoContainerRoot.style.visibility = Visibility.Visible;
+    }
+
+    public void HideConfigInfoContainer() {
+        configInfoContainerRoot.style.visibility = Visibility.Hidden;
+    }
+
+    public void SetConfigInfoContainerContent(VisualElement content) {
+        configInfoContainerContentRoot.Clear();
+
+        configInfoContainerContentRoot.Add(content);
+    }
 
     public void SetInfoContainerContent(VisualElement content) {
         infoContainerContentRoot.Clear();

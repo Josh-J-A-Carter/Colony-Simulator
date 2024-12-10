@@ -12,7 +12,7 @@
 .tool {
     width: 80px;
     height: 80px;
-    background-color: rgb(103, 103, 103);
+    background-color: rgb(123, 123, 123);
     border-radius: 6px;
     border-width: 2px;
     border-color: rgb(57, 57, 57);
@@ -38,6 +38,8 @@
     height: auto;
     min-height: auto;
     max-height: 40%;
+    margin-left: 2px;
+    margin-right: 2px;
     border-left-color: rgba(53, 158, 255, 0);
     border-right-color: rgba(53, 158, 255, 0);
     border-top-color: rgba(53, 158, 255, 0);
@@ -90,13 +92,12 @@
 }
 
 .foldout__property {
-    white-space: normal;
     font-size: 18px;
     margin: 0;
     margin-left: 20px;
 }
 
-.foldout__property label {
+.foldout__property Label {
     white-space: normal;
     margin: 0;
 }
@@ -120,9 +121,11 @@
 }
 
 .preview {
+    background-color: rgb(123, 123, 123);
+    border-radius: 2px;
     justify-content: center;
     flex-wrap: wrap;
-    width: auto;
+    width: 110px;
     height: auto;
     align-items: center;
 }

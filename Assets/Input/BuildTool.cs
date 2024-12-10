@@ -18,8 +18,15 @@ public class BuildTool : Tool {
         Vector2Int newStartPreview = data.GetGridPosition();
         Vector2Int newEndPreview = newStartPreview;
         
+        // New constructable is null; not useful
         if (newConstructable == null) return;
-        constructable = newConstructable;
+
+        // Old constructable is null or different to new one, so need to display
+        if (constructable != newConstructable) {
+            constructable = newConstructable;
+            InfoToUI.DisplayConfigInfoTree(GetConstructableConfigInfo());
+            InterfaceManager.Instance.ShowConfigInfoContainer();
+        }
 
         if (type == HoverType.None) return;
 
@@ -104,14 +111,33 @@ public class BuildTool : Tool {
         return (new Vector2Int(startX, startY), new Vector2Int(endX, endY));
     }
 
+    InfoBranch GetConstructableConfigInfo() {
+        InfoBranch root = new InfoBranch(null);
+
+        InfoBranch genericCategory = new InfoBranch("Generic properties");
+        root.AddChild(genericCategory);
+
+        InfoLeaf nameProperty = new InfoLeaf(constructable.GetName(), description: constructable.GetDescription());
+        genericCategory.AddChild(nameProperty);
+
+        return root;
+    }
+
     public override void OnEquip() {
         NavToUI.DisplayNavTree(navTreeRoot, parent.SetConstructable);
 
         InterfaceManager.Instance.ShowConfigurableContainer();
+
+        if (constructable) {
+            InfoToUI.DisplayConfigInfoTree(GetConstructableConfigInfo());
+            InterfaceManager.Instance.ShowConfigInfoContainer();
+        }
     }
 
     public override void OnDequip() {
         InterfaceManager.Instance.HideConfigurableContainer();
+
+        InterfaceManager.Instance.HideConfigInfoContainer();
     }
 
 }

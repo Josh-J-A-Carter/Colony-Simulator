@@ -15,6 +15,17 @@ public static class InfoToUI {
         InterfaceManager.Instance.SetInfoContainerContent(infoContainer);
     }
 
+    public static void DisplayConfigInfoTree(InfoBranch root) {
+    
+        VisualElement infoContainer = new VisualElement();
+        
+        foreach (InfoNode node in root.GetChildren()) {
+            DisplayInfoRecursive(node, infoContainer);
+        }
+
+        InterfaceManager.Instance.SetConfigInfoContainerContent(infoContainer);
+    }
+
     static void DisplayInfoRecursive(InfoNode node, VisualElement parentContainer) {
         if (node is InfoBranch category) {
             Foldout foldout = new Foldout();
@@ -38,6 +49,11 @@ public static class InfoToUI {
             
             Label keyLabel = new Label(labelText);
             row.Add(keyLabel);
+
+            if (property.GetDescription() != null) {
+                Label descLabel = new Label(property.GetDescription());
+                row.Add(descLabel);
+            }
 
             parentContainer.Add(row);
         }

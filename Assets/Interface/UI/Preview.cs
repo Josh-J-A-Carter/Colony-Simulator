@@ -14,7 +14,6 @@ public class Preview : Button {
         display.style.backgroundImage = new StyleBackground(icon);
         display.AddToClassList("preview__display");
 
-        style.backgroundColor = new StyleColor(Color.clear);
         AddToClassList("preview");
 
         Add(display);

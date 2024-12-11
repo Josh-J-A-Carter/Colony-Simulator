@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildTool : Tool {
@@ -9,6 +10,7 @@ public class BuildTool : Tool {
     TileManager tm => TileManager.Instance;
 
     Vector2Int startPreview, endPreview;
+    Dictionary<String, object> previewConfigData;
     bool previewActive = false;
 
     public override void Run(HoverData data) {
@@ -24,8 +26,7 @@ public class BuildTool : Tool {
         // Old constructable is null or different to new one, so need to display
         if (constructable != newConstructable) {
             constructable = newConstructable;
-            InfoToUI.DisplayConfigInfoTree(GetConstructableConfigInfo());
-            InterfaceManager.Instance.ShowConfigInfoContainer();
+            ShowInfoContainers();
         }
 
         if (type == HoverType.None) return;
@@ -65,6 +66,16 @@ public class BuildTool : Tool {
         }
     }
 
+    void OnConfigUpdate(String[] path, bool newValue) {
+        Dictionary<String, object> subTree = previewConfigData;
+        for (int i = 0 ; i < path.Length - 1 ; i += 1) {
+            String step = path[i];
+            subTree = (Dictionary<String, object>) subTree[step];
+        }
+
+        subTree[path[path.Length - 1]] = newValue;
+    }
+
     void RemovePreviewArea(Vector2Int start, Vector2Int end) {
         (Vector2Int p1, Vector2Int p2) = GetBounds(start, end);
 
@@ -90,7 +101,7 @@ public class BuildTool : Tool {
 
         for (int x = p1.x ; x <= p2.x ; x += 1) {
             for (int y = p1.y ; y >= p2.y ; y -= 1) {
-                TaskManager.Instance.CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(x, y), constructable));
+                TaskManager.Instance.CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(x, y), constructable, previewConfigData));
             }
         }
     }
@@ -120,7 +131,23 @@ public class BuildTool : Tool {
         InfoLeaf nameProperty = new InfoLeaf(constructable.GetName(), description: constructable.GetDescription());
         genericCategory.AddChild(nameProperty);
 
+
+        if (constructable is Configurable configurable) {
+            previewConfigData = (constructable as TileEntity).GenerateDefaultData();
+            InfoBranch configurableProperties = configurable.GetConfigTree(previewConfigData);
+            root.AddChild(configurableProperties);
+        }
+
         return root;
+    }
+
+    void ShowInfoContainers() {
+        InfoBranch configInfo = GetConstructableConfigInfo();
+
+        Action<String[], bool> callback = null;
+        if (constructable is Configurable) callback = OnConfigUpdate;
+        InfoToUI.DisplayConfigInfoTree(configInfo, callback);
+        InterfaceManager.Instance.ShowConfigInfoContainer();
     }
 
     public override void OnEquip() {
@@ -128,10 +155,7 @@ public class BuildTool : Tool {
 
         InterfaceManager.Instance.ShowConfigurableContainer();
 
-        if (constructable) {
-            InfoToUI.DisplayConfigInfoTree(GetConstructableConfigInfo());
-            InterfaceManager.Instance.ShowConfigInfoContainer();
-        }
+        if (constructable) ShowInfoContainers();
     }
 
     public override void OnDequip() {

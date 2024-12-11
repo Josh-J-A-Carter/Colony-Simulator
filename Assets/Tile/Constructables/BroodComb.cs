@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Comb")]
-public class BroodComb : TileEntity, Storage {
+public class BroodComb : TileEntity, Configurable, Storage {
 
     // Constants for TileEntityData attribute names
 
@@ -66,8 +66,8 @@ public class BroodComb : TileEntity, Storage {
 
         data[CURRENT_STORAGE_TYPE] = StorageType.Empty;
 
-        data[CAN_STORE_BROOD] = true;
-        data[CAN_STORE_FERMENTABLE] = true;
+        data[CAN_STORE_BROOD] = false;
+        data[CAN_STORE_FERMENTABLE] = false;
         data[CAN_STORE_ITEM] = true;
 
         return data;
@@ -321,6 +321,32 @@ public class BroodComb : TileEntity, Storage {
         InfoBranch inventoryCategory = GetInventory(instance).GetInfoTree();
         root.AddChild(inventoryCategory);
         
+        return root;
+    }
+
+    public InfoBranch GetConfigTree(Dictionary<String, object> instance) {
+        InfoBranch root = new InfoBranch("Configurable properties");
+
+        StorageType store = (StorageType) instance[CURRENT_STORAGE_TYPE];
+
+        InfoCheckbox storeBroodProperty = new InfoCheckbox("Can store brood", 
+                                                            new string[]{ CAN_STORE_BROOD }, 
+                                                            (bool) instance[CAN_STORE_BROOD],
+                                                            store == StorageType.Brood || store == StorageType.Empty);
+        root.AddChild(storeBroodProperty);
+
+        InfoCheckbox storeFermentablesProperty = new InfoCheckbox("Can store fermentables",
+                                                            new string[]{ CAN_STORE_FERMENTABLE },
+                                                            (bool) instance[CAN_STORE_FERMENTABLE],
+                                                            store == StorageType.Fermentable || store == StorageType.Empty);
+        root.AddChild(storeFermentablesProperty);
+
+        InfoCheckbox storeItemsProperty = new InfoCheckbox("Can store items",
+                                                            new string[]{ CAN_STORE_ITEM },
+                                                            (bool) instance[CAN_STORE_ITEM],
+                                                            store == StorageType.Item || store == StorageType.Empty);
+        root.AddChild(storeItemsProperty);
+
         return root;
     }
 }

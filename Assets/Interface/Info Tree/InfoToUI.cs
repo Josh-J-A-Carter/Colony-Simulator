@@ -15,18 +15,18 @@ public static class InfoToUI {
         InterfaceManager.Instance.SetInfoContainerContent(infoContainer);
     }
 
-    public static void DisplayConfigInfoTree(InfoBranch root) {
+    public static void DisplayConfigInfoTree(InfoBranch root, Action<String[], bool> callback) {
     
         VisualElement infoContainer = new VisualElement();
         
         foreach (InfoNode node in root.GetChildren()) {
-            DisplayInfoRecursive(node, infoContainer);
+            DisplayInfoRecursive(node, infoContainer, callback);
         }
 
         InterfaceManager.Instance.SetConfigInfoContainerContent(infoContainer);
     }
 
-    static void DisplayInfoRecursive(InfoNode node, VisualElement parentContainer) {
+    static void DisplayInfoRecursive(InfoNode node, VisualElement parentContainer, Action<String[], bool> callback = null) {
         if (node is InfoBranch category) {
             Foldout foldout = new Foldout();
 
@@ -35,7 +35,7 @@ public static class InfoToUI {
             foldout.AddToClassList("sub-foldout");
 
             // Call children
-            foreach (InfoNode child in category.GetChildren()) DisplayInfoRecursive(child, foldout);
+            foreach (InfoNode child in category.GetChildren()) DisplayInfoRecursive(child, foldout, callback);
 
             parentContainer.Add(foldout);
         }
@@ -56,6 +56,16 @@ public static class InfoToUI {
             }
 
             parentContainer.Add(row);
+        }
+
+        else if (node is InfoCheckbox checkbox) {
+            CheckboxLabel box = new CheckboxLabel(checkbox.GetCategoryName(),
+                                                checkbox.GetPath(),
+                                                checkbox.GetValue(),
+                                                checkbox.IsModifiable());
+            box.AddCallback(callback);
+
+            parentContainer.Add(box);
         }
     }
 }

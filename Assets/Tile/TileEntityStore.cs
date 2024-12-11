@@ -53,8 +53,11 @@ public class TileEntityStore {
         return queryResult;
     }
 
-    public Dictionary<String, object> AddTileEntity(Vector2Int position, TileEntity tileEntity) {
-        Dictionary<String, object> data = tileEntity.GenerateDefaultData();
+    public Dictionary<String, object> AddTileEntity(Vector2Int position, TileEntity tileEntity, Dictionary<String, object> dataIn = null) {
+        Dictionary<String, object> data;
+        
+        if (dataIn != null) data = dataIn;
+        else data = tileEntity.GenerateDefaultData();
 
         tileEntitiesToAdd.Add((position, tileEntity, data));
         return data;

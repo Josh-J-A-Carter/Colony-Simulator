@@ -104,8 +104,8 @@ public class TileManager : MonoBehaviour {
     /// Build a <c>Constructable</c> into the world tilemap, without obtaining a reference to any tile entity data that is created there.
     /// </summary>
     /// <returns>True if the construction takes place, false otherwise; e.g. it is obstructed.</returns>
-    public bool Construct(Vector2Int startPosition, Constructable constructable) {
-        return Construct(startPosition, constructable, out _);
+    public bool Construct(Vector2Int startPosition, Constructable constructable, Dictionary<String, object> dataIn = null) {
+        return Construct(startPosition, constructable, out _, dataIn);
     }
 
     /// <summary>
@@ -113,7 +113,7 @@ public class TileManager : MonoBehaviour {
     /// through the <c>data</c> parameter.
     /// </summary>
     /// <returns>True if the construction takes place, false otherwise; e.g. it is obstructed.</returns>
-    public bool Construct(Vector2Int startPosition, Constructable constructable, out Dictionary<String, object> data) {
+    public bool Construct(Vector2Int startPosition, Constructable constructable, out Dictionary<String, object> data, Dictionary<String, object> dataIn = null) {
         // First, check if the desired area is completely clear.
         foreach (Vector2Int pos in constructable.GetInteriorPoints()) {
             if (worldMap.HasTile((Vector3Int) (startPosition + pos))) {
@@ -124,7 +124,7 @@ public class TileManager : MonoBehaviour {
 
         // If the constructable is a tile entity, make sure to add this to the list of tile entities
         if (constructable is TileEntity tileEntity) {
-            data = tileEntityStore.AddTileEntity(startPosition, tileEntity);
+            data = tileEntityStore.AddTileEntity(startPosition, tileEntity, dataIn);
         } else data = null;
 
         // The area is clear, so we may continue with construction

@@ -10,7 +10,7 @@ public class BuildTool : Tool {
     TileManager tm => TileManager.Instance;
 
     Vector2Int startPreview, endPreview;
-    Dictionary<String, object> previewConfigData;
+    Dictionary<String, object> previewConfigDataTemplate;
     bool previewActive = false;
 
     public override void Run(HoverData data) {
@@ -67,7 +67,7 @@ public class BuildTool : Tool {
     }
 
     void OnConfigUpdate(String[] path, bool newValue) {
-        Dictionary<String, object> subTree = previewConfigData;
+        Dictionary<String, object> subTree = previewConfigDataTemplate;
         for (int i = 0 ; i < path.Length - 1 ; i += 1) {
             String step = path[i];
             subTree = (Dictionary<String, object>) subTree[step];
@@ -101,7 +101,7 @@ public class BuildTool : Tool {
 
         for (int x = p1.x ; x <= p2.x ; x += 1) {
             for (int y = p1.y ; y >= p2.y ; y -= 1) {
-                TaskManager.Instance.CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(x, y), constructable, previewConfigData));
+                TaskManager.Instance.CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(x, y), constructable, previewConfigDataTemplate));
             }
         }
     }
@@ -133,8 +133,8 @@ public class BuildTool : Tool {
 
 
         if (constructable is Configurable configurable) {
-            previewConfigData = (constructable as TileEntity).GenerateDefaultData();
-            InfoBranch configurableProperties = configurable.GetConfigTree(previewConfigData);
+            previewConfigDataTemplate = (constructable as TileEntity).GenerateDefaultData();
+            InfoBranch configurableProperties = configurable.GetConfigTree(previewConfigDataTemplate);
             root.AddChild(configurableProperties);
         }
 

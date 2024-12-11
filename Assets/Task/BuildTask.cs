@@ -8,7 +8,7 @@ public class BuildTask : WorkerTask, Locative, Consumer {
     Constructable constructable;
     Vector2Int startPos;
 
-    Dictionary<String, object> configData;
+    Dictionary<String, object> configDataTemplate;
 
     ReadOnlyCollection<Vector2Int> exteriorPoints;
     ReadOnlyCollection<Vector2Int> interiorPoints;
@@ -22,7 +22,7 @@ public class BuildTask : WorkerTask, Locative, Consumer {
         this.priority = priority;
         this.startPos = startPos;
         this.constructable = constructable;
-        this.configData = configDataTemplate;
+        this.configDataTemplate = configDataTemplate;
 
         creationTime = Time.time;
     }
@@ -52,7 +52,7 @@ public class BuildTask : WorkerTask, Locative, Consumer {
     public override void OnCompletion() {
         TileManager.Instance.RemoveTaskPreview(startPos);
 
-        TileManager.Instance.Construct(startPos, constructable, configData);
+        TileManager.Instance.Construct(startPos, constructable, configDataTemplate);
 
         TaskManager.Instance.CreateTask(new LayTask(TaskPriority.Normal, startPos));
     }

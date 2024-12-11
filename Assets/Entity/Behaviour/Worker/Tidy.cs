@@ -8,7 +8,13 @@ public class Tidy : State {
     [SerializeField]
     State Collect, Store;
 
+    int tidyCycles;
+
+    const int MAX_TIDY_CYCLES = 3;
+
     public override void OnEntry() {
+        tidyCycles = 0;
+
         DecideState();
     }
 
@@ -18,13 +24,17 @@ public class Tidy : State {
             return;
         }
 
+        tidyCycles += 1;
+
         DecideState();
     }
 
     void DecideState() {
         ReadOnlyCollection<ItemEntity> itemEntities = EntityManager.Instance.GetItemEntities();
 
-        if (inventory.RemainingCapacity() == 0 || itemEntities.Count == 0) {
+        if (tidyCycles >= MAX_TIDY_CYCLES) {
+            CompleteState();
+        } else if (inventory.RemainingCapacity() == 0 || itemEntities.Count == 0) {
             stateMachine.SetChildState(Store);
         } else if (itemEntities.Count > 1) {
             stateMachine.SetChildState(Collect);

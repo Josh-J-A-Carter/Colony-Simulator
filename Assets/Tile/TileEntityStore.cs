@@ -53,14 +53,28 @@ public class TileEntityStore {
         return queryResult;
     }
 
-    public Dictionary<String, object> AddTileEntity(Vector2Int position, TileEntity tileEntity, Dictionary<String, object> dataIn = null) {
+    public Dictionary<String, object> AddTileEntity(Vector2Int position, TileEntity tileEntity, Dictionary<String, object> dataTemplate = null) {
         Dictionary<String, object> data;
-        
-        if (dataIn != null) data = dataIn;
+
+        if (dataTemplate != null) data = RecursiveDataCopy(dataTemplate);
         else data = tileEntity.GenerateDefaultData();
 
         tileEntitiesToAdd.Add((position, tileEntity, data));
         return data;
+    }
+
+    Dictionary<String, object> RecursiveDataCopy(Dictionary<String, object> data) {
+        Dictionary<String, object> copy = new Dictionary<string, object>(data.Count);
+
+        foreach (KeyValuePair<String, object> pair in data) {
+            if (pair.Value is Dictionary<String, object> childData) copy.Add(pair.Key, RecursiveDataCopy(childData));
+
+            // Base case here: value is not a dictionary, so assume it is pass by value.
+            else copy.Add(pair.Key, pair.Value);
+
+        }
+
+        return copy;
     }
 
     public Dictionary<String, object> GetTileEntityData(Vector2Int position) {

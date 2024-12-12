@@ -10,38 +10,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b002a6ec99a46224db011f2d8f8c29b4, type: 3}
-  m_Name: Worker Brood Comb
+  m_Name: Drone Brood Comb 1
   m_EditorClassIdentifier: 
   gridData:
   - gridEntries:
-    - worldTile: {fileID: 11400000, guid: 16b8fbadc6843a749901ad9c0f9572c8, type: 2}
-      previewTile: {fileID: 11400000, guid: b7ce93463e689374b872d9f8724fa8fe, type: 2}
+    - worldTile: {fileID: 11400000, guid: 17a6a170ed36f5340a5cac4c8189cb9b, type: 2}
+      previewTile: {fileID: 11400000, guid: b9ba2ab35c4e8fe4ab7f4ad1c8cad7d4, type: 2}
   obstructive: 0
-  nameInfo: Worker Brood Comb
-  descriptionInfo: Comb made from Beeswax, perfect for rearing worker bee brood,
-    storing items, or fermenting products like nectar.
-  previewSprite: {fileID: -1635639722, guid: e968b14bfeec8de458ca473ed1716498, type: 3}
+  nameInfo: Drone Brood Comb
+  descriptionInfo: Voluminous comb made from Beeswax, perfect for rearing drone bee
+    brood, storing items, or fermenting products like nectar.
+  previewSprite: {fileID: -615253942, guid: 4d4a6c37b6fe60444a21f5a77e18c3db, type: 3}
   requiredResources:
   - item: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
-    quantity: 1
-  maxCapacity: 75
-  broodCombSize: 0
-  toFertilise: 1
+    quantity: 2
+  maxCapacity: 200
+  broodCombSize: 1
+  toFertilise: 0
   beeswax: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
   royalJelly: {fileID: 11400000, guid: e51afdb714c6eb346b5ad286646c97ca, type: 2}
   eggVariant:
   - gridEntries:
-    - worldTile: {fileID: 11400000, guid: de1b806782fa05b469dc345401178c73, type: 2}
+    - worldTile: {fileID: 11400000, guid: 36179af20efd4904a8cd7b5d12a075d3, type: 2}
       previewTile: {fileID: 0}
   larvaVariant:
   - gridEntries:
-    - worldTile: {fileID: 11400000, guid: 77e51259213ad1a4187214826433bd86, type: 2}
+    - worldTile: {fileID: 11400000, guid: 31bbba771dc64c447a975d7b22ff4cdc, type: 2}
       previewTile: {fileID: 0}
   larvaFedVariant:
   - gridEntries:
-    - worldTile: {fileID: 11400000, guid: f30bb4dc8368d904eaf4c32223ad23cc, type: 2}
+    - worldTile: {fileID: 11400000, guid: 770d325e5cac322468e8d55d05aeccbd, type: 2}
       previewTile: {fileID: 0}
   cappedVariant:
   - gridEntries:
-    - worldTile: {fileID: 11400000, guid: 7232138ca0952f141ba5d9499aa28d9a, type: 2}
+    - worldTile: {fileID: 11400000, guid: bc6c14bb02cc8fd49a957472bf5a2b28, type: 2}
       previewTile: {fileID: 0}

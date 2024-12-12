@@ -54,7 +54,9 @@ public class BuildTask : WorkerTask, Locative, Consumer {
 
         TileManager.Instance.Construct(startPos, constructable, configDataTemplate);
 
-        TaskManager.Instance.CreateTask(new LayTask(TaskPriority.Normal, startPos));
+        if (constructable is BroodComb broodComb) {
+            TaskManager.Instance.CreateTask(new LayTask(TaskPriority.Normal, startPos));
+        }   
     }
 
     public ReadOnlyCollection<Vector2Int> GetExteriorPoints() {

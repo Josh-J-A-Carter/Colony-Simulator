@@ -3,7 +3,11 @@ guid: 0bf707c58d280e84780f91b1087ff441
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - workerBeePrefab: {fileID: 4430628740495362487, guid: 76ba290e052d71a409f568b201c9502a, type: 3}
+  - queenBeePrefab: {instanceID: 0}
+  - itemEntityPrefab: {instanceID: 0}
+  - droneBeePrefab: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

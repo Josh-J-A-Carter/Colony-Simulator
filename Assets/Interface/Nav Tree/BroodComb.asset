@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7b6a9d050a2eb458421518bb2ec1d2, type: 3}
   m_Name: BroodComb
   m_EditorClassIdentifier: 
-  categoryName: Brood Comb
+  categoryName: Comb
   preview: {fileID: 21300000, guid: 9f46950688b65ee44a39c99f38832369, type: 3}
   constructables:
   - {fileID: 11400000, guid: 928cb5dc22216df48a239ce0372de8fa, type: 2}
-  - {fileID: 11400000, guid: 6ddad3f585e895540bebaea43e34b1db, type: 2}
+  - {fileID: 11400000, guid: 683c30eb214c4e144a43809d29aa8f82, type: 2}

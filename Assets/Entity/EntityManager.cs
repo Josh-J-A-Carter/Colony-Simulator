@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
-using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 public class EntityManager : MonoBehaviour {
@@ -10,7 +9,7 @@ public class EntityManager : MonoBehaviour {
     public static EntityManager Instance { get; private set; }
 
     [SerializeField]
-    GameObject workerBeePrefab, queenBeePrefab, itemEntityPrefab;
+    GameObject workerBeePrefab, queenBeePrefab, itemEntityPrefab, droneBeePrefab;
 
     List<ItemEntity> itemEntities;
 
@@ -23,6 +22,10 @@ public class EntityManager : MonoBehaviour {
     String[] awesomeQueenBeeNames = new String[] {
         "Artemisia", "Elizabeth", "Margaret", "Berenice", "Cleopatra", "Eleanor", "Catherine",
         "Maria", "Christina", "Victoria", "Mathilde", "Caterina", "Nefertiti", "Lady Jane"
+    };
+
+    String[] awesomeDroneBeeNames = new String[] {
+        "Barry", "Bartholomew", "Ben", "Behemoth", "Bill"
     };
 
     int zIndex = -2;
@@ -52,6 +55,16 @@ public class EntityManager : MonoBehaviour {
         WorkerBehaviour worker = obj.GetComponent<WorkerBehaviour>();
         int index = Random.Range(0, awesomeWorkerBeeNames.Length);
         worker.SetName(awesomeWorkerBeeNames[index]);
+
+        return obj;
+    }
+
+    public GameObject InstantiateDrone(Vector2 pos) {
+        GameObject obj = Instantiate(droneBeePrefab, new Vector3(pos.x, pos.y, zIndex), Quaternion.identity, transform);
+
+        DroneBehaviour drone = obj.GetComponent<DroneBehaviour>();
+        int index = Random.Range(0, awesomeDroneBeeNames.Length);
+        drone.SetName(awesomeDroneBeeNames[index]);
 
         return obj;
     }

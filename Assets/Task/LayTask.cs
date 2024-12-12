@@ -22,6 +22,6 @@ public class LayTask : QueenTask {
         BroodComb comb = constructable as BroodComb;
 
         if (comb == null) return;
-        comb.TryLayEgg(location, BroodComb.BroodType.Worker);
+        comb.TryLayEgg(location, comb.toFertilise);
     }
 }

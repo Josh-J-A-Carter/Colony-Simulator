@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -23,9 +22,8 @@ public class BroodComb : TileEntity, Configurable, Storage {
     /// <summary>Data relevant to brood stored in a comb tile. The corresponding value should be of type <c>Dictionary</c>.</summary>
     public const String BROOD_DATA = "broodData";
 
-        /// <summary>Part of the <c>BROOD_DATA</c> attribute, storing the type of brood currently inside. Value is of type <c>BroodType</c>.</summary>
-        public const String BROOD_DATA__TYPE = "broodData__broodType";
-        public enum BroodType { Worker, Drone, Queen };
+        /// <summary>Part of the <c>BROOD_DATA</c> attribute, storing the type of brood currently inside. Value is of type <c>bool</c>.</summary>
+        public const String BROOD_DATA__FERTILISED = "broodData__fertilised";
         /// <summary>Part of the <c>BROOD_DATA</c> attribute, storing the life stage of the brood inside. Value is of type <c>BroodStage</c>.</summary>
         public const String BROOD_DATA__BROOD_STAGE = "broodData__broodStage";
         public enum BroodStage { Egg, Larva, Pupa, };
@@ -49,6 +47,9 @@ public class BroodComb : TileEntity, Configurable, Storage {
     [SerializeField]
     BroodCombSize broodCombSize = BroodCombSize.Worker;
 
+    [SerializeField]
+    public bool toFertilise = true;
+
     [Serializable]
     public enum BroodCombSize { Worker, Drone, Queen };
 
@@ -59,7 +60,7 @@ public class BroodComb : TileEntity, Configurable, Storage {
 
     /// <summary>Variants to display when the comb contains brood of differing life stages.</summary>
     [SerializeField]
-    GridRow[] containsEggVariant, containsLarvaVariant, sealedVariant;
+    GridRow[] eggVariant, larvaVariant, larvaFedVariant, cappedVariant;
 
     public override Dictionary<String, object> GenerateDefaultData() {
         Dictionary<String, object> data = new Dictionary<String, object>();
@@ -111,7 +112,7 @@ public class BroodComb : TileEntity, Configurable, Storage {
             broodData[BROOD_DATA__TIME_LEFT] = LARVA_STAGE_DURATION;
             broodData[BROOD_DATA__BROOD_STAGE] = BroodStage.Larva;
 
-            DrawVariant(position, GetTileAt__ContainsLarvaVariant);
+            DrawVariant(position, GetTileAt__LarvaVariant);
         }
 
         // Larva -> Pupa
@@ -122,41 +123,53 @@ public class BroodComb : TileEntity, Configurable, Storage {
 
         // Pupa -> Adult
         else {
-            EntityManager.Instance.InstantiateWorker(position);
+            bool fertilised = (bool) broodData[BROOD_DATA__FERTILISED];
+            if (fertilised) EntityManager.Instance.InstantiateWorker(position);
+            else EntityManager.Instance.InstantiateDrone(position);
+
             data[CURRENT_STORAGE_TYPE] = StorageType.Empty;
 
             TileManager.Instance.DrawVariant(position, this, GetTileAt);
         }
     }
 
-    TileBase GetTileAt__ContainsEggVariant(Vector2Int pos) {
+    TileBase GetTileAt__EggVariant(Vector2Int pos) {
         int col = pos.x;
         int row = pos.y;
 
-        return containsEggVariant[row].gridEntries[col].worldTile;
+        return eggVariant[row].gridEntries[col].worldTile;
     }
 
-    TileBase GetTileAt__ContainsLarvaVariant(Vector2Int pos) {
+    TileBase GetTileAt__LarvaVariant(Vector2Int pos) {
         int col = pos.x;
         int row = pos.y;
 
-        return containsLarvaVariant[row].gridEntries[col].worldTile;
+        return larvaVariant[row].gridEntries[col].worldTile;
     }
 
-    TileBase GetTileAt__SealedVariant(Vector2Int pos) {
+    TileBase GetTileAt__LarvaFedVariant(Vector2Int pos) {
         int col = pos.x;
         int row = pos.y;
 
-        return sealedVariant[row].gridEntries[col].worldTile;
+        return larvaFedVariant[row].gridEntries[col].worldTile;
+    }
+
+    TileBase GetTileAt__CappedVariant(Vector2Int pos) {
+        int col = pos.x;
+        int row = pos.y;
+
+        return cappedVariant[row].gridEntries[col].worldTile;
     }
 
     public void GiveBrood(Vector2Int position, Dictionary<String, object> data, Item item, uint quantity) {
 
         if (item == beeswax) {
-            DrawVariant(position, GetTileAt__SealedVariant);
+            DrawVariant(position, GetTileAt__CappedVariant);
         }
 
-        else Debug.Log("Fed!");
+        else if (item == royalJelly) {
+            DrawVariant(position, GetTileAt__LarvaFedVariant);
+        }
     }
 
 
@@ -238,20 +251,20 @@ public class BroodComb : TileEntity, Configurable, Storage {
         return (bool) data[CAN_STORE_BROOD];
     }
 
-    public bool TryLayEgg(Vector2Int location, BroodType broodType) {
+    public bool TryLayEgg(Vector2Int location, bool fertilised) {
 
         // Get the tile entity data & check we can store brood here
         Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(location);
         if (CanStoreBrood(data) == false) return false;
         
-        DrawVariant(location, GetTileAt__ContainsEggVariant);
+        DrawVariant(location, GetTileAt__EggVariant);
 
         data[CURRENT_STORAGE_TYPE] = StorageType.Brood;
 
         Dictionary<String, object> broodData = new Dictionary<String, object>();
         broodData[BROOD_DATA__TIME_LEFT] = EGG_STAGE_DURATION;
         broodData[BROOD_DATA__BROOD_STAGE] = BroodStage.Egg;
-        broodData[BROOD_DATA__TYPE] = broodType;
+        broodData[BROOD_DATA__FERTILISED] = fertilised;
         data[BROOD_DATA] = broodData;
 
         return true;
@@ -293,14 +306,9 @@ public class BroodComb : TileEntity, Configurable, Storage {
 
             Dictionary<String, object> broodData = (Dictionary<String, object>) instance[BROOD_DATA];
 
-            String casteValue = broodData[BROOD_DATA__TYPE] switch {
-                BroodType.Worker => "Worker (Honey Bee)",
-                BroodType.Queen => "Queen (Honey Bee)",
-                BroodType.Drone => "Drone (Honey Bee)",
-                _ => "Unknown"
-            };
-            InfoLeaf casteProperty = new InfoLeaf("Caste", casteValue);
-            broodCategory.AddChild(casteProperty);
+            String fertilisedValue = broodData[BROOD_DATA__FERTILISED].ToString();
+            InfoLeaf fertilisedProperty = new InfoLeaf("Fertilised", fertilisedValue);
+            broodCategory.AddChild(fertilisedProperty);
 
             String stageValue = broodData[BROOD_DATA__BROOD_STAGE] switch {
                 BroodStage.Egg => "Egg",

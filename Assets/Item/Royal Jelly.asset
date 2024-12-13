@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: Royal Jelly
   m_EditorClassIdentifier: 
   infoName: Royal Jelly
-  infoDescription: A nutrient-dense source of food secreted by worker bees. If a
-    larva eats it consistently, it will become a queen.
-  previewSprite: {fileID: 21300000, guid: ebf377a56e334724b806209909a186ac, type: 3}
+  infoDescription: A nutrient-dense source of food secreted by worker bees. All larvae
+    are initially fed this substance - but if this diet is continued, a female larva
+    will become a queen
+  previewSprite: {fileID: 21300000, guid: d13bfd0dd03643d46a6546b3cfcb35c6, type: 3}
+  isFood: 1
+  <FoodComponent>k__BackingField:
+    <NutritionalValue>k__BackingField: 5

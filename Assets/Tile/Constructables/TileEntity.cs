@@ -14,9 +14,7 @@ public abstract class TileEntity : Constructable {
     /// </summary>
     public virtual void TickInstance(Vector2Int position, Dictionary<String, object> instance) {}
 
-    public virtual Dictionary<String, object> GenerateDefaultData() {
-        return new Dictionary<String, object>();
-    }
+    public abstract Dictionary<String, object> GenerateDefaultData();
 
     // public void Create(Vector2Int pos, Dictionary<String, object> instance) {
     //     if (this is Storage storage) storage.OnStorageCreation(pos, instance);

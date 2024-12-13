@@ -30,7 +30,7 @@ public class CameraManager : MonoBehaviour {
     VerticalInput verticalInput;
 
     // Minimum/maximum zoom levels allowed; default zoom level; how quickly to ease the zoom level
-    static readonly float zoomMin = 0.5f, zoomMax = 5f, zoomDefault = 1.0f, zoomEaseFactorBase = 0.2f;
+    static readonly float zoomMin = 0.5f, zoomMax = 2f, zoomDefault = 1.0f, zoomEaseFactorBase = 0.2f;
     // When zoom <= 1, change zoom by by 0.2f. When zoom > 1, this factor is too small, so increase linearly with zoom.
     static readonly Func<float, float> zoomEaseFactor = zoom => zoom <= 1 ? zoomEaseFactorBase : zoomEaseFactorBase * zoom;
     float zoom = zoomDefault;

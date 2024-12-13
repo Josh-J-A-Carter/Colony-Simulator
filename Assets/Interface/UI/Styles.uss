@@ -126,7 +126,7 @@
     justify-content: center;
     flex-wrap: wrap;
     width: 110px;
-    height: auto;
+    height: 150px;
     align-items: center;
 }
 

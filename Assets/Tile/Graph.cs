@@ -4,60 +4,36 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Graph {
-
-    Tilemap tilemap;
     
     int minX, minY, maxX, maxY;
 
-    bool[,] emptyCells;
+    HashSet<Vector2Int> obstacles;
 
-    public void CreateGraph(Tilemap tilemap) {
-        this.tilemap = tilemap;
+    public void CreateGraph(int minX, int minY, int maxX, int maxY) {
+        this.minX = minX;
+        this.minY = minY;
 
-        //// Get the grid bounds
-        Bounds localBounds = tilemap.localBounds;
-        // Bottom left corner
-        Vector3 p1 = tilemap.transform.TransformPoint(localBounds.min);
-        // Top right corner
-        Vector3 p2 = tilemap.transform.TransformPoint(localBounds.max);
+        this.maxX = maxX;
+        this.maxY = maxY;
 
+        obstacles = new();
+    }
+    
 
-        // This is super confusing; x- comes before x+, and y- also comes before y+...
-        // i.e. y+ does NOT grow down from the top of the screen
-        minX = (int) p1.x;
-        minY = (int) p1.y;
-
-        maxX = (int) p2.x;
-        maxY = (int) p2.y;
-
-        //// Create the array to store the cells
-        emptyCells = new bool[maxX - minX, maxY - minY];
-
-        // need to do y, then x (if displaying the debug stuff! I got super confused as to why the image was rotated 90 degrees lol)
-        for (int y = maxY ; y > minY ; y -= 1) {
-            for (int x = minX ; x < maxX ; x += 1) {
-
-                int xIndex = x - minX;
-                int yIndex = maxY - y;
-
-                emptyCells[xIndex, yIndex] = ! tilemap.HasTile(new Vector3Int(x, y, 0));
-            }
-        }
+    public bool IsObstructed(Vector2Int position) {
+        return obstacles.Contains(position);
     }
 
     public bool IsInBounds(int x, int y) {
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
 
-    public bool IsUnobstructed(int x, int y) {
-        if (x < minX || x > maxX || y < minY || y > maxX) return true;
+    public void SetObstructed(Vector2Int position, bool value) {
+        if (value == false) {
+            obstacles.Remove(position);
+            return;
+        }
 
-        return emptyCells[x - minX, maxY - y];
-    }
-
-    public void SetObstructed(int x, int y, bool value) {
-        if (!IsInBounds(x, y)) throw new System.Exception($"Position ({x}, {y}) is not inside the map bounds. Consider making the Graph implementation dynamic to solve such problems.");
-
-        emptyCells[x - minX, maxY - y] = !value;
+        obstacles.Add(position);
     }
 }

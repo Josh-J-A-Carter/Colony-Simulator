@@ -3,19 +3,23 @@ using UnityEngine.Tilemaps;
 
 public class WorldLoader {
 
-    const int WORLD_WIDTH = 10;
+    int worldWidth, worldHeight, minX, minY;
 
-    const int WORLD_HEIGHT = 10;
 
     TileBase dirt, grass;
 
     Tilemap gameWorld;
 
-    public bool LoadOrGenerateWorld(Tilemap gameWorld, TileBase dirt, TileBase grass) {
+    public bool LoadOrGenerateWorld(Tilemap gameWorld, TileBase dirt, TileBase grass, int minX, int minY, int worldWidth, int worldHeight) {
 
         this.gameWorld = gameWorld;
         this.dirt = dirt;
         this.grass = grass;
+
+        this.minX = minX;
+        this.minY = minY;
+        this.worldWidth = worldWidth;
+        this.worldHeight = worldHeight;
 
         // Try read world data from file
         // If it does exist, pass to load
@@ -42,19 +46,21 @@ public class WorldLoader {
     }
 
     bool GenerateWorld(out Vector3Int[] positions, out TileBase[] tiles) {
-        positions = new Vector3Int[WORLD_WIDTH * WORLD_HEIGHT];
-        tiles = new TileBase[WORLD_WIDTH * WORLD_HEIGHT];
+        positions = new Vector3Int[worldWidth * worldHeight];
+        tiles = new TileBase[worldWidth * worldHeight];
 
-        for (int index = 0 ; index < WORLD_WIDTH * WORLD_HEIGHT ; index += 1) {
+        int surface_level = 0;
 
-            int x = index % WORLD_WIDTH;
-            int y = index / WORLD_WIDTH;
+        for (int index = 0 ; index < worldWidth * worldHeight ; index += 1) {
+
+            int x = index % worldWidth + minX;
+            int y = index / worldWidth + minY;
 
             positions[index] = new Vector3Int(x, y, 0);
 
-            if (y > WORLD_HEIGHT - 2) {
+            if (y > surface_level) {
                 continue;
-            } else if (y == WORLD_HEIGHT - 2) {
+            } else if (y == surface_level || y == surface_level - 1) {
                 tiles[index] = grass;
             } else {
                 tiles[index] = dirt;

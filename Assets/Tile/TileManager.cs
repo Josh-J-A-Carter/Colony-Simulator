@@ -11,16 +11,19 @@ public class TileManager : MonoBehaviour {
     public static TileManager Instance { get; private set; }
 
     [SerializeField]
-    Tilemap worldMap, obstacleMap, previewMap, taskPreviewMap;
+    Tilemap worldMap, previewMap, taskPreviewMap;
 
-    [SerializeField]
-    Tile obstacleTile;
-
-    Graph graph;
+    Graph obstacles;
 
     ConstructableGraph constructableGraph, constructablePreviewGraph, constructableTaskPreviewGraph;
 
     WorldLoader worldLoader;
+
+    const int WORLD_WIDTH = 512;
+    const int WORLD_HEIGHT = 128;
+    const int MIN_X = - WORLD_WIDTH / 2;
+    const int MIN_Y = - WORLD_HEIGHT / 4;
+
 
     [SerializeField]
     TileBase dirt, grass;
@@ -40,8 +43,8 @@ public class TileManager : MonoBehaviour {
             return;
         } else Instance = this;
 
-        graph = new Graph();
-        graph.CreateGraph(obstacleMap);
+        obstacles = new Graph();
+        obstacles.CreateGraph(MIN_X, MIN_Y, MIN_X + WORLD_WIDTH, MIN_Y + WORLD_HEIGHT);
 
         constructableGraph = new ConstructableGraph(worldMap, this);
         constructablePreviewGraph = new ConstructableGraph(previewMap, this);
@@ -51,27 +54,31 @@ public class TileManager : MonoBehaviour {
 
         worldLoader = new WorldLoader();
 
-        worldLoader.LoadOrGenerateWorld(worldMap, dirt, grass);
+        worldLoader.LoadOrGenerateWorld(worldMap, dirt, grass, MIN_X, MIN_Y, WORLD_WIDTH, WORLD_HEIGHT);
     }
 
     public void FixedUpdate() {
         tileEntityStore.Tick();
     }
 
-    public bool IsInBounds(int x, int y) {
-        return graph.IsInBounds(x, y);
+    public bool IsObstructed(Vector2Int p) {
+        return obstacles.IsObstructed(p);
     }
 
-    public bool IsInBounds(Vector2Int p) {
-        return graph.IsInBounds(p.x, p.y);
+    public bool IsInBounds(int x, int y) {
+        return obstacles.IsInBounds(x, y);
+    }
+
+    public bool IsObstructed(int x, int y) {
+        return obstacles.IsObstructed(new Vector2Int(x, y));
+    }
+
+    public bool IsUnobstructed(Vector2Int pos) {
+        return !obstacles.IsObstructed(pos);
     }
 
     public bool IsUnobstructed(int x, int y) {
-        return graph.IsUnobstructed(x, y);
-    }
-
-    public bool IsUnobstructed(Vector2Int p) {
-        return graph.IsUnobstructed(p.x, p.y);
+        return !obstacles.IsObstructed(new Vector2Int(x, y));
     }
 
     public Dictionary<String, object> GetTileEntityData(Vector2Int position) {
@@ -246,19 +253,22 @@ public class TileManager : MonoBehaviour {
     }
 
     void SetPreviewTile(Vector2Int pos, TileBase t) {
+        if (!obstacles.IsInBounds(pos.x, pos.y)) return;
+
         previewMap.SetTile((Vector3Int) pos, t);
     }
 
     void SetTaskPreviewTile(Vector2Int pos, TileBase t) {
+        if (!obstacles.IsInBounds(pos.x, pos.y)) return;
+
         taskPreviewMap.SetTile((Vector3Int) pos, t);
     }
 
     void SetTile(Vector2Int pos, TileBase t, bool obstructive) {
+        if (!obstacles.IsInBounds(pos.x, pos.y)) return;
+
         worldMap.SetTile((Vector3Int) pos, t);
 
-        if (obstructive) obstacleMap.SetTile((Vector3Int) pos, obstacleTile);
-        else obstacleMap.SetTile((Vector3Int) pos, null);
-
-        graph.SetObstructed(pos.x, pos.y, obstructive);
+        obstacles.SetObstructed(pos, obstructive);
     }
 }

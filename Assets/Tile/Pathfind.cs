@@ -67,7 +67,7 @@ public static class Pathfind {
         Dictionary<Vector2Int, int> gScores = new Dictionary<Vector2Int, int>();
         Dictionary<Vector2Int, int> fScores = new Dictionary<Vector2Int, int>();
 
-        if (!tm.IsInBounds(goal.x, goal.y) || !tm.IsUnobstructed(goal.x, goal.y)) return null;
+        if (!tm.IsInBounds(goal.x, goal.y) || tm.IsObstructed(goal.x, goal.y)) return null;
 
         openSet.Add(root);
         gScores.Add(root, 0);

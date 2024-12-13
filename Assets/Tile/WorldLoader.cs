@@ -10,9 +10,12 @@ public class WorldLoader {
 
     Tilemap gameWorld;
 
-    public bool LoadOrGenerateWorld(Tilemap gameWorld, TileBase dirt, TileBase grass, int minX, int minY, int worldWidth, int worldHeight) {
+    Graph obstacles;
+
+    public bool LoadOrGenerateWorld(Tilemap gameWorld, Graph obstacles, TileBase dirt, TileBase grass, int minX, int minY, int worldWidth, int worldHeight) {
 
         this.gameWorld = gameWorld;
+        this.obstacles = obstacles;
         this.dirt = dirt;
         this.grass = grass;
 
@@ -58,13 +61,18 @@ public class WorldLoader {
 
             positions[index] = new Vector3Int(x, y, 0);
 
+            TileBase toPlace = null;
+
             if (y > surface_level) {
                 continue;
             } else if (y == surface_level || y == surface_level - 1) {
-                tiles[index] = grass;
+                toPlace = grass;
             } else {
-                tiles[index] = dirt;
+                toPlace = dirt;
             }
+
+            tiles[index] = toPlace;
+            obstacles.SetObstructed(new Vector2Int(x, y), true);
         }
 
         return true;

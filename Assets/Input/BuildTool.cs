@@ -13,6 +13,8 @@ public class BuildTool : Tool {
     Dictionary<String, object> previewConfigDataTemplate;
     bool previewActive = false;
 
+    const int MAX_SELECTION = 512;
+
     public override void Run(HoverData data) {
         Constructable newConstructable = parent.GetConstructable();
         
@@ -43,7 +45,14 @@ public class BuildTool : Tool {
             SetPreviewArea(startPreview, endPreview, constructable);
             previewActive = true;
         }
+
+        // Changed selection area, and new area is not too large
         else if (previewActive && newEndPreview != endPreview) {
+            (Vector2Int p1, Vector2Int p2) = GetBounds(startPreview, newEndPreview);
+            if ((p2.x - p1.x) * (p1.y - p2.y) > MAX_SELECTION) {
+                newEndPreview = GetClosestValidEndPreview(startPreview, newEndPreview);
+            }
+
             RemovePreviewArea(startPreview, endPreview);
 
             endPreview = newEndPreview;
@@ -64,6 +73,27 @@ public class BuildTool : Tool {
         else if (!previewActive && Input.GetKeyUp(KeyCode.Mouse0) && type != HoverType.UI) {
             BuildArea(newStartPreview, newEndPreview, constructable);
         }
+    }
+
+    Vector2Int GetClosestValidEndPreview(Vector2Int origin, Vector2Int extremity) {
+        int maxIterations = 10;
+
+        float minScale = 0.5f;
+        float maxScale = 1.0f;
+
+        float increment = (maxScale - minScale) / maxIterations;
+
+        Vector2Int newPoint = Vector2Int.zero;
+
+        for (int i = 1 ; i <= maxIterations ; i += 1) {
+            float scale = maxScale - increment * i;
+
+            newPoint = new Vector2Int(Mathf.FloorToInt(extremity.x * scale), Mathf.FloorToInt(extremity.y * scale));
+            (Vector2Int p1, Vector2Int p2) = GetBounds(startPreview, newPoint);
+            if ((p2.x - p1.x) * (p1.y - p2.y) <= MAX_SELECTION) return newPoint;
+        }
+
+        return newPoint;
     }
 
     void OnConfigUpdate(String[] path, bool newValue) {

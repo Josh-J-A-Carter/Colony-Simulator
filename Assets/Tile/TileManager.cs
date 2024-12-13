@@ -54,7 +54,7 @@ public class TileManager : MonoBehaviour {
 
         worldLoader = new WorldLoader();
 
-        worldLoader.LoadOrGenerateWorld(worldMap, dirt, grass, MIN_X, MIN_Y, WORLD_WIDTH, WORLD_HEIGHT);
+        worldLoader.LoadOrGenerateWorld(worldMap, obstacles, dirt, grass, MIN_X, MIN_Y, WORLD_WIDTH, WORLD_HEIGHT);
     }
 
     public void FixedUpdate() {

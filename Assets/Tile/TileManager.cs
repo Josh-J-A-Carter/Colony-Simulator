@@ -20,6 +20,11 @@ public class TileManager : MonoBehaviour {
 
     ConstructableGraph constructableGraph, constructablePreviewGraph, constructableTaskPreviewGraph;
 
+    WorldLoader worldLoader;
+
+    [SerializeField]
+    TileBase dirt, grass;
+
     TileEntityStore tileEntityStore;
 
     public const int TICK_RATE = 25;
@@ -43,6 +48,10 @@ public class TileManager : MonoBehaviour {
         constructableTaskPreviewGraph = new ConstructableGraph(taskPreviewMap, this);
 
         tileEntityStore = new TileEntityStore();
+
+        worldLoader = new WorldLoader();
+
+        worldLoader.LoadOrGenerateWorld(worldMap, dirt, grass);
     }
 
     public void FixedUpdate() {

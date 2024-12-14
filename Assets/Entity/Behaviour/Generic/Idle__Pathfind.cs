@@ -30,28 +30,16 @@ public class Idle__Pathfind : State {
     public override void OnExit() {}
 
     public override void FixedRun() {
-        int currentX = (int) Math.Floor(entity.transform.position.x);
-        int currentY = (int) Math.Floor(entity.transform.position.y);
+        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
 
-        Vector2Int current = new Vector2Int(currentX, currentY);
+        step += 1;
 
-        if (path.IsValidFrom(current)) {
-            
-            // Linearly interpolate to next point
-            Vector2 nextPoint = path.LinearlyInterpolate(step, stepsMax);
-            Vector2 translation = nextPoint - (Vector2) entity.transform.position;
-            entity.transform.Translate(translation);
+        if (step > stepsMax) {
+            CompleteState();
+            return;
+        }
 
-            /// Remember to flip the character's sprite as needed
-            int sign = Math.Sign(translation.x);
-            if (sign != 0) entity.transform.localScale = new Vector3(sign, 1, 1);
-
-            step += 1;
-
-            // Once we reach the end of the path, the state is completed
-            if (step > stepsMax) CompleteState();
-
-        } else ChooseTarget();
+        if (success == false) CompleteState(false);
     }
 
     /// <summary>

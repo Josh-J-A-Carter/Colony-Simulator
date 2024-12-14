@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -70,57 +67,36 @@ public class Tidy__Store : State {
             }
         }
 
-        int currentX = (int) Math.Floor(entity.transform.position.x);
-        int currentY = (int) Math.Floor(entity.transform.position.y);
+        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
 
-        Vector2Int current = new Vector2Int(currentX, currentY);
+        step += 1;
 
-        if (path.IsValidFrom(current)) {
-            
-            // Linearly interpolate to next point
-            Vector2 nextPoint = path.LinearlyInterpolate(step, stepsMax);
-            Vector2 translation = nextPoint - (Vector2) entity.transform.position;
-            entity.transform.Translate(translation);
+        if (step > stepsMax) {
+            // Get the first N items in inventory (N = space available in storage)
+            int space = (int) targetType.RemainingCapacity(targetData);
 
-            /// Remember to flip the character's sprite as needed
-            int sign = Math.Sign(translation.x);
-            if (sign != 0) entity.transform.localScale = new Vector3(sign, 1, 1);
+            List<(Item, uint)> toStore = new();
 
-            step += 1;
-
-            // Once we reach the end of the path, leave state & store as much as possible
-            if (step > stepsMax) {
-                
-                // Get the first N items in inventory (N = space available in storage)
-                int space = (int) targetType.RemainingCapacity(targetData);
-
-                List<(Item, uint)> toStore = new();
-
-                foreach ((Item item, uint quantity) in inventory.GetContents()) {
-                    if (quantity < space) {
-                        toStore.Add((item, quantity));
-                        space -= (int) quantity;
-                        continue;
-                    }
-
-                    toStore.Add((item, (uint) space));
-                    break;
+            foreach ((Item item, uint quantity) in inventory.GetContents()) {
+                if (quantity < space) {
+                    toStore.Add((item, quantity));
+                    space -= (int) quantity;
+                    continue;
                 }
 
-                // Debug.Log($"before - bee {inventory.Carrying()}, comb {targetType.RemainingCapacity(targetData)}");
-                foreach ((Item item, uint quantity) in toStore) {
-                    targetType.Give(targetLocation, targetData, item, quantity);
-                    inventory.Take(item, quantity);
-                }
-                // Debug.Log($"after - bee {inventory.Carrying()}, comb {targetType.RemainingCapacity(targetData)}");
-
-                CompleteState();
+                toStore.Add((item, (uint) space));
+                break;
             }
 
-        } 
-        
-        // Path is invalidated - but there may exist another valid path so don't return failure here
-        else CompleteState();
-    }
+            foreach ((Item item, uint quantity) in toStore) {
+                targetType.Give(targetLocation, targetData, item, quantity);
+                inventory.Take(item, quantity);
+            }
 
+            CompleteState();
+            return;
+        }
+
+        if (success == false) CompleteState();
+    }
 }

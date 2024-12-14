@@ -35,34 +35,17 @@ public class Tidy__Collect : State {
             return;
         }
 
-        int currentX = (int) Math.Floor(entity.transform.position.x);
-        int currentY = (int) Math.Floor(entity.transform.position.y);
+        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
 
-        Vector2Int current = new Vector2Int(currentX, currentY);
+        step += 1;
 
-        if (path.IsValidFrom(current)) {
-            
-            // Linearly interpolate to next point
-            Vector2 nextPoint = path.LinearlyInterpolate(step, stepsMax);
-            Vector2 translation = nextPoint - (Vector2) entity.transform.position;
-            entity.transform.Translate(translation);
+        if (step > stepsMax) {
+            CompleteState();
+            targetEntity.Collect(inventory);
+            return;
+        }
 
-            /// Remember to flip the character's sprite as needed
-            int sign = Math.Sign(translation.x);
-            if (sign != 0) entity.transform.localScale = new Vector3(sign, 1, 1);
-
-            step += 1;
-
-            // Once we reach the end of the path, leave state & collect item
-            if (step > stepsMax) {
-                targetEntity.Collect(inventory);
-                CompleteState();
-            }
-
-        } 
-        
-        // Path is invalidated - but there may exist another valid path so don't return failure here
-        else CompleteState();
+        if (success == false) TryFindPath();
     }
 
     void TryFindPath() {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
@@ -11,6 +10,8 @@ public class ForageTask : WorkerTask, ILocative, IReward {
     ReadOnlyCollection<Vector2Int> interiorPoints, exteriorPoints;
 
     Vector2Int startPos;
+
+    bool allocatedReward = false;
 
     public ForageTask(Vector2Int startPos, IProducer forageStructure) {
         this.startPos = startPos;
@@ -48,8 +49,10 @@ public class ForageTask : WorkerTask, ILocative, IReward {
     }
 
     public List<(Item, uint)> GetRewardItems() {
-        Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(startPos);
+        if (allocatedReward) return new();
 
+        allocatedReward = true;
+        Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(startPos);
         return forageStructure.CollectAll(data);
     }
 
@@ -67,7 +70,8 @@ public class ForageTask : WorkerTask, ILocative, IReward {
         InfoLeaf nameProperty = new InfoLeaf("Type", "Foraging");
         root.AddChild(nameProperty);
 
-        InfoLeaf progressProperty = new InfoLeaf("Progress", (float) progress / MAX_PROGRESS + "%");
+        int percentProgress = (int) (100 * (float) progress / MAX_PROGRESS);
+        InfoLeaf progressProperty = new InfoLeaf("Progress", percentProgress + "%");
         root.AddChild(progressProperty);
 
         return root;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 872d223d1c667a2469523e9b3c0d8de8, type: 3}
   m_Name: Nectar
   m_EditorClassIdentifier: 
-  infoName: Honey
+  infoName: Nectar
   infoDescription: A raw ingredient that is fermented to produce honey, although
     it can also be eaten on its own for a smaller nutritional gain.
   previewSprite: {fileID: 21300000, guid: ae047317ec0e47648b89b9fe93b48b81, type: 3}

@@ -39,7 +39,8 @@ public class LayTask : QueenTask {
         InfoLeaf nameProperty = new InfoLeaf("Type", "Foraging");
         root.AddChild(nameProperty);
 
-        InfoLeaf progressProperty = new InfoLeaf("Progress", (float) progress / MAX_PROGRESS + "%");
+        int percentProgress = (int) (100 * (float) progress / MAX_PROGRESS);
+        InfoLeaf progressProperty = new InfoLeaf("Progress", percentProgress + "%");
         root.AddChild(progressProperty);
 
         return root;

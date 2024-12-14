@@ -131,7 +131,6 @@ public class TaskManager : MonoBehaviour {
             // Remove the task from the list
             tasks.Remove(task);
 
-            bool rewardGiven = false;
             // Reset all those agents whose task is set to this one
             for (int i = 0 ; i < assignedAgents.Count ; i += 1) {
                 TaskAgent agent = assignedAgents[i];
@@ -142,9 +141,6 @@ public class TaskManager : MonoBehaviour {
                 unassignedAgents.Add(agent);
                 assignedAgents.RemoveAt(i);
                 i -= 1;
-
-                if (!rewardGiven && task is IReward rewardTask) rewardTask.GiveReward(agent.GetInventory());
-                rewardGiven = true;
             }
 
             // Unset locative task store!

@@ -15,7 +15,10 @@ public class Build__Construct : State {
         // Make sure we can actually complete the task lol
         if (!task.HasAllocation()) {
             foreach ((Item item, uint quantity) in task.GetRequiredResources()) {
-                if (!inventory.Has(item, quantity)) CompleteState(false);
+                if (!inventory.Has(item, quantity)) {
+                    CompleteState(false);
+                    return;
+                }
             }
 
             TaskManager.Instance.Allocate(task, inventory);

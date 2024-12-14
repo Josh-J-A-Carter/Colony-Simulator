@@ -6,7 +6,7 @@ using UnityEngine;
 public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
     [SerializeField]
-    State Idle, Build, Nurse, Tidy;
+    State idle, build, nurse, tidy, forage;
     Animator animator;
 
     WorkerTask task;
@@ -124,22 +124,26 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
             List<(Vector2Int, IStorage, Dictionary<String, object>)> storage = TileManager.Instance.FindAvailableStorage();
 
             if ((invFull || itemEntities.Count > 0) && storage.Count > 0) {
-                stateMachine.SetChildState(Tidy);
+                stateMachine.SetChildState(tidy);
             }
 
             else {
-                stateMachine.SetChildState(Idle);
+                stateMachine.SetChildState(idle);
             }
 
             return;
         }
 
         if (task is BuildTask) {
-            stateMachine.SetChildState(Build);
+            stateMachine.SetChildState(build);
         }
 
         else if (task is NurseTask) {
-            stateMachine.SetChildState(Nurse);
+            stateMachine.SetChildState(nurse);
+        }
+
+        else if (task is ForageTask) {
+            stateMachine.SetChildState(forage);
         }
 
         else {

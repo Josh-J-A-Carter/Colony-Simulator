@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Task {
+public abstract class Task : IInformative {
     public const int MAX_PROGRESS = 250;
     public int progress { get; protected set; } = 0;
 
@@ -64,6 +65,11 @@ public abstract class Task {
 
     public virtual void OnCancellation() {}
 
+    public abstract String GetName();
+
+    public abstract String GetDescription();
+
+    public abstract InfoBranch GetInfoTree(object obj = null);
 }
 
 public enum TaskPriority {

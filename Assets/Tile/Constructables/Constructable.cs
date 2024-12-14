@@ -6,8 +6,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/Constructable")]
-public class Constructable : ScriptableObject, Informative {
+[CreateAssetMenu(menuName = "ScriptableObjects/Generic Constructable")]
+public class Constructable : ScriptableObject, IInformative {
 
     [SerializeField]
     protected GridRow[] gridData;
@@ -16,7 +16,10 @@ public class Constructable : ScriptableObject, Informative {
     protected bool obstructive;
 
     [SerializeField]
-    protected String nameInfo, descriptionInfo;
+    protected String nameInfo;
+    
+    [SerializeField, TextArea]
+    protected String descriptionInfo;
 
     [SerializeField]
     protected Sprite previewSprite;
@@ -145,10 +148,6 @@ public class Constructable : ScriptableObject, Informative {
 
     public Sprite GetPreviewSprite() {
         return previewSprite;
-    }
-
-    public virtual InfoType GetInfoType() {
-        return InfoType.Structure;
     }
 
     public InfoBranch GetInfoTree(object instance = null) {

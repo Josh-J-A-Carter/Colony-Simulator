@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class LocativeTaskStore {
 
-    Dictionary<Vector2Int, Locative> taskMap = new Dictionary<Vector2Int, Locative>();
+    Dictionary<Vector2Int, ILocative> taskMap = new Dictionary<Vector2Int, ILocative>();
 
-    public void SetTask(Locative task) {
+    public void SetTask(ILocative task) {
         foreach (Vector2Int pos in task.GetInteriorPoints()) taskMap[pos] = task;
     }
 
-    public List<Task> GetConflictingTasks(Locative task) {
+    public List<Task> GetConflictingTasks(ILocative task) {
         List<Task> conflictingTasks = new List<Task>();
 
         foreach (Vector2Int pos in task.GetInteriorPoints()) {
-            Locative possibleConflict;
+            ILocative possibleConflict;
             bool exists = taskMap.TryGetValue(pos, out possibleConflict);
 
             if (!exists) continue;
@@ -25,7 +25,7 @@ public class LocativeTaskStore {
         return conflictingTasks;
     }
 
-    public void UnsetTask(Locative task) {
+    public void UnsetTask(ILocative task) {
         foreach (Vector2Int pos in task.GetInteriorPoints()) taskMap.Remove(pos);
     }
 

@@ -908,12 +908,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldMap: {fileID: 898347671}
-  obstacleMap: {fileID: 1759477140}
   previewMap: {fileID: 551670567}
   taskPreviewMap: {fileID: 787926328}
-  obstacleTile: {fileID: 11400000, guid: 704a32f773ce5954786c0b0d8bb9ec14, type: 2}
   dirt: {fileID: 11400000, guid: 9fedad7ae1d80b04480107e70c1807b8, type: 2}
   grass: {fileID: 11400000, guid: 0630222ea713a194ebe50eea7acfac51, type: 2}
+  flower: {fileID: 11400000, guid: 451bf6435a8101c4c8cf6de14df6bcbe, type: 2}
 --- !u!1 &1077591157
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,9 +1071,54 @@ Transform:
   - {fileID: 228560785}
   - {fileID: 457383676}
   - {fileID: 165163173}
+  - {fileID: 1306666203}
   - {fileID: 1115333797}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1306666202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1306666203}
+  - component: {fileID: 1306666204}
+  m_Layer: 0
+  m_Name: Forage Tool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1306666203
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306666202}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1138024223}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1306666204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306666202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25e2b1ed05c279c48a50150ecd68898d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1470879822
 GameObject:
   m_ObjectHideFlags: 0

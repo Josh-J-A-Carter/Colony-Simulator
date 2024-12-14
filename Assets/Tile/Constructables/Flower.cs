@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Flower : TileEntity {
+[CreateAssetMenu(menuName = "ScriptableObjects/Flower Constructable")]
+public class Flower : TileEntity, IProducer {
 
-    [field: SerializeField]
-    public bool IsPollenProducer { get; protected set; }
+    ReadOnlyCollection<Item> productionItemTypes;
+
+    [SerializeField]
+    protected bool isPollenProducer;
 
         [SerializeField]
         Item pollen;
@@ -27,14 +31,14 @@ public class Flower : TileEntity {
         public const String POLLEN__QUANTITY = "pollen__quantity";
 
 
-    [field: SerializeField]
-    public bool IsNectarProducer { get; protected set; }
+    [SerializeField]
+    protected bool isNectarProducer;
 
         [SerializeField]
         Item nectar;
 
         [SerializeField]
-        public int minNectarDelay, maxNectarDelay;
+        int minNectarDelay, maxNectarDelay;
         
         [SerializeField]
         uint minNectarQuantity, maxNectarQuantity;
@@ -59,15 +63,14 @@ public class Flower : TileEntity {
     }
 
     void ResetPollenData(Dictionary<String, object> data) {
-        if (IsPollenProducer) {
+        if (isPollenProducer) {
             data[POLLEN__IS_READY] = false;
             data[POLLEN__TIME_LEFT] = Random.Range(minPollenDelay, maxPollenDelay);
             data[POLLEN__QUANTITY] = (uint) Random.Range(minPollenQuantity, maxPollenQuantity);
         }
     }
     void ResetNectarData(Dictionary<String, object> data) {
-        
-        if (IsNectarProducer) {
+        if (isNectarProducer) {
             data[NECTAR__IS_READY] = false;
             data[NECTAR__TIME_LEFT] = Random.Range(minNectarDelay, maxNectarDelay);
             data[NECTAR__QUANTITY] = (uint) Random.Range(minNectarQuantity, maxNectarQuantity);
@@ -75,7 +78,7 @@ public class Flower : TileEntity {
     }
 
     public override void TickInstance(Vector2Int position, Dictionary<string, object> instance) {
-        if (IsPollenProducer) {
+        if (isPollenProducer) {
             int timeLeft = (int) instance[POLLEN__TIME_LEFT];
             timeLeft = timeLeft == 0 ? 0 : timeLeft - 1;
             instance[POLLEN__TIME_LEFT] = timeLeft;
@@ -83,7 +86,7 @@ public class Flower : TileEntity {
             if (timeLeft == 0) instance[POLLEN__IS_READY] = true;
         }
 
-        if (IsNectarProducer) {
+        if (isNectarProducer) {
             int timeLeft = (int) instance[NECTAR__TIME_LEFT];
             timeLeft = timeLeft == 0 ? 0 : timeLeft - 1;
             instance[NECTAR__TIME_LEFT] = timeLeft;
@@ -92,13 +95,26 @@ public class Flower : TileEntity {
         }
     }
 
-    public bool HasPollen(Dictionary<String, object> instance) {
-        if (!IsPollenProducer) return false;
+    public ReadOnlyCollection<Item> ProductionItemTypes() {
+        if (productionItemTypes == null) {
+            List<Item> list = new();
+
+            if (isNectarProducer) list.Add(nectar);
+            if (isPollenProducer) list.Add(pollen);
+
+            productionItemTypes = list.AsReadOnly();
+        }
+
+        return productionItemTypes;
+    }
+
+    bool HasPollen(Dictionary<String, object> instance) {
+        if (!isPollenProducer) return false;
 
         return (bool) instance[POLLEN__IS_READY];
     }
 
-    public (Item, uint) CollectPollen(Dictionary<String, object> instance) {
+    (Item, uint) CollectPollen(Dictionary<String, object> instance) {
         if (!HasPollen(instance)) return (null, 0);
 
         uint quantity = (uint) instance[POLLEN__QUANTITY];
@@ -108,13 +124,13 @@ public class Flower : TileEntity {
         return (pollen, quantity);
     }
 
-    public bool HasNectar(Dictionary<String, object> instance) {
-        if (!IsNectarProducer) return false;
+    bool HasNectar(Dictionary<String, object> instance) {
+        if (!isNectarProducer) return false;
 
         return (bool) instance[NECTAR__IS_READY];
     }
 
-    public (Item, uint) CollectNectar(Dictionary<String, object> instance) {
+    (Item, uint) CollectNectar(Dictionary<String, object> instance) {
         if (!HasNectar(instance)) return (null, 0);
 
         uint quantity = (uint) instance[NECTAR__QUANTITY];
@@ -124,16 +140,46 @@ public class Flower : TileEntity {
         return (nectar, quantity);
     }
 
+    public bool IsReady(Dictionary<string, object> instance, Item item) {
+        if (item == nectar) {
+            return (bool) instance[NECTAR__IS_READY];
+        }
+
+        else if (item == pollen) {
+            return (bool) instance[POLLEN__IS_READY];
+        }
+
+        else {
+            throw new Exception($"This Flower does not produce {item}");
+        }
+    }
+
+    public bool IsReady(Dictionary<string, object> instance) {
+        foreach (Item item in ProductionItemTypes()) if (IsReady(instance, item)) return true;
+
+        return false;
+    }
+
+    public List<(Item, uint)> CollectAll(Dictionary<string, object> instance) {
+        List<(Item, uint)> harvest = new();
+
+        if (isNectarProducer && (bool) instance[NECTAR__IS_READY]) harvest.Add(CollectNectar(instance));
+        if (isPollenProducer && (bool) instance[POLLEN__IS_READY]) harvest.Add(CollectPollen(instance));
+
+        return harvest;
+    }
+
+
     public override InfoBranch GetTileEntityInfoTree(Dictionary<String, object> instance) {
         InfoBranch root = new InfoBranch(String.Empty);
 
         InfoBranch flowerCategory = new InfoBranch("Flower properties");
         root.AddChild(flowerCategory);
 
-        InfoLeaf pollenProducerProperty = new InfoLeaf("Pollen producer", IsPollenProducer.ToString());
+        InfoLeaf pollenProducerProperty = new InfoLeaf("Pollen producer", isPollenProducer.ToString());
         flowerCategory.AddChild(pollenProducerProperty);
 
-        if (IsPollenProducer) {
+        if (isPollenProducer) {
             if (HasPollen(instance)) {
                 InfoLeaf hasPollenProperty = new InfoLeaf("Pollen is ready to harvest");
                 flowerCategory.AddChild(hasPollenProperty);
@@ -144,10 +190,10 @@ public class Flower : TileEntity {
             }
         }
 
-        InfoLeaf nectarProducerProperty = new InfoLeaf("Nectar producer", IsNectarProducer.ToString());
+        InfoLeaf nectarProducerProperty = new InfoLeaf("Nectar producer", isNectarProducer.ToString());
         flowerCategory.AddChild(nectarProducerProperty);
 
-        if (IsNectarProducer) {
+        if (isNectarProducer) {
             if (HasNectar(instance)) {
                 InfoLeaf hasNectarProperty = new InfoLeaf("Nectar is ready to harvest");
                 flowerCategory.AddChild(hasNectarProperty);
@@ -160,6 +206,5 @@ public class Flower : TileEntity {
                 
         return root;
     }
-
 }
 

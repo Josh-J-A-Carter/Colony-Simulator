@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Storage {
+public interface IStorage {
     public bool Take(Dictionary<String, object> instance, Item item, uint quantity);
 
     public void Give(Vector2Int defaultLocation, Dictionary<String, object> instance, Item item, uint quantity);

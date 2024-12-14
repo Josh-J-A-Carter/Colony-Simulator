@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/Comb")]
-public class BroodComb : TileEntity, Configurable, Storage {
+[CreateAssetMenu(menuName = "ScriptableObjects/Brood Comb Constructable")]
+public class BroodComb : TileEntity, IConfigurable, IStorage {
 
     // Constants for TileEntityData attribute names
 

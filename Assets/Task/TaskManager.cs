@@ -131,18 +131,24 @@ public class TaskManager : MonoBehaviour {
             // Remove the task from the list
             tasks.Remove(task);
 
+            bool rewardGiven = false;
             // Reset all those agents whose task is set to this one
             for (int i = 0 ; i < assignedAgents.Count ; i += 1) {
-                if (assignedAgents[i].GetTask() != task) continue;
+                TaskAgent agent = assignedAgents[i];
 
-                assignedAgents[i].SetTask(null);
-                unassignedAgents.Add(assignedAgents[i]);
+                if (agent.GetTask() != task) continue;
+
+                agent.SetTask(null);
+                unassignedAgents.Add(agent);
                 assignedAgents.RemoveAt(i);
                 i -= 1;
+
+                if (!rewardGiven && task is IReward rewardTask) rewardTask.GiveReward(agent.GetInventory());
+                rewardGiven = true;
             }
 
             // Unset locative task store!
-            if (task is Locative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
+            if (task is ILocative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
         }
 
         pendingCompletionTasks.Clear();
@@ -161,7 +167,7 @@ public class TaskManager : MonoBehaviour {
                 // when in reality they have the same age
                 tasks.Add(task);
                 toConfirm.Add(task);
-                if (task is Locative locativeTask) locativeTaskStore.SetTask(locativeTask);
+                if (task is ILocative locativeTask) locativeTaskStore.SetTask(locativeTask);
             }
         }
         
@@ -174,7 +180,7 @@ public class TaskManager : MonoBehaviour {
     bool ResolveConflicts(Task task) {
         if (task.MustAbort()) return false;
 
-        if (task is Locative locative) {
+        if (task is ILocative locative) {
             List<Task> conflicts = locativeTaskStore.GetConflictingTasks(locative);
 
             // Look for a reason to cancel the new task (i.e. conflicts with another pending task)
@@ -210,7 +216,7 @@ public class TaskManager : MonoBehaviour {
         }
         
         // Unset locative task store!
-        if (task is Locative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
+        if (task is ILocative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
     }
 
     public void Allocate(Consumer consumer, InventoryManager inventory) {

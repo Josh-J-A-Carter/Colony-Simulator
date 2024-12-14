@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ItemEntity : MonoBehaviour, Informative, Entity {
+public class ItemEntity : MonoBehaviour, IInformative, Entity {
 
     public Item item { get; private set; }
     public uint quantity { get; private set; }
@@ -80,9 +80,6 @@ public class ItemEntity : MonoBehaviour, Informative, Entity {
 
     public string GetDescription() {
         return item.GetDescription();
-    }
-    public InfoType GetInfoType() {
-        return InfoType.Item;
     }
 
     public string GetName() {

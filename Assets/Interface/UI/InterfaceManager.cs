@@ -36,6 +36,7 @@ public class InterfaceManager : MonoBehaviour {
         select.RegisterCallback<ClickEvent>(ClickedSelectTool);
         containerRoot.Q(name: "construct-tool").RegisterCallback<ClickEvent>(ClickedConstructTool);
         containerRoot.Q(name: "destroy-tool").RegisterCallback<ClickEvent>(ClickedDestroyTool);
+        containerRoot.Q(name: "forage-tool").RegisterCallback<ClickEvent>(ClickedForageTool);
 
         // Configurable container
         configurableContainerRoot = containerRoot.Q(name: "configurable-container-root");
@@ -119,5 +120,13 @@ public class InterfaceManager : MonoBehaviour {
         DeselectAllButtons();
 
         containerRoot.Q(name: "destroy-tool").AddToClassList("selected");
+    }
+
+        void ClickedForageTool(ClickEvent evt) {
+        tm.SetTool(ToolType.Forage);
+
+        DeselectAllButtons();
+
+        containerRoot.Q(name: "forage-tool").AddToClassList("selected");
     }
 }

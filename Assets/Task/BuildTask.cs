@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class BuildTask : WorkerTask, Locative, Consumer {
+public class BuildTask : WorkerTask, ILocative, Consumer {
     
     Constructable constructable;
     Vector2Int startPos;
@@ -103,5 +103,26 @@ public class BuildTask : WorkerTask, Locative, Consumer {
 
     public Vector2Int GetDefaultDeallocationPosition() {
         return startPos;
+    }
+
+
+    public override String GetName() {
+        return "Construction";
+    }
+
+    public override String GetDescription() {
+        return "Constructing little bee structures out of beeswax and other naturally found materials";
+    }
+
+    public override InfoBranch GetInfoTree(object obj = null) {
+        InfoBranch root = new InfoBranch(String.Empty);
+        
+        InfoLeaf nameProperty = new InfoLeaf("Type", "Construction");
+        root.AddChild(nameProperty);
+
+        InfoLeaf progressProperty = new InfoLeaf("Progress", (float) progress / MAX_PROGRESS + "%");
+        root.AddChild(progressProperty);
+
+        return root;
     }
 }

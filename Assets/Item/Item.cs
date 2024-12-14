@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Item")]
-public class Item : ScriptableObject, Informative {
+public class Item : ScriptableObject, IInformative {
 
     [SerializeField]
     String infoName;
@@ -23,10 +23,6 @@ public class Item : ScriptableObject, Informative {
         return infoDescription;
     }
     
-    public InfoType GetInfoType() {
-        return InfoType.Item;
-    }
-
     public string GetName() {
         return infoName;
     }

@@ -12,7 +12,8 @@ public class WorldLoader {
 
     Graph obstacles;
 
-    public bool LoadOrGenerateWorld(Tilemap gameWorld, Graph obstacles, TileBase dirt, TileBase grass, int minX, int minY, int worldWidth, int worldHeight) {
+    public bool LoadOrGenerateWorld(Tilemap gameWorld, Graph obstacles, int minX, int minY, int worldWidth, int worldHeight,
+                                    TileBase dirt, TileBase grass) {
 
         this.gameWorld = gameWorld;
         this.obstacles = obstacles;

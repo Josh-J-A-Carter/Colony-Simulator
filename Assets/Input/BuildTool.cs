@@ -162,7 +162,7 @@ public class BuildTool : Tool {
         genericCategory.AddChild(nameProperty);
 
 
-        if (constructable is Configurable configurable) {
+        if (constructable is IConfigurable configurable) {
             previewConfigDataTemplate = (constructable as TileEntity).GenerateDefaultData();
             InfoBranch configurableProperties = configurable.GetConfigTree(previewConfigDataTemplate);
             root.AddChild(configurableProperties);
@@ -175,7 +175,7 @@ public class BuildTool : Tool {
         InfoBranch configInfo = GetConstructableConfigInfo();
 
         Action<String[], bool> callback = null;
-        if (constructable is Configurable) callback = OnConfigUpdate;
+        if (constructable is IConfigurable) callback = OnConfigUpdate;
         InfoToUI.DisplayConfigInfoTree(configInfo, callback);
         InterfaceManager.Instance.ShowConfigInfoContainer();
     }

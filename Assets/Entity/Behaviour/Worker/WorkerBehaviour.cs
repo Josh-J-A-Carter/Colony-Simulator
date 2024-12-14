@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
+public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
     [SerializeField]
     State Idle, Build, Nurse, Tidy;
@@ -44,7 +44,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
         if (task is Consumer consumer && !AreResourcesAvailable(consumer)) return false;
 
         // Make sure pathfinding to the task is possible, if applicable
-        if (task is Locative locative && !IsPathAvailable(locative)) return false;
+        if (task is ILocative locative && !IsPathAvailable(locative)) return false;
 
         if (task is WorkerTask workerTask) {
             this.task = workerTask;
@@ -53,7 +53,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
         } else return false;
     }
 
-    bool IsPathAvailable(Locative locative) {
+    bool IsPathAvailable(ILocative locative) {
         ReadOnlyCollection<Vector2Int> exterior = locative.GetExteriorPoints();
         foreach (Vector2Int destination in exterior) {
             Path path = Pathfind.FindPath(transform.position, destination);
@@ -121,7 +121,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
             // If inventory full or random items around, AND available storage, then tidy
             bool invFull = inventory.RemainingCapacity() <= inventory.MaxCapacity() / 5;
             ReadOnlyCollection<ItemEntity> itemEntities = EntityManager.Instance.GetItemEntities();
-            List<(Vector2Int, Storage, Dictionary<String, object>)> storage = TileManager.Instance.FindAvailableStorage();
+            List<(Vector2Int, IStorage, Dictionary<String, object>)> storage = TileManager.Instance.FindAvailableStorage();
 
             if ((invFull || itemEntities.Count > 0) && storage.Count > 0) {
                 stateMachine.SetChildState(Tidy);
@@ -145,10 +145,6 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
         else {
             throw new Exception("Unknown/incompatible task type");
         }
-    }
-
-    public Sprite GetPreviewSprite() {
-        throw new NotImplementedException();
     }
 
     public String GetName() {
@@ -175,18 +171,24 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
 
         InfoLeaf nameProperty = new InfoLeaf("Name", nameInfo);
         genericCategory.AddChild(nameProperty);
-        
+
+        // Task
+        InfoBranch taskCategory = new InfoBranch("Task information");
+        root.AddChild(taskCategory);
+
+        if (task == null) {
+            InfoLeaf currentTaskProperty = new InfoLeaf("Current task", "None", "As this bee is not assigned a particular task, it may instead be tidying or idling");
+            taskCategory.AddChild(currentTaskProperty);
+        } else {
+            foreach (InfoNode node in task.GetInfoTree().GetChildren()) {
+                taskCategory.AddChild(node);
+            }
+        }
+
         // Inventory
         InfoBranch inventoryCategory = inventory.GetInfoTree();
         root.AddChild(inventoryCategory);
 
-        // Task
-
-
         return root;
-    }
-
-    public InfoType GetInfoType() {
-        return InfoType.Entity;
     }
 }

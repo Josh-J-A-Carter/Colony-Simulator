@@ -12,7 +12,7 @@ public class Tidy__Store : State {
     AnimationClip anim;
 
     Vector2Int targetLocation;
-    Storage targetType;
+    IStorage targetType;
     Dictionary<String, object> targetData;
 
     Path path;
@@ -30,7 +30,7 @@ public class Tidy__Store : State {
     public override void OnEntry() {
         animator.Play(anim.name);
 
-        List<(Vector2Int, Storage, Dictionary<String, object>)> storage = TileManager.Instance.FindAvailableStorage();
+        List<(Vector2Int, IStorage, Dictionary<String, object>)> storage = TileManager.Instance.FindAvailableStorage();
 
         // We need somewhere to store our collected items, but there isn't anywhere - return failure
         if (storage.Count == 0) {

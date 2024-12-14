@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class NurseTask : WorkerTask, Locative, Consumer {
+public class NurseTask : WorkerTask, ILocative, Consumer {
     
     BroodComb broodComb;
     Vector2Int startPos;
@@ -86,5 +86,25 @@ public class NurseTask : WorkerTask, Locative, Consumer {
 
     public Vector2Int GetDefaultDeallocationPosition() {
         return startPos;
+    }
+
+    public override String GetName() {
+        return "Nursing";
+    }
+
+    public override String GetDescription() {
+        return "Feeding newly hatched eggs and capping larvae before they become pupae";
+    }
+
+    public override InfoBranch GetInfoTree(object obj = null) {
+        InfoBranch root = new InfoBranch(String.Empty);
+        
+        InfoLeaf nameProperty = new InfoLeaf("Type", "Nursing");
+        root.AddChild(nameProperty);
+
+        InfoLeaf progressProperty = new InfoLeaf("Progress", (float) progress / MAX_PROGRESS + "%");
+        root.AddChild(progressProperty);
+
+        return root;
     }
 }

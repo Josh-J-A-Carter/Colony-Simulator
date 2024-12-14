@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public interface Locative {
+public interface ILocative {
 
     public abstract ReadOnlyCollection<Vector2Int> GetInteriorPoints();
 

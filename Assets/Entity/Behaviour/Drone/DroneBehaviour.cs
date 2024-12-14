@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DroneBehaviour : MonoBehaviour, Informative, Entity {
+public class DroneBehaviour : MonoBehaviour, IInformative, Entity {
     
     [SerializeField]
     State idle;
@@ -42,10 +42,6 @@ public class DroneBehaviour : MonoBehaviour, Informative, Entity {
         stateMachine.SetChildState(idle);
     }
 
-    public Sprite GetPreviewSprite() {
-        throw new System.NotImplementedException();
-    }
-
     public string GetName() {
         return nameInfo;
     }
@@ -76,9 +72,5 @@ public class DroneBehaviour : MonoBehaviour, Informative, Entity {
 
 
         return root;
-    }
-
-    public InfoType GetInfoType() {
-        return InfoType.Entity;
     }
 }

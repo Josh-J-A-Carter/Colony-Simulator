@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aabd070bfc0c9eb45aac4bbcff182b75, type: 3}
+  m_Name: Lily
+  m_EditorClassIdentifier: 
+  gridData:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: f326d3024207dde41a21e5ce10dcd25b, type: 2}
+      previewTile: {fileID: 0}
+  obstructive: 0
+  nameInfo: Lily
+  descriptionInfo: A common flower that provides a respectable quantity of nectar
+    and pollen
+  previewSprite: {fileID: 0}
+  requiredResources: []
+  <IsPollenProducer>k__BackingField: 0
+  pollen: {fileID: 0}
+  minPollenDelay: 0
+  maxPollenDelay: 0
+  minPollenQuantity: 0
+  maxPollenQuantity: 0
+  <IsNectarProducer>k__BackingField: 1
+  nectar: {fileID: 11400000, guid: 73eaea258b6679441b5ee8b389bbb70f, type: 2}
+  minNectarDelay: 100
+  maxNectarDelay: 300
+  minNectarQuantity: 1
+  maxNectarQuantity: 2

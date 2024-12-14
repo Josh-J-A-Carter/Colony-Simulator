@@ -28,6 +28,9 @@ public class TileManager : MonoBehaviour {
     [SerializeField]
     TileBase dirt, grass;
 
+    [SerializeField]
+    Constructable flower;
+
     TileEntityStore tileEntityStore;
 
     public const int TICK_RATE = 25;
@@ -54,7 +57,11 @@ public class TileManager : MonoBehaviour {
 
         worldLoader = new WorldLoader();
 
-        worldLoader.LoadOrGenerateWorld(worldMap, obstacles, dirt, grass, MIN_X, MIN_Y, WORLD_WIDTH, WORLD_HEIGHT);
+        worldLoader.LoadOrGenerateWorld(worldMap, obstacles, MIN_X, MIN_Y, WORLD_WIDTH, WORLD_HEIGHT, dirt, grass);
+
+
+        Vector2Int loc = new Vector2Int(0, 1);
+        Construct(loc, flower);
     }
 
     public void FixedUpdate() {
@@ -93,7 +100,7 @@ public class TileManager : MonoBehaviour {
         result = new();
         int target = (int) quantity;
         
-        foreach ((Vector2Int pos, Storage storage, Dictionary<String, object> data) in QueryTileEntities<Storage>()) {
+        foreach ((Vector2Int pos, IStorage storage, Dictionary<String, object> data) in QueryTileEntities<IStorage>()) {
             uint contribution = storage.CountItem(data, item);
             
             if (contribution == 0) continue;
@@ -108,9 +115,9 @@ public class TileManager : MonoBehaviour {
         return false;
     }
 
-    public List<(Vector2Int, Storage, Dictionary<String, object>)> FindAvailableStorage() {
+    public List<(Vector2Int, IStorage, Dictionary<String, object>)> FindAvailableStorage() {
         return tileEntityStore
-                        .Query<Storage>()
+                        .Query<IStorage>()
                         .Where(tuple => tuple.Item2.IsAvailableStorage(tuple.Item3))
                         .OrderBy(tuple => tuple.Item2.RemainingCapacity(tuple.Item3))
                         .ToList();

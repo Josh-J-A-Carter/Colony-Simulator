@@ -19,7 +19,7 @@ public class SelectTool : Tool {
 
     // Entity preview data
     GameObject entityPreview;
-    Informative entityPreviewInfo;
+    IInformative entityPreviewInfo;
 
     // Tile preview data
     Vector2Int tilePreview;
@@ -89,7 +89,7 @@ public class SelectTool : Tool {
         if (type == HoverType.Entity) {
             entityPreview = data.GetEntityData();
             // Get informative component??? idk man
-            entityPreviewInfo = entityPreview.GetComponent<Informative>();
+            entityPreviewInfo = entityPreview.GetComponent<IInformative>();
 
             // If it turns out that this entity does not have a component implementing Informative, reset selection
             if (entityPreviewInfo == null) {

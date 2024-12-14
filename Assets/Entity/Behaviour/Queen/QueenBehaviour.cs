@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QueenBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
+public class QueenBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
     
     [SerializeField]
     State Idle, Lay;
@@ -83,10 +83,6 @@ public class QueenBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
         stateMachine.SetChildState(Idle);
     }
 
-    public Sprite GetPreviewSprite() {
-        throw new System.NotImplementedException();
-    }
-
     public string GetName() {
         return nameInfo;
     }
@@ -112,14 +108,6 @@ public class QueenBehaviour : MonoBehaviour, TaskAgent, Informative, Entity {
         InfoLeaf nameProperty = new InfoLeaf("Name", nameInfo);
         genericCategory.AddChild(nameProperty);
 
-        
-        // Task
-
-
         return root;
-    }
-
-    public InfoType GetInfoType() {
-        return InfoType.Entity;
     }
 }

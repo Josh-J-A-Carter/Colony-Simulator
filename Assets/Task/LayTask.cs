@@ -24,4 +24,24 @@ public class LayTask : QueenTask {
         if (comb == null) return;
         comb.TryLayEgg(location, comb.toFertilise);
     }
+
+    public override String GetName() {
+        return "Foraging";
+    }
+
+    public override String GetDescription() {
+        return "Foraging for nectar, pollen, sap, and other resources essential to the survival of the bee nest";
+    }
+
+    public override InfoBranch GetInfoTree(object obj = null) {
+        InfoBranch root = new InfoBranch(String.Empty);
+        
+        InfoLeaf nameProperty = new InfoLeaf("Type", "Foraging");
+        root.AddChild(nameProperty);
+
+        InfoLeaf progressProperty = new InfoLeaf("Progress", (float) progress / MAX_PROGRESS + "%");
+        root.AddChild(progressProperty);
+
+        return root;
+    }
 }

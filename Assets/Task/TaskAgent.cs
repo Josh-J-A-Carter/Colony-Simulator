@@ -30,4 +30,8 @@ public interface TaskAgent {
 
     public abstract Task GetTask();
 
+    public virtual InventoryManager GetInventory() {
+        return null;
+    }
+
 }

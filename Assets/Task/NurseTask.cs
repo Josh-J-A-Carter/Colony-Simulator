@@ -12,22 +12,21 @@ public class NurseTask : WorkerTask, ILocative, IConsumer {
     ReadOnlyCollection<Vector2Int> interiorPoints;
 
 
-    ReadOnlyCollection<(Item, uint)> requiredResources;
+    ReadOnlyCollection<(Resource, uint)> requiredResources;
     Item item;
     uint quantity;
+
     InventoryManager allocator;
+    List<(Item, uint)> allocation;
 
     bool hasAllocation = false;
 
-    public NurseTask(TaskPriority priority, Vector2Int startPos, BroodComb broodComb, Item item, uint quantity) {
+    public NurseTask(TaskPriority priority, Vector2Int startPos, BroodComb broodComb, List<(Resource, uint)> requiredResources) {
         this.priority = priority;
         this.startPos = startPos;
         
         this.broodComb = broodComb;
-        this.item = item;
-        this.quantity = quantity;
-
-        requiredResources = new List<(Item, uint)>() { (item, quantity) }.AsReadOnly();
+        this.requiredResources = requiredResources.AsReadOnly();
 
         creationTime = Time.time;
     }
@@ -67,7 +66,7 @@ public class NurseTask : WorkerTask, ILocative, IConsumer {
     }
 
 
-    public ReadOnlyCollection<(Item, uint)> GetRequiredResources() {
+    public ReadOnlyCollection<(Resource, uint)> GetRequiredResources() {
         return requiredResources;
     }
 
@@ -75,13 +74,17 @@ public class NurseTask : WorkerTask, ILocative, IConsumer {
         return hasAllocation;
     }
 
-    public void Allocate(InventoryManager allocator) {
+    public void Allocate(InventoryManager allocator, List<(Item, uint)> allocation) {
         this.allocator = allocator;
+        this.allocation = allocation;
         hasAllocation = true;
     }
 
-    public InventoryManager GetAllocator() {
-        return allocator;
+    public (InventoryManager, List<(Item, uint)>) Deallocate() {
+        allocation = null;
+        allocator = null;
+        hasAllocation = false;
+        return (allocator, allocation);
     }
 
     public Vector2Int GetDefaultDeallocationPosition() {

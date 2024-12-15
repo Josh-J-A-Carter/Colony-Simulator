@@ -65,15 +65,21 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
     bool AreResourcesAvailable(IConsumer consumer) {
         // Try find locations to get each resource
-        foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) {
+        foreach ((Resource res, uint quantity) in consumer.GetRequiredResources()) {
+
+            ///
+            /// Note: potential source of bug here - we aren't adding up the subtotals across
+            /// inventory, entities, and storage; e.g. could have 1/3 in each but the test would fail
+            ///
+
             // Inventory has it? Go to next resource
-            if (inventory.Has(item, quantity)) continue;
+            if (inventory.CountResource(res) >= quantity) continue;
 
             // ItemEntities have it?
-            if (EntityManager.Instance.FindItemEntities(item, quantity, out _)) continue;
+            if (EntityManager.Instance.FindItemEntities(res, quantity, out _)) continue;
 
             // Storage has it?
-            if (TileManager.Instance.FindItemInStorage(item, quantity, out _)) continue;
+            if (TileManager.Instance.FindResourceInStorage(res, quantity, out _)) continue;
 
             // Nothing in the nest has it readily accessible
             return false;

@@ -96,11 +96,15 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         // Developmental events
         if (broodStage == BroodStage.Larva) {
             if (timeLeft == LARVA_FEED) {
-                TaskManager.Instance.CreateTask(new NurseTask(TaskPriority.Important, position, this, royalJelly, 1));
+                List<(Resource, uint)> res = new() { (new(royalJelly), 1) };
+
+                TaskManager.Instance.CreateTask(new NurseTask(TaskPriority.Important, position, this, res));
             }
 
             else if (timeLeft == LARVA_SEAL) {
-                TaskManager.Instance.CreateTask(new NurseTask(TaskPriority.Important, position, this, beeswax, 1));
+                List<(Resource, uint)> res = new() { (new(beeswax), 1) };
+
+                TaskManager.Instance.CreateTask(new NurseTask(TaskPriority.Important, position, this, res));
             }
         }
 
@@ -189,6 +193,14 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
 
     public uint CountItem(Dictionary<String, object> instance, Item item) {
         return GetInventory(instance).CountItem(item);
+    }
+
+    public uint CountResource(Dictionary<String, object> instance, Resource res) {
+        return GetInventory(instance).CountResource(res);
+    }
+
+    public bool HasResources(Dictionary<String, object> instance, List<(Resource, uint)> resources) {
+        return GetInventory(instance).HasResources(resources);
     }
 
     public void Give(Vector2Int defaultLocation, Dictionary<String, object> instance, Item item, uint quantity) {

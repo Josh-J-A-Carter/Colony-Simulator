@@ -9,6 +9,11 @@ public interface IStorage {
 
     public uint CountItem(Dictionary<String, object> instance, Item item);
 
+    public uint CountResource(Dictionary<String, object> instance, Resource res);
+
+    public bool HasResources(Dictionary<String, object> instance, List<(Resource, uint)> resources);
+
+
     public bool IsAvailableStorage(Dictionary<String, object> instance);
 
     public uint RemainingCapacity(Dictionary<String, object> instance);

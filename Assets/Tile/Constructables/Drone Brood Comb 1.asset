@@ -22,7 +22,10 @@ MonoBehaviour:
     brood, storing items, or fermenting products like nectar.
   previewSprite: {fileID: -615253942, guid: 4d4a6c37b6fe60444a21f5a77e18c3db, type: 3}
   requiredResources:
-  - item: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
+  - resource:
+      <ResourceType>k__BackingField: 0
+      <Item>k__BackingField: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
+      <ItemTag>k__BackingField: 0
     quantity: 2
   maxCapacity: 200
   broodCombSize: 1

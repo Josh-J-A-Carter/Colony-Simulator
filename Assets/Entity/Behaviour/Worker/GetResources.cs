@@ -10,7 +10,7 @@ public class GetResources : State {
     [SerializeField]
     AnimationClip anim;
 
-    IConsumer task => (IConsumer) taskAgent.GetTask();
+    ReadOnlyCollection<(Resource, uint)> resources;
 
     bool isTargetingItemEntity;
     ItemEntity targetEntity;
@@ -26,9 +26,13 @@ public class GetResources : State {
     int step, stepsMax;
     static readonly int stepSpeed = 15;
 
+    public void SetResourceRequirements(ReadOnlyCollection<(Resource, uint)> resources) {
+        this.resources = resources;
+    }
+
 
     public override void OnEntry() {
-        // Debug.Log("try get resources");
+        Debug.Assert(resources != null);
 
         animator.Play(anim.name);
 
@@ -42,6 +46,10 @@ public class GetResources : State {
         CompleteState(false);
     }
 
+    public override void OnExit() {
+        resources = null;
+    }
+
     bool TryFindItemTarget() {
         Vector2 pos = entity.transform.position;
         Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
@@ -50,7 +58,10 @@ public class GetResources : State {
         List<ItemEntity> itemEntities = EntityManager.Instance
                 .GetItemEntities()
                 .Where(entity => {
-                    foreach ((Item item, _) in task.GetRequiredResources()) if (entity.item == item) return true;
+                    foreach ((Resource res, _) in resources) {
+                        if (res.ResourceType == ResourceType.Item && entity.item == res.Item ||
+                        res.ResourceType == ResourceType.Tag && entity.item.HasItemTag(res.ItemTag)) return true;
+                    }
 
                     return false;
                 })
@@ -88,7 +99,7 @@ public class GetResources : State {
                 .Where(val => {
                     (_, IStorage type, Dictionary<String, object> data) = val;
                     
-                    foreach ((Item item, _) in task.GetRequiredResources()) if (type.CountItem(data, item) > 0) return true;
+                    foreach ((Resource res, _) in resources) if (type.CountResource(data, res) > 0) return true;
                     
                     return false;
                 })
@@ -133,14 +144,14 @@ public class GetResources : State {
             }
 
             else {
-                foreach ((Item item, uint required) in task.GetRequiredResources()) {
-                    uint existingCount = inventory.CountItem(item);
-                    if (existingCount >= required) continue;
+                foreach ((Resource res, uint quantity) in resources) {
+                    uint existingCount = inventory.CountResource(res);
+                    if (existingCount >= quantity) continue;
 
-                    uint inStorage = targetType.CountItem(targetData, item);
+                    uint inStorage = targetType.CountResource(targetData, res);
                     if (inStorage == 0) continue;
 
-                    uint toTake = inStorage <= required ? inStorage : required;
+                    uint toTake = inStorage <= quantity ? inStorage : quantity;
                     
                     // We can guarantee that the storage will have at least toTake spaces,
                     // so if we run out of inventory space, we can store toTake items in there

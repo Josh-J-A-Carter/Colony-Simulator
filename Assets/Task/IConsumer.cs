@@ -4,13 +4,13 @@ using UnityEngine;
 
 public interface IConsumer {
 
-    public abstract ReadOnlyCollection<(Item, uint)> GetRequiredResources();
+    public abstract ReadOnlyCollection<(Resource, uint)> GetRequiredResources();
 
     public abstract bool HasAllocation();
 
-    public abstract void Allocate(InventoryManager inventory);
+    public abstract void Allocate(InventoryManager inventory, List<(Item, uint)> allocation);
 
-    public abstract InventoryManager GetAllocator();
+    public abstract (InventoryManager, List<(Item, uint)>) Deallocate();
 
     /// <summary>
     /// Where should the items be left if the task is cancelled, and the items need to be left somewhere

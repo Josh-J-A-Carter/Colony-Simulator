@@ -64,8 +64,16 @@ public class InventoryManager : MonoBehaviour {
         return inventory.CountItem(item) >= quantity;
     }
 
-    public uint CountItem (Item item) {
+    public bool HasResources(List<(Resource, uint)> resources) {
+        return inventory.HasResources(resources);
+    }
+
+    public uint CountItem(Item item) {
         return inventory.CountItem(item);
+    }
+
+    public uint CountResource(Resource res) {
+        return inventory.CountResource(res);
     }
 
     public void Give(List<(Item, uint)> items) {

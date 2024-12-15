@@ -1,17 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Build : State {
 
     [SerializeField]
-    State getResources, pathfind, construct;
+    State pathfind, construct;
+    GetResources getResources;
     BuildTask task => (BuildTask) taskAgent.GetTask();
 
     const float MAX_IDLE = 2.0f;
     
     public override void OnEntry() {
-        if (HaveRequirements()) stateMachine.SetChildState(pathfind);
+        if (inventory.HasResources(task.GetRequiredResources().ToList())) stateMachine.SetChildState(pathfind);
         else stateMachine.SetChildState(getResources);
     }
 
@@ -23,19 +25,14 @@ public class Build : State {
         }
 
         if (exitingChild == getResources) {
-            if (HaveRequirements()) stateMachine.SetChildState(pathfind);
-            else stateMachine.SetChildState(getResources);
+            if (inventory.HasResources(task.GetRequiredResources().ToList())) stateMachine.SetChildState(pathfind);
+            else {
+                getResources.SetResourceRequirements(task.GetRequiredResources());
+                stateMachine.SetChildState(getResources);
+            }
         }
     
         else if (exitingChild == pathfind) stateMachine.SetChildState(construct);
         else if (exitingChild == construct) CompleteState();
-    }
-
-    bool HaveRequirements() {
-        foreach ((Item item, uint quantity) in task.GetRequiredResources()) {
-            if (inventory.Has(item, quantity) == false) return false;
-        }
-
-        return true;
     }
 }

@@ -15,6 +15,7 @@ public class BuildTask : WorkerTask, ILocative, IConsumer {
 
 
     InventoryManager allocator;
+    List<(Item, uint)> allocation;
 
     bool hasAllocation = false;
 
@@ -84,7 +85,7 @@ public class BuildTask : WorkerTask, ILocative, IConsumer {
     }
 
 
-    public ReadOnlyCollection<(Item, uint)> GetRequiredResources() {
+    public ReadOnlyCollection<(Resource, uint)> GetRequiredResources() {
         return constructable.GetRequiredResources();
     }
 
@@ -92,13 +93,14 @@ public class BuildTask : WorkerTask, ILocative, IConsumer {
         return hasAllocation;
     }
 
-    public void Allocate(InventoryManager allocator) {
+    public void Allocate(InventoryManager allocator, List<(Item, uint)> allocation) {
         this.allocator = allocator;
+        this.allocation = allocation;
         hasAllocation = true;
     }
 
-    public InventoryManager GetAllocator() {
-        return allocator;
+    public (InventoryManager, List<(Item, uint)>) Deallocate() {
+        return (allocator, allocation);
     }
 
     public Vector2Int GetDefaultDeallocationPosition() {

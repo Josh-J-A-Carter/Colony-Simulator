@@ -27,7 +27,8 @@ public class Constructable : ScriptableObject, IInformative {
     [SerializeField]
     protected List<ResourceRequirement> requiredResources;
 
-    ReadOnlyCollection<(Item, uint)> requiredResourcesReadOnly;
+    ReadOnlyCollection<(Resource, uint)> requirement;
+
     ReadOnlyCollection<Vector2Int> exteriorPoints;
     ReadOnlyCollection<Vector2Int> interiorPoints;
 
@@ -129,12 +130,14 @@ public class Constructable : ScriptableObject, IInformative {
         return interiorPoints;
     }
 
-    public ReadOnlyCollection<(Item, uint)> GetRequiredResources() {
-        if (requiredResourcesReadOnly == null) {
-            requiredResourcesReadOnly = requiredResources.Select((resource) => (resource.item, resource.quantity)).ToList().AsReadOnly();
+    public ReadOnlyCollection<(Resource, uint)> GetRequiredResources() {
+        if (requirement == null) {
+            requirement = requiredResources.Select(req => (req.resource, req.quantity))
+                                            .ToList()
+                                            .AsReadOnly();
         }
 
-        return requiredResourcesReadOnly;
+        return requirement;
     }
 
 
@@ -191,9 +194,8 @@ public struct GridEntry {
     public TileBase previewTile;
 }
 
-
 [Serializable]
 public struct ResourceRequirement {
-    public Item item;
+    public Resource resource;
     public uint quantity;
 }

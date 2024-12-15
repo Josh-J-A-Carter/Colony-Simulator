@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,11 +15,9 @@ public class Build__Construct : State {
 
         // Make sure we can actually complete the task lol
         if (!task.HasAllocation()) {
-            foreach ((Item item, uint quantity) in task.GetRequiredResources()) {
-                if (!inventory.Has(item, quantity)) {
-                    CompleteState(false);
-                    return;
-                }
+            if (inventory.HasResources(task.GetRequiredResources().ToList()) == false) {
+                CompleteState(false);
+                return;
             }
 
             TaskManager.Instance.Allocate(task, inventory);

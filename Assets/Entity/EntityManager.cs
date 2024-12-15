@@ -112,12 +112,13 @@ public class EntityManager : MonoBehaviour {
         Destroy(entity.GetGameObject());
     }
 
-    public bool FindItemEntities(Item item, uint quantity, out List<ItemEntity> result) {
+    public bool FindItemEntities(Resource res, uint quantity, out List<ItemEntity> result) {
         result = new();
         int target = (int) quantity;
         
         foreach (ItemEntity entity in itemEntities) {
-            if (entity.item != item) continue;
+            if (res.ResourceType == ResourceType.Item && entity.item != res.Item) continue;
+            if (res.ResourceType == ResourceType.Tag && !entity.item.HasItemTag(res.ItemTag)) continue;
 
             result.Add(entity);
             target -= (int) entity.quantity;

@@ -26,16 +26,44 @@ public class Inventory {
         return contents.AsReadOnly();
     }
 
+    public uint CountResource(Resource res) {
+        if (res.ResourceType == ResourceType.Item) {
+            return CountItem(res.Item);
+        } else if (res.ResourceType == ResourceType.Tag) {
+            return CountItemTag(res.ItemTag);
+        } else {
+            throw new System.Exception("Unknown ResourceType variant");
+        }
+    }
+
     public uint CountItem(Item item) {
         foreach ((Item item_star, uint quantity) in contents) if (item == item_star) return quantity;
 
         return 0;
     }
 
+    public uint CountItemTag(ItemTag tag) {
+        uint count = 0;
+
+        foreach ((Item item, uint quantity) in contents) {
+            if (item.HasItemTag(tag)) count += quantity;
+        }
+
+        return count;
+    }
+
     public bool Contains(Item item) {
         int index = contents.FindIndex((val) => val.Item1 == item);
 
         if (index == -1) return false;
+
+        return true;
+    }
+
+    public bool HasResources(List<(Resource, uint)> resources) {
+        foreach ((Resource res, uint quantity) in resources) {
+            if (CountResource(res) < quantity) return false;
+        }
 
         return true;
     }

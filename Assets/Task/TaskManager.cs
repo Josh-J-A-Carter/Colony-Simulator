@@ -230,15 +230,15 @@ public class TaskManager : MonoBehaviour {
     void Deallocate(IConsumer consumer) {
         if (!consumer.HasAllocation()) return;
 
-        InventoryManager inventory = consumer.GetAllocator();
+        (InventoryManager inventory, List<(Item, uint)> allocation) = consumer.Deallocate();
 
         if (inventory) {
-            inventory.Give(consumer.GetRequiredResources().ToList());
+            inventory.Give(allocation);
             return;
         }
 
         Vector2Int pos = consumer.GetDefaultDeallocationPosition();
-        foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) {
+        foreach ((Item item, uint quantity) in allocation) {
             EntityManager.Instance.InstantiateItemEntity(pos, item, quantity);
         }
     }

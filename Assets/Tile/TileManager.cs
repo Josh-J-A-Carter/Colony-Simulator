@@ -96,12 +96,13 @@ public class TileManager : MonoBehaviour {
         return tileEntityStore.Query<T>();
     }
 
-    public bool FindItemInStorage(Item item, uint quantity, out List<Vector2Int> result) {
+
+    public bool FindResourceInStorage(Resource res, uint quantity, out List<Vector2Int> result) {
         result = new();
         int target = (int) quantity;
         
         foreach ((Vector2Int pos, IStorage storage, Dictionary<String, object> data) in QueryTileEntities<IStorage>()) {
-            uint contribution = storage.CountItem(data, item);
+            uint contribution = storage.CountResource(data, res);
             
             if (contribution == 0) continue;
 

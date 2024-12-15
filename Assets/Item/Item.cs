@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/Item")]
+[CreateAssetMenu(menuName = "ScriptableObjects/Item/Item")]
 public class Item : ScriptableObject, IInformative {
 
     [SerializeField]
@@ -14,10 +14,10 @@ public class Item : ScriptableObject, IInformative {
     Sprite previewSprite;
 
     [SerializeField]
-    bool isFood;
+    ItemTag[] itemTags;
 
-    [field: SerializeField]
-    public Food FoodComponent { get; protected set; }
+    [SerializeField]
+    ItemComponent[] components;
 
     public string GetDescription() {
         return infoDescription;
@@ -46,18 +46,39 @@ public class Item : ScriptableObject, IInformative {
         InfoLeaf descriptionProperty = new InfoLeaf("Description", infoDescription);
         genericCategory.AddChild(descriptionProperty);
 
-        if (isFood) {
+        ItemComponent foodComponent;
+        if (TryGetItemComponent(ItemTag.Food, out foodComponent)) {
             InfoBranch foodCategory = new InfoBranch("Food information");
             root.AddChild(foodCategory);
 
-            InfoLeaf nutrientsProperty = new InfoLeaf("Nutritional value", FoodComponent.NutritionalValue.ToString());
+            InfoLeaf nutrientsProperty = new InfoLeaf("Nutritional value", (foodComponent as FoodComponent).NutritionalValue.ToString());
             foodCategory.AddChild(nutrientsProperty);
         }
 
         return root;
     }
 
-    public bool IsFood() {
-        return isFood;
+    public bool HasItemTag(ItemTag input) {
+        foreach (ItemTag tag in itemTags) if (input == tag) return true;
+
+        return false;
+    }
+
+    public ItemComponent GetItemComponent(ItemTag tag) {
+        foreach (ItemComponent component in components) if (component.ComponentType == tag) return component;
+
+        throw new Exception($"ItemComponent associated to tag {tag} unable to be found on item {this}");
+    }
+
+    public bool TryGetItemComponent(ItemTag tag, out ItemComponent component) {
+        foreach (ItemComponent comp in components) {
+            if (comp.ComponentType == tag) {
+                component = comp;
+                return true;
+            }
+        }
+
+        component = null;
+        return false;
     }
 }

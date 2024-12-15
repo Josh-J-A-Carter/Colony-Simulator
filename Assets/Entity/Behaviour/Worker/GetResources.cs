@@ -116,8 +116,6 @@ public class GetResources : State {
     }
 
     public override void FixedRun() {
-        // Debug.Log("before pulse");
-
         if (Pulse() == false) {
             CompleteState();
             return;
@@ -127,11 +125,7 @@ public class GetResources : State {
 
         step += 1;
 
-        // Debug.Log("trying to path find");
-
         if (step > stepsMax) {
-            // Debug.Log("successfully reached end of path");
-
             CompleteState();
 
             if (isTargetingItemEntity) {
@@ -160,8 +154,6 @@ public class GetResources : State {
                     inventory.Give(item, toTake);
                 }
             }
-
-            // Debug.Log("done yay");
 
             return;
         }

@@ -16,6 +16,6 @@ MonoBehaviour:
   infoDescription: A raw ingredient that is fermented to produce honey, although
     it can also be eaten on its own for a smaller nutritional gain.
   previewSprite: {fileID: 21300000, guid: ae047317ec0e47648b89b9fe93b48b81, type: 3}
-  isFood: 1
-  <FoodComponent>k__BackingField:
-    <NutritionalValue>k__BackingField: 1
+  itemTags: 000000000200000005000000
+  components:
+  - {fileID: 11400000, guid: 95d45ad78f2f1fd4089dc8cd1ce52701, type: 2}

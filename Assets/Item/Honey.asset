@@ -15,6 +15,6 @@ MonoBehaviour:
   infoName: Honey
   infoDescription: An important source of nutrients in any bee's diet
   previewSprite: {fileID: 21300000, guid: a401570e35a05704a94d134cc58d37b9, type: 3}
-  isFood: 1
-  <FoodComponent>k__BackingField:
-    <NutritionalValue>k__BackingField: 3
+  itemTags: 00000000
+  components:
+  - {fileID: 11400000, guid: f6d41e9805dcb054f9cdadef440a3f90, type: 2}

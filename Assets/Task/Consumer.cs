@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public interface Consumer {
+public interface IConsumer {
 
     public abstract ReadOnlyCollection<(Item, uint)> GetRequiredResources();
 

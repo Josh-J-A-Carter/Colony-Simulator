@@ -199,7 +199,7 @@ public class TaskManager : MonoBehaviour {
         tasks.Remove(task);
 
         // If applicable, de-allocate the task's resources (i.e. items needed for its completion)
-        if (task is Consumer consumer) Deallocate(consumer);
+        if (task is IConsumer consumer) Deallocate(consumer);
 
         // Reset all those agents whose task is set to this one
         for (int i = 0 ; i < assignedAgents.Count ; i += 1) {
@@ -215,7 +215,7 @@ public class TaskManager : MonoBehaviour {
         if (task is ILocative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
     }
 
-    public void Allocate(Consumer consumer, InventoryManager inventory) {
+    public void Allocate(IConsumer consumer, InventoryManager inventory) {
         if (consumer == null || !inventory) return;
 
         if (consumer.HasAllocation()) return;
@@ -227,7 +227,7 @@ public class TaskManager : MonoBehaviour {
         foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) inventory.Take(item, quantity);
     }
 
-    void Deallocate(Consumer consumer) {
+    void Deallocate(IConsumer consumer) {
         if (!consumer.HasAllocation()) return;
 
         InventoryManager inventory = consumer.GetAllocator();

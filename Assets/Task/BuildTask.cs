@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class BuildTask : WorkerTask, ILocative, Consumer {
+public class BuildTask : WorkerTask, ILocative, IConsumer {
     
     Constructable constructable;
     Vector2Int startPos;

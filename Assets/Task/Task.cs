@@ -23,7 +23,7 @@ public abstract class Task : IInformative {
 
         if (progress >= MAX_PROGRESS) {
             // Only allow for completion once resources have been allocated (if applicable)
-            if (this is Consumer consumer && !consumer.HasAllocation()) return;
+            if (this is IConsumer consumer && !consumer.HasAllocation()) return;
             TaskManager.Instance.MarkComplete(this);
             complete = true;
         }

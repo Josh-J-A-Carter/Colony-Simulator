@@ -64,6 +64,10 @@ public class InventoryManager : MonoBehaviour {
         return inventory.CountItem(item) >= quantity;
     }
 
+    public uint CountItem (Item item) {
+        return inventory.CountItem(item);
+    }
+
     public void Give(List<(Item, uint)> items) {
 
         List<(Item, uint)> remaining;

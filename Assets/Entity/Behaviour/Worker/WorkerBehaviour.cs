@@ -41,7 +41,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
         if (this.task != null) return false;
 
         // Check resource requirements. If they aren't met, can't help
-        if (task is Consumer consumer && !AreResourcesAvailable(consumer)) return false;
+        if (task is IConsumer consumer && !AreResourcesAvailable(consumer)) return false;
 
         // Make sure pathfinding to the task is possible, if applicable
         if (task is ILocative locative && !IsPathAvailable(locative)) return false;
@@ -63,17 +63,17 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
         return false;
     }
 
-    bool AreResourcesAvailable(Consumer consumer) {
+    bool AreResourcesAvailable(IConsumer consumer) {
         // Try find locations to get each resource
         foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) {
             // Inventory has it? Go to next resource
             if (inventory.Has(item, quantity)) continue;
 
             // ItemEntities have it?
-            // if (EntityManager.Instance.FindItemEntities(item, quantity, out _)) continue;
+            if (EntityManager.Instance.FindItemEntities(item, quantity, out _)) continue;
 
             // Storage has it?
-            // if (TileManager.Instance.FindItemInStorage(item, quantity, out _)) continue;
+            if (TileManager.Instance.FindItemInStorage(item, quantity, out _)) continue;
 
             // Nothing in the nest has it readily accessible
             return false;
@@ -117,7 +117,6 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
     void DecideState() {
         if (task == null) {
-            
             // If inventory full or random items around, AND available storage, then tidy
             bool invFull = inventory.RemainingCapacity() <= inventory.MaxCapacity() / 5;
             ReadOnlyCollection<ItemEntity> itemEntities = EntityManager.Instance.GetItemEntities();
@@ -188,11 +187,26 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
                 taskCategory.AddChild(node);
             }
         }
+    
+    #if UNITY_EDITOR
+        InfoLeaf stateProperty = new InfoLeaf("State", DeepestChildState() + "");
+        taskCategory.AddChild(stateProperty);
+    #endif
 
         // Inventory
         InfoBranch inventoryCategory = inventory.GetInfoTree();
         root.AddChild(inventoryCategory);
 
         return root;
+    }
+
+    State DeepestChildState() {
+        State curr = currentState;
+
+        if (curr == null) return curr;
+
+        while (curr.stateMachine.childState != null) curr = curr.stateMachine.childState;
+
+        return curr;
     }
 }

@@ -49,7 +49,6 @@ public class Tidy__Collect : State {
     }
 
     void TryFindPath() {
-
         itemEntities = EntityManager.Instance.GetItemEntities();
 
         if (itemEntities.Count == 0) {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class NurseTask : WorkerTask, ILocative, Consumer {
+public class NurseTask : WorkerTask, ILocative, IConsumer {
     
     BroodComb broodComb;
     Vector2Int startPos;

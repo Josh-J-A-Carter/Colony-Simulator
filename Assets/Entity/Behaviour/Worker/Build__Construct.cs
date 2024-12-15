@@ -26,8 +26,6 @@ public class Build__Construct : State {
     }
 
     public override void FixedRun(){
-        if (task == null) return;
-
         task.IncrementProgress();
         if (task.IsComplete()) {
             CompleteState();

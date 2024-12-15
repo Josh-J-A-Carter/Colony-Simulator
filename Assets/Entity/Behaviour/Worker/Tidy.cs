@@ -36,7 +36,7 @@ public class Tidy : State {
             CompleteState();
         } else if (inventory.RemainingCapacity() == 0 || itemEntities.Count == 0) {
             stateMachine.SetChildState(Store);
-        } else if (itemEntities.Count > 1) {
+        } else if (inventory.RemainingCapacity() > 0 && itemEntities.Count > 0) {
             stateMachine.SetChildState(Collect);
         } else {
             CompleteState();

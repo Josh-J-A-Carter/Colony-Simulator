@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class StateMachine {
 
@@ -17,6 +18,8 @@ public class StateMachine {
 
     public void SetChildState(State childState) {
         if (this.childState == childState) return;
+
+        Debug.Assert(childState);
 
         // Make sure we change the state BEFORE calling OnChildExit, otherwise we might have an infinite recursion
         State oldState = this.childState;

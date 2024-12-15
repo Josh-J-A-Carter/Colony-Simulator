@@ -27,8 +27,7 @@ public class BuildTool : Tool {
 
         // Old constructable is null or different to new one, so need to display
         if (constructable != newConstructable) {
-            constructable = newConstructable;
-            ShowInfoContainers();
+            ShowInfoContainers(newConstructable);
         }
 
         if (type == HoverType.None) return;
@@ -134,6 +133,10 @@ public class BuildTool : Tool {
                 TaskManager.Instance.CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(x, y), constructable, previewConfigDataTemplate));
             }
         }
+
+        // IMPORTANT! Update after setting tasks, otherwise changing the configuration parameters
+        // will change the tasks too... not desired
+        previewConfigDataTemplate = Utilities.RecursiveDataCopy(previewConfigDataTemplate);
     }
 
 
@@ -152,18 +155,19 @@ public class BuildTool : Tool {
         return (new Vector2Int(startX, startY), new Vector2Int(endX, endY));
     }
 
-    InfoBranch GetConstructableConfigInfo() {
+    InfoBranch GetConstructableConfigInfo(Constructable newConstructable) {
         InfoBranch root = new InfoBranch(null);
 
         InfoBranch genericCategory = new InfoBranch("Generic properties");
         root.AddChild(genericCategory);
 
-        InfoLeaf nameProperty = new InfoLeaf(constructable.GetName(), description: constructable.GetDescription());
+        InfoLeaf nameProperty = new InfoLeaf(newConstructable.GetName(), description: newConstructable.GetDescription());
         genericCategory.AddChild(nameProperty);
 
 
-        if (constructable is IConfigurable configurable) {
-            previewConfigDataTemplate = (constructable as TileEntity).GenerateDefaultData();
+        if (newConstructable is IConfigurable configurable) {
+            // Only update preview data if it's a different constructable - reloading shouldn't change config
+            if (newConstructable != constructable) previewConfigDataTemplate = (configurable as TileEntity).GenerateDefaultData();
             InfoBranch configurableProperties = configurable.GetConfigTree(previewConfigDataTemplate);
             root.AddChild(configurableProperties);
         }
@@ -171,8 +175,9 @@ public class BuildTool : Tool {
         return root;
     }
 
-    void ShowInfoContainers() {
-        InfoBranch configInfo = GetConstructableConfigInfo();
+    void ShowInfoContainers(Constructable newConstructable) {
+        InfoBranch configInfo = GetConstructableConfigInfo(newConstructable);
+        constructable = newConstructable;
 
         Action<String[], bool> callback = null;
         if (constructable is IConfigurable) callback = OnConfigUpdate;
@@ -185,7 +190,7 @@ public class BuildTool : Tool {
 
         InterfaceManager.Instance.ShowConfigurableContainer();
 
-        if (constructable) ShowInfoContainers();
+        if (constructable) ShowInfoContainers(constructable);
     }
 
     public override void OnDequip() {

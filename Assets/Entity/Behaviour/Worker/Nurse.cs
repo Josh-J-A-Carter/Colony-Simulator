@@ -5,10 +5,13 @@ using UnityEngine;
 public class Nurse : State {
 
     [SerializeField]
-    State pathfind, administer;
+    State getResources, pathfind, administer;
 
+    NurseTask task => (NurseTask) taskAgent.GetTask();
+ 
     public override void OnEntry() {
-        stateMachine.SetChildState(pathfind);
+        if (HaveRequirements()) stateMachine.SetChildState(pathfind);
+        else stateMachine.SetChildState(getResources);
     }
 
     public override void OnChildExit(State exitingChild, bool success = true) {
@@ -18,7 +21,20 @@ public class Nurse : State {
             return;
         }
 
-        if (exitingChild == pathfind) stateMachine.SetChildState(administer);
-        else CompleteState();
+        if (exitingChild == getResources) {
+            if (HaveRequirements()) stateMachine.SetChildState(pathfind);
+            else stateMachine.SetChildState(getResources);
+        }
+    
+        else if (exitingChild == pathfind) stateMachine.SetChildState(administer);
+        else if (exitingChild == administer) CompleteState();
+    }
+
+    bool HaveRequirements() {
+        foreach ((Item item, uint quantity) in task.GetRequiredResources()) {
+            if (inventory.Has(item, quantity) == false) return false;
+        }
+
+        return true;
     }
 }

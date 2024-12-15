@@ -229,6 +229,7 @@ Transform:
   m_Children:
   - {fileID: 979454546215716982}
   - {fileID: 1967809900614994323}
+  - {fileID: 2738038357461361233}
   m_Father: {fileID: 5405411461827431291}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &315169292399443832
@@ -246,6 +247,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   entity: {fileID: 0}
   inventory: {fileID: 0}
+  getResources: {fileID: 1534169623433054590}
   pathfind: {fileID: 8694058030150903680}
   administer: {fileID: 2143918346329946397}
 --- !u!1 &3549341296443011130
@@ -883,6 +885,54 @@ MonoBehaviour:
   inventory: {fileID: 0}
   Collect: {fileID: 1432687605925642583}
   Store: {fileID: 5766766275175161628}
+--- !u!1 &7823918513654220410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2738038357461361233}
+  - component: {fileID: 1534169623433054590}
+  m_Layer: 0
+  m_Name: Nurse__GetResources
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2738038357461361233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7823918513654220410}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3823887132889052590}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1534169623433054590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7823918513654220410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f3bf2f8f9049f44882d1468d2df9ed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &8122973212392184058
 GameObject:
   m_ObjectHideFlags: 0

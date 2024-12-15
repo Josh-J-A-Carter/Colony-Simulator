@@ -220,11 +220,9 @@ public class TaskManager : MonoBehaviour {
 
         if (consumer.HasAllocation()) return;
 
-        foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) if (!inventory.Has(item, quantity)) return;
+        if (!inventory.HasResources(consumer.GetRequiredResources().ToList())) return;
 
-        consumer.Allocate(inventory);
-        
-        foreach ((Item item, uint quantity) in consumer.GetRequiredResources()) inventory.Take(item, quantity);
+        consumer.Allocate(inventory, inventory.TakeResources(consumer.GetRequiredResources().ToList()));        
     }
 
     void Deallocate(IConsumer consumer) {

@@ -19,7 +19,9 @@ public class StateMachine {
     public void SetChildState(State childState) {
         if (this.childState == childState) return;
 
-        Debug.Assert(childState);
+    #if UNITY_EDITOR
+        if (childState == null) throw new System.Exception("Child state is unassigned or null!");
+    #endif
 
         // Make sure we change the state BEFORE calling OnChildExit, otherwise we might have an infinite recursion
         State oldState = this.childState;

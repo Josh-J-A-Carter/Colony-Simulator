@@ -13,8 +13,6 @@ public class NurseTask : WorkerTask, ILocative, IConsumer {
 
 
     ReadOnlyCollection<(Resource, uint)> requiredResources;
-    Item item;
-    uint quantity;
 
     InventoryManager allocator;
     List<(Item, uint)> allocation;
@@ -37,6 +35,12 @@ public class NurseTask : WorkerTask, ILocative, IConsumer {
 
     public override void OnCompletion() {
         Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(startPos);
+
+    #if UNITY_EDITOR
+        Debug.Assert(allocation.Count == 1);
+    #endif
+
+        (Item item, uint quantity) = allocation[0];
 
         broodComb.GiveBrood(startPos, data, item, quantity);
     }

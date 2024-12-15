@@ -13,8 +13,11 @@ public class Idle : State {
         stateMachine.SetChildState(pathfind);
     }
 
-    public override void OnChildExit(State exitingChild, bool _) {
-        if (task != null) CompleteState();
+    public override void OnChildExit(State exitingChild, bool success) {
+        if (task != null || success == false) {
+            CompleteState();
+            return;
+        }
 
         if (exitingChild == stall) {
             // A good idea to leave this state every now and then

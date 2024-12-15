@@ -223,6 +223,10 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         instance[CURRENT_STORAGE_TYPE] = StorageType.Item;
     }
 
+    public void Give(Vector2Int defaultLocation, Dictionary<String, object> instance, List<(Item, uint)> items) {
+        foreach ((Item item, uint quantity) in items) Give(defaultLocation, instance, item, quantity);
+    }
+
 
     public bool Take(Dictionary<String, object> instance, Item item, uint quantity) {
         if ((StorageType) instance[CURRENT_STORAGE_TYPE] != StorageType.Item) return false;
@@ -233,6 +237,15 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         if (success && inventory.Carrying() == 0) instance[CURRENT_STORAGE_TYPE] = StorageType.Empty;
 
         return success;
+    }
+
+    public List<(Item, uint)> TakeResources(Dictionary<String, object> instance, List<(Resource, uint)> resources) {
+        Inventory inventory = GetInventory(instance);
+        List<(Item, uint)> taken = inventory.TakeResources(resources);
+
+        if (inventory.Carrying() == 0) instance[CURRENT_STORAGE_TYPE] = StorageType.Empty;
+
+        return taken;
     }
 
     public uint RemainingCapacity(Dictionary<String, object> instance) {

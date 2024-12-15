@@ -7,6 +7,8 @@ public class Build : State {
 
     [SerializeField]
     State pathfind, construct;
+
+    [SerializeField]
     GetResources getResources;
     BuildTask task => (BuildTask) taskAgent.GetTask();
 
@@ -14,7 +16,10 @@ public class Build : State {
     
     public override void OnEntry() {
         if (inventory.HasResources(task.GetRequiredResources().ToList())) stateMachine.SetChildState(pathfind);
-        else stateMachine.SetChildState(getResources);
+        else {
+            getResources.SetResourceRequirements(task.GetRequiredResources());
+            stateMachine.SetChildState(getResources);
+        }
     }
 
     public override void OnChildExit(State exitingChild, bool success) {

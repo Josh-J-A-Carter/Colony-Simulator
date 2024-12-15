@@ -31,9 +31,11 @@ public class Inventory {
             return CountItem(res.Item);
         } else if (res.ResourceType == ResourceType.Tag) {
             return CountItemTag(res.ItemTag);
-        } else {
-            throw new System.Exception("Unknown ResourceType variant");
-        }
+        } 
+
+    #if UNITY_EDITOR
+        throw new System.Exception("Unknown ResourceType variant");
+    #endif
     }
 
     public uint CountItem(Item item) {
@@ -69,6 +71,72 @@ public class Inventory {
     }
 
     /// <summary>
+    /// Find all those resource requirements which are currently unsatisfied by the inventory
+    /// </summary>
+    public List<(Resource, uint)> FindRemainder(List<(Resource, uint)> toSatisfy) {
+        List<(Resource, uint)> remaining = new();
+
+        foreach ((Resource res, uint quantity) in toSatisfy) {
+            uint existing = CountResource(res);
+
+            if (existing < quantity) remaining.Add((res, quantity - existing));
+        }
+
+        return remaining;
+    }
+
+
+    /// <summary>
+    /// Try remove a collection of resources (i.e. items and/or tags) from the inventory, returning all those <b>items</b> that were taken
+    /// </summary>
+    public List<(Item, uint)> TakeResources(List<(Resource, uint)> resources) {
+        List<(Item, uint)> taken = new();
+
+        foreach ((Resource res, uint quantity) in resources) taken.AddRange(RemoveResource(res, quantity));
+
+        return taken;
+    }
+
+    /// <summary>
+    /// Try remove a single resource (i.e. item or tag) from the inventory, returning all those <b>items</b> that were taken
+    /// </summary>
+    public List<(Item, uint)> RemoveResource(Resource resource, uint quantity) {
+        // Item type is easier to deal with, since it's all in one slot
+        if (resource.ResourceType == ResourceType.Item) {
+            uint existing = CountItem(resource.Item);
+            uint toTake = quantity <= existing ? quantity : existing;
+            RemoveAtomic(resource.Item, toTake);
+            return new() { (resource.Item, toTake) };
+        }
+    #if UNITY_EDITOR
+        else if (resource.ResourceType != ResourceType.Tag) {
+            throw new System.Exception("Unknown ResourceType");
+        }
+    #endif
+
+        List<(Item, uint)> taken = new();
+
+        uint target = quantity;
+
+        for (int i = 0 ; i < contents.Count ; i += 1) {
+            (Item current, uint existing) = contents[i];
+            if (!current.HasItemTag(resource.ItemTag)) continue;
+
+            // Take either as much of contents[i] as possible, or the reaminder of target
+            uint toTake = target < existing ? target : existing;
+            RemoveAtomic(current, toTake);
+            taken.Add((current, toTake));
+            target -= toTake;
+            i -= 1;
+
+            if (target <= 0) return taken;
+        }
+
+        return taken;
+    }
+
+
+    /// <summary>
     /// Attempt to remove all of the items in the list from this <c>inventory</c>. All successful removals are committed,
     /// even if a given quantity of an item can't be removed because it does not exist (in sufficient quantity).
     /// In such a case, the existing quantity of said item is removed from the <c>inventory</c>, and the remainder is
@@ -94,6 +162,25 @@ public class Inventory {
 
         if (itemsRemaining.Count == 0) itemsRemaining = null;
         return success;
+    }
+
+    public List<(Item, uint)> RemoveN(uint toRemoveTotal) {
+        List<(Item, uint)> removed = new();
+
+        for (int i = 0 ; i < contents.Count ; i += 1) {
+            (Item item, uint quantity) = contents[i];
+
+            uint toRemove = toRemoveTotal < quantity ? toRemoveTotal : quantity;
+            RemoveAtomic(item, toRemove);
+            removed.Add((item, toRemove));
+            toRemoveTotal -= toRemove;
+            i -= 1;
+
+            if (toRemoveTotal <= 0) return removed;
+        }
+    #if UNITY_EDITOR
+        throw new System.Exception("Unable to remove requested total from inventory");
+    #endif
     }
 
     /// <summary>

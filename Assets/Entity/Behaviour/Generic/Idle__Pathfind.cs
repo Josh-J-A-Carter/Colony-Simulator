@@ -34,7 +34,7 @@ public class Idle__Pathfind : State {
 
         step += 1;
 
-        if (step > stepsMax) {
+        if (step >= stepsMax) {
             CompleteState();
             return;
         }

@@ -32,7 +32,9 @@ public class GetResources : State {
 
 
     public override void OnEntry() {
+    #if UNITY_EDITOR
         Debug.Assert(resources != null);
+    #endif
 
         animator.Play(anim.name);
 
@@ -80,7 +82,6 @@ public class GetResources : State {
                 targetEntity = target;
                 step = 0;
                 stepsMax = path.Count * stepSpeed;
-                // Debug.Log("Found target entity");
                 return true;
             }
         }
@@ -118,7 +119,6 @@ public class GetResources : State {
             if (path != null) {
                 step = 0;
                 stepsMax = path.Count * stepSpeed;
-                // Debug.Log("Found target storage");
                 return true;
             }
         }
@@ -136,67 +136,42 @@ public class GetResources : State {
 
         step += 1;
 
-        if (step > stepsMax) {
-            CompleteState();
-
+        if (step == stepsMax) {
             if (isTargetingItemEntity) {
                 targetEntity.Collect(inventory);
             }
 
             else {
-                foreach ((Resource res, uint quantity) in resources) {
-                    uint existingCount = inventory.CountResource(res);
-                    if (existingCount >= quantity) continue;
+                // What items are left to satisfy?
+                List<(Resource, uint)> remaining = inventory.FindRemainder(resources.ToList());
 
-                    uint inStorage = targetType.CountResource(targetData, res);
-                    if (inStorage == 0) continue;
+                // Take from storage & store temporarily, while we make sure inventory has enough space
+                List<(Item, uint)> takenFromStorage = targetType.TakeResources(targetData, remaining);
 
-                    uint toTake = inStorage <= quantity ? inStorage : quantity;
-                    
-                    // We can guarantee that the storage will have at least toTake spaces,
-                    // so if we run out of inventory space, we can store toTake items in there
-                    // But first, we need to remove the items from storage to create some temporary space
-                    targetType.Take(targetData, item, toTake);
+                // Swap extraneous stuff, if necessary
+                // We can guarantee that storage has spaceRequired spaces free, so these can be used to swap
+                uint spaceRequired = takenFromStorage.Aggregate<(Item, uint), uint>(0, (acc, tuple) => acc + tuple.Item2);
+                uint capacity = inventory.RemainingCapacity();
+                if (spaceRequired > capacity) {
+                    // To make this easier, we temporarily remove the existing required items (TempR) from inventory,
+                    // remove some random junk (RJ), put the random junk (RJ) in storage, and re-add the temporarily removed items (TempR)
+                    List<(Item, uint)> tempRemoval = inventory.TakeResources(resources.ToList());
 
-                    if (toTake > inventory.RemainingCapacity()) {
-                        SwapExtraneousItems(toTake);
-                    }
+                    List<(Item, uint)> randomRemoval = inventory.RemoveN(spaceRequired - capacity);
 
-                    inventory.Give(item, toTake);
+                    targetType.Give(targetLocation, targetData, randomRemoval);
+
+                    inventory.Give(tempRemoval);
                 }
+
+                // Take the temporarily stored items and put them in inventory
+                inventory.Give(takenFromStorage);
             }
 
-            return;
+            CompleteState();
         }
 
         if (success == false) CompleteState();
-    }
-
-    void SwapExtraneousItems(uint remainingAmountToSwap) {
-        // Find the items that we can safely remove without affecting task requirements
-        List<(Item, uint)> toSwap = new();
-
-        ReadOnlyCollection<(Item, uint)> keep = task.GetRequiredResources();
-
-        foreach ((Item invItem, uint invQuantity) in inventory.GetContents()) {
-            uint needToKeep = 0;
-            foreach ((Item reqItem, uint reqQuantity) in keep) {
-                if (reqItem != invItem) continue;
-
-                needToKeep += reqQuantity <= invQuantity ? reqQuantity : invQuantity;
-            }
-
-            if (needToKeep == invQuantity) continue;
-
-            uint amountToSwap = invQuantity - needToKeep <= remainingAmountToSwap ? remainingAmountToSwap : invQuantity - needToKeep;
-            toSwap.Add((invItem, amountToSwap));
-            remainingAmountToSwap -= amountToSwap;
-        }
-
-        foreach ((Item item, uint quantity) in toSwap) {
-            inventory.Take(item, quantity);
-            targetType.Give(targetLocation, targetData, item, quantity);
-        }
     }
 
     /// <summary>

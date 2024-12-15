@@ -68,6 +68,10 @@ public class InventoryManager : MonoBehaviour {
         return inventory.HasResources(resources);
     }
 
+    public List<(Resource, uint)> FindRemainder(List<(Resource, uint)> resources) {
+        return inventory.FindRemainder(resources);
+    }
+
     public uint CountItem(Item item) {
         return inventory.CountItem(item);
     }
@@ -102,6 +106,15 @@ public class InventoryManager : MonoBehaviour {
     public bool Take(Item item, uint quantity) {
         return inventory.RemoveAtomic(item, quantity);
     }
+
+    public List<(Item, uint)> TakeResources(List<(Resource, uint)> resources) {
+        return inventory.TakeResources(resources);
+    }
+
+    public List<(Item, uint)> RemoveN(uint toRemoveTotal) {
+        return inventory.RemoveN(toRemoveTotal);
+    }
+
 
     public InfoBranch GetInfoTree() {
         return inventory.GetInfoTree();

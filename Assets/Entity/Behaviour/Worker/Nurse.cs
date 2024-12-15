@@ -8,13 +8,17 @@ public class Nurse : State {
     [SerializeField]
     State pathfind, administer;
 
+    [SerializeField]
     GetResources getResources;
 
     NurseTask task => (NurseTask) taskAgent.GetTask();
  
     public override void OnEntry() {
         if (inventory.HasResources(task.GetRequiredResources().ToList())) stateMachine.SetChildState(pathfind);
-        else stateMachine.SetChildState(getResources);
+        else {
+            getResources.SetResourceRequirements(task.GetRequiredResources());
+            stateMachine.SetChildState(getResources);
+        }
     }
 
     public override void OnChildExit(State exitingChild, bool success = true) {

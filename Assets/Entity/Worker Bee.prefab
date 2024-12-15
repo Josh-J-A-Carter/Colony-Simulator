@@ -194,9 +194,9 @@ MonoBehaviour:
   animator: {fileID: 0}
   entity: {fileID: 0}
   inventory: {fileID: 0}
-  getResources: {fileID: 7909127768614599062}
   pathfind: {fileID: 2535051914071567500}
   construct: {fileID: 6110178386457755492}
+  getResources: {fileID: 7909127768614599062}
 --- !u!1 &3428250340048907298
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,9 +247,9 @@ MonoBehaviour:
   animator: {fileID: 0}
   entity: {fileID: 0}
   inventory: {fileID: 0}
-  getResources: {fileID: 1534169623433054590}
   pathfind: {fileID: 8694058030150903680}
   administer: {fileID: 2143918346329946397}
+  getResources: {fileID: 1534169623433054590}
 --- !u!1 &3549341296443011130
 GameObject:
   m_ObjectHideFlags: 0

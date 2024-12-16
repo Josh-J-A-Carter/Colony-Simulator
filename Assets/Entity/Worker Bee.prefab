@@ -820,6 +820,7 @@ Transform:
   m_Children:
   - {fileID: 6797589907858192949}
   - {fileID: 6123391468659759850}
+  - {fileID: 7671401883387763286}
   m_Father: {fileID: 5405411461827431291}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7443480746491101835
@@ -838,6 +839,7 @@ MonoBehaviour:
   entity: {fileID: 0}
   inventory: {fileID: 0}
   store: {fileID: 3844709797778594445}
+  collect: {fileID: 7408984841124088472}
   getResources: {fileID: 6866715991589670201}
 --- !u!1 &6780914768193794047
 GameObject:
@@ -1184,3 +1186,51 @@ MonoBehaviour:
   inventory: {fileID: 0}
   pathfind: {fileID: 2450127168033958353}
   collect: {fileID: 2208695895270862180}
+--- !u!1 &9083523695122456465
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7671401883387763286}
+  - component: {fileID: 7408984841124088472}
+  m_Layer: 0
+  m_Name: Ferment__Collect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7671401883387763286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9083523695122456465}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2883539734441149644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7408984841124088472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9083523695122456465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae81793f69b4582408fa8fd8ef9c4a82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}

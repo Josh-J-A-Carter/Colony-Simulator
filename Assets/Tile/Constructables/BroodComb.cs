@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -42,7 +43,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         /// <summary>Value is of type int</summary>
         public const String FERMENTABLE_DATA__TIME_LEFT = "fermentableData__timeLeft";
 
-        const int FERMENTATION_TIME = 100;
+        const int FERMENTATION_TIME = 20;
 
 
     /// <summary>Path leading to the inventory field. The value should be of type <c>Inventory</c></summary>
@@ -154,7 +155,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         instance[FERMENTABLE_DATA__TIME_LEFT] = timeLeft;
 
         if (timeLeft <= 0) {
-            Debug.Log("Ready for collection :)");
+            // Debug.Log("Ready for collection :)");
         }
     }
 
@@ -331,6 +332,30 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         data[BROOD_DATA__FERTILISED] = fertilised;
 
         return true;
+    }
+
+    public bool FermentablesReady(Dictionary<String, object> data) {
+        if ((StorageType) data[CURRENT_STORAGE_TYPE] != StorageType.Fermentable) return false;
+
+        return (int) data[FERMENTABLE_DATA__TIME_LEFT] <= 0;
+    }
+
+    public List<(Item, uint)> CollectFermentables(Dictionary<String, object> data) {
+    #if UNITY_EDITOR
+        if (FermentablesReady(data) == false) throw new Exception("No fermentables are ready to collect");
+    #else
+        if (FermentablesReady(data) == false) return null;
+    #endif
+
+        data[CURRENT_STORAGE_TYPE] = StorageType.Empty;
+
+        List<(Item, uint)> items = (data[FERMENTABLE_DATA__ITEMS] as List<(Item, uint)>)
+                                    .Select(tuple => {
+                                        FermentableComponent comp = (FermentableComponent) tuple.Item1.GetItemComponent(ItemTag.Fermentable);
+                                        return (comp.fermentationItem, tuple.Item2);
+                                    })
+                                    .ToList();        
+        return items;
     }
 
 

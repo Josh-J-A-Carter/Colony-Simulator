@@ -1,12 +1,11 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Ferment : State {
 
     [SerializeField]
-    State store;
+    State store, collect;
 
     [SerializeField]
     GetResources getResources;
@@ -17,6 +16,17 @@ public class Ferment : State {
     }
     
     public override void OnEntry() {
+        // Stuff to collect?
+        List<(Vector2Int, BroodComb, Dictionary<String, object>)> fermentableStorage = TileManager.Instance.QueryTileEntities<BroodComb>(
+            tuple => tuple.Item2.FermentablesReady(tuple.Item3)
+        );
+
+        if (fermentableStorage.Count > 0) {
+            stateMachine.SetChildState(collect);
+            return;
+        }
+
+        // New stuff to ferment
         if (inventory.HasResources(resourceRequirements)) stateMachine.SetChildState(store);
         else {
             getResources.SetResourceRequirements(resourceRequirements.AsReadOnly());
@@ -30,6 +40,7 @@ public class Ferment : State {
             return;
         }
 
+        // New stuff to ferment
         if (exitingChild == getResources) {
             if (inventory.HasResources(resourceRequirements)) stateMachine.SetChildState(store);
             else {
@@ -38,6 +49,17 @@ public class Ferment : State {
             }
         }
     
-        else if (exitingChild == store) CompleteState();
+        else if (exitingChild == store) {
+            // Stuff to collect?
+            List<(Vector2Int, BroodComb, Dictionary<String, object>)> fermentableStorage = TileManager.Instance.QueryTileEntities<BroodComb>(
+               tuple => tuple.Item2.FermentablesReady(tuple.Item3)
+            );
+
+            if (fermentableStorage.Count > 0) stateMachine.SetChildState(collect);
+            // Else - done
+            else CompleteState();
+        }
+
+        else CompleteState();
     }
 }

@@ -118,7 +118,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
     void DecideState() {
         if (task == null) {
-            // Tidying
+            /// Tidying
             bool invFull = inventory.RemainingCapacity() <= inventory.MaxCapacity() / 5;
             ReadOnlyCollection<ItemEntity> itemEntities = EntityManager.Instance.GetItemEntities();
             List<(Vector2Int, IStorage, Dictionary<String, object>)> itemStorage = TileManager.Instance.FindAvailableStorage();
@@ -128,7 +128,9 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
                 return;
             }
 
-            // Fermenting
+            /// Fermenting
+
+            // Stuff to store
             Resource resource = new Resource(ItemTag.Fermentable);
             List<(Vector2Int, BroodComb, Dictionary<String, object>)> fermentableStorage = TileManager.Instance.QueryTileEntities<BroodComb>(
                 tuple => tuple.Item2.CanStoreFermentable(tuple.Item3)
@@ -137,8 +139,18 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
                 stateMachine.SetChildState(ferment);
                 return;
             }
+
+            // Stuff to collect
+            fermentableStorage = TileManager.Instance.QueryTileEntities<BroodComb>(
+                tuple => tuple.Item2.FermentablesReady(tuple.Item3)
+            );
+            if (fermentableStorage.Count > 0) {
+                stateMachine.SetChildState(ferment);
+                return;
+            }
+
             
-            // Idle
+            /// Idle
             stateMachine.SetChildState(idle);
             return;
         }

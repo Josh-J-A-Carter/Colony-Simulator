@@ -19,7 +19,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
     public const String CAN_STORE_ITEM = "canStoreItem";
 
 
-    /// <summary>Data relevant to brood stored in a comb tile. The corresponding value should be of type <c>Dictionary</c>.</summary>
+    /// Data relevant to brood stored in a comb tile.
 
         /// <summary>Part of the <c>BROOD_DATA</c> attribute, storing the type of brood currently inside. Value is of type <c>bool</c>.</summary>
         public const String BROOD_DATA__FERTILISED = "broodData__fertilised";
@@ -32,6 +32,17 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
 
         const int EGG_STAGE_DURATION = 80, LARVA_STAGE_DURATION = 160, PUPA_STAGE_DURATION = 160;
         const int LARVA_FEED = LARVA_STAGE_DURATION - 20, LARVA_SEAL = LARVA_STAGE_DURATION - 80;
+
+
+    /// Data for stored fermentables
+    
+        /// <summary>Value is a <c>List</c> of tuples <c>(Item, uint)</c></summary>
+        public const String FERMENTABLE_DATA__ITEMS = "fermentableData__items";
+
+        /// <summary>Value is of type int</summary>
+        public const String FERMENTABLE_DATA__TIME_LEFT = "fermentableData__timeLeft";
+
+        const int FERMENTATION_TIME = 100;
 
 
     /// <summary>Path leading to the inventory field. The value should be of type <c>Inventory</c></summary>
@@ -82,6 +93,8 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
     public override void TickInstance(Vector2Int position, Dictionary<String, object> data) {
 
         if ((StorageType) data[CURRENT_STORAGE_TYPE] == StorageType.Brood) TickBrood(position, data);
+
+        if ((StorageType) data[CURRENT_STORAGE_TYPE] == StorageType.Fermentable) TickFermentable(data);
     }
 
     void TickBrood(Vector2Int position, Dictionary<String, object> data) {
@@ -131,6 +144,17 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
             data[CURRENT_STORAGE_TYPE] = StorageType.Empty;
 
             TileManager.Instance.DrawVariant(position, this, GetTileAt);
+        }
+    }
+
+    void TickFermentable(Dictionary<String, object> instance) {
+        int timeLeft = (int) instance[FERMENTABLE_DATA__TIME_LEFT];
+
+        timeLeft = timeLeft <= 0 ? 0 : timeLeft - 1;
+        instance[FERMENTABLE_DATA__TIME_LEFT] = timeLeft;
+
+        if (timeLeft <= 0) {
+            Debug.Log("Ready for collection :)");
         }
     }
 
@@ -265,12 +289,31 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         return true;
     }
 
+    public bool CanStoreFermentable(Dictionary<String, object> data) {
+        if (data == null) return false;
+
+        if ((StorageType) data[CURRENT_STORAGE_TYPE] != StorageType.Empty) return false;
+
+        return (bool) data[CAN_STORE_FERMENTABLE];
+    }
+
     public bool CanStoreBrood(Dictionary<String, object> data) {
         if (data == null) return false;
 
         if ((StorageType) data[CURRENT_STORAGE_TYPE] != StorageType.Empty) return false;
 
         return (bool) data[CAN_STORE_BROOD];
+    }
+
+    public bool TryStoreFermentable(Dictionary<String, object> instance, List<(Item, uint)> fermentables) {
+        if (CanStoreFermentable(instance) == false) return false;
+
+        instance[CURRENT_STORAGE_TYPE] = StorageType.Fermentable;
+
+        instance[FERMENTABLE_DATA__ITEMS] = fermentables;
+        instance[FERMENTABLE_DATA__TIME_LEFT] = FERMENTATION_TIME;
+
+        return true;
     }
 
     public bool TryLayEgg(Vector2Int location, bool fertilised) {
@@ -342,6 +385,29 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
             broodCategory.AddChild(timeProperty);
         }
 
+        // Fermentable data
+        if ((StorageType) instance[CURRENT_STORAGE_TYPE] == StorageType.Fermentable) {
+            InfoBranch fermentableCategory = new InfoBranch("Fermentable properties");
+            root.AddChild(fermentableCategory);
+
+            int timeLeft = (int) (TileManager.TICKS_TO_SECONDS * (int) instance[FERMENTABLE_DATA__TIME_LEFT]);
+
+            if (timeLeft <= 0) {
+                InfoLeaf timeProperty = new InfoLeaf("Ready for collection");
+                fermentableCategory.AddChild(timeProperty);
+            } else {
+                InfoLeaf timeProperty = new InfoLeaf("Time until completion", timeLeft + "s");
+                fermentableCategory.AddChild(timeProperty);
+            }
+
+            InfoBranch storingCategory = new InfoBranch("Fermenting items");
+            fermentableCategory.AddChild(storingCategory);
+
+            foreach ((Item item, uint quantity) in (List<(Item, uint)>) instance[FERMENTABLE_DATA__ITEMS]) {
+                InfoLeaf itemProperty = new InfoLeaf(item.GetName(), quantity + " unit(s)");
+                storingCategory.AddChild(itemProperty);
+            }
+        }
 
         // Inventory data
         InfoBranch inventoryCategory = GetInventory(instance).GetInfoTree();

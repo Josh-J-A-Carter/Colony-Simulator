@@ -96,6 +96,54 @@ MonoBehaviour:
   entity: {fileID: 0}
   inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+--- !u!1 &1129543561385129785
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6123391468659759850}
+  - component: {fileID: 3844709797778594445}
+  m_Layer: 0
+  m_Name: Ferment__Store
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6123391468659759850
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129543561385129785}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2883539734441149644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3844709797778594445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129543561385129785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4c52dc58a9e9414388b5ceef8ba008b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
 --- !u!1 &1384241947847165291
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,6 +245,54 @@ MonoBehaviour:
   pathfind: {fileID: 2535051914071567500}
   construct: {fileID: 6110178386457755492}
   getResources: {fileID: 7909127768614599062}
+--- !u!1 &2013521393747470659
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6797589907858192949}
+  - component: {fileID: 6866715991589670201}
+  m_Layer: 0
+  m_Name: Ferment__GetResources
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6797589907858192949
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013521393747470659}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2883539734441149644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6866715991589670201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013521393747470659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f3bf2f8f9049f44882d1468d2df9ed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &3428250340048907298
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,6 +433,7 @@ Transform:
   - {fileID: 3823887132889052590}
   - {fileID: 4354941086093276931}
   - {fileID: 1647731349896505615}
+  - {fileID: 2883539734441149644}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &333776470971658172
@@ -474,6 +571,7 @@ MonoBehaviour:
   nurse: {fileID: 315169292399443832}
   tidy: {fileID: 5819586312370582743}
   forage: {fileID: 5747646048528248155}
+  ferment: {fileID: 7443480746491101835}
 --- !u!114 &8531101069963779304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,6 +788,57 @@ MonoBehaviour:
   entity: {fileID: 0}
   inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+--- !u!1 &6599584522742000199
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2883539734441149644}
+  - component: {fileID: 7443480746491101835}
+  m_Layer: 0
+  m_Name: Ferment
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2883539734441149644
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6599584522742000199}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6797589907858192949}
+  - {fileID: 6123391468659759850}
+  m_Father: {fileID: 5405411461827431291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7443480746491101835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6599584522742000199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba972ba9478c1e14f926c8bce664f349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  entity: {fileID: 0}
+  inventory: {fileID: 0}
+  store: {fileID: 3844709797778594445}
+  getResources: {fileID: 6866715991589670201}
 --- !u!1 &6780914768193794047
 GameObject:
   m_ObjectHideFlags: 0

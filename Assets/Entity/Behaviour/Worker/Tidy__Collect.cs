@@ -15,7 +15,7 @@ public class Tidy__Collect : State {
     ReadOnlyCollection<ItemEntity> itemEntities;
     ItemEntity targetEntity;
     Path path;
-    int TARGET_ATTEMPTS = 10;
+    const int TARGET_ATTEMPTS = 10;
 
     int step, stepsMax;
     static readonly int stepSpeed = 15;

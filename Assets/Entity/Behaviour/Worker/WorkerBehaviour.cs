@@ -6,11 +6,10 @@ using UnityEngine;
 public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
     [SerializeField]
-    State idle, build, nurse, tidy, forage;
+    State idle, build, nurse, tidy, forage, ferment;
     Animator animator;
 
     WorkerTask task;
-
     InventoryManager inventory;
 
     StateMachine stateMachine;
@@ -41,7 +40,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
         if (this.task != null) return false;
 
         // Check resource requirements. If they aren't met, can't help
-        if (task is IConsumer consumer && !AreResourcesAvailable(consumer)) return false;
+        if (task is IConsumer consumer && !AreResourcesAvailable(consumer.GetRequiredResources())) return false;
 
         // Make sure pathfinding to the task is possible, if applicable
         if (task is ILocative locative && !IsPathAvailable(locative)) return false;
@@ -63,29 +62,25 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
         return false;
     }
 
-    bool AreResourcesAvailable(IConsumer consumer) {
-        // Try find locations to get each resource
-        foreach ((Resource res, uint quantity) in consumer.GetRequiredResources()) {
-
-            ///
-            /// Note: potential source of bug here - we aren't adding up the subtotals across
-            /// inventory, entities, and storage; e.g. could have 1/3 in each but the test would fail
-            ///
-
-            // Inventory has it? Go to next resource
-            if (inventory.CountResource(res) >= quantity) continue;
-
-            // ItemEntities have it?
-            if (EntityManager.Instance.FindItemEntities(res, quantity, out _)) continue;
-
-            // Storage has it?
-            if (TileManager.Instance.FindResourceInStorage(res, quantity, out _)) continue;
-
-            // Nothing in the nest has it readily accessible
-            return false;
-        }
+    bool AreResourcesAvailable(IEnumerable<(Resource, uint)> resources) {
+        foreach ((Resource res, uint quantity) in resources) if (IsResourceAvailable(res, quantity) == false) return false;
 
         return true;
+    }
+
+    bool IsResourceAvailable(Resource resource, uint quantity = 1) {
+        ///
+        /// Note: potential source of bug here - we aren't adding up the subtotals across
+        /// inventory, entities, and storage; e.g. could have 1/3 in each but the test would fail
+        ///
+
+        if (inventory.CountResource(resource) >= quantity) return true;
+
+        if (EntityManager.Instance.FindItemEntities(resource, quantity, out _)) return true;
+
+        if (TileManager.Instance.FindResourceInStorage(resource, quantity, out _)) return true;
+
+        return false;
     }
 
     public void SetTask(Task task) {
@@ -123,19 +118,28 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
     void DecideState() {
         if (task == null) {
-            // If inventory full or random items around, AND available storage, then tidy
+            // Tidying
             bool invFull = inventory.RemainingCapacity() <= inventory.MaxCapacity() / 5;
             ReadOnlyCollection<ItemEntity> itemEntities = EntityManager.Instance.GetItemEntities();
-            List<(Vector2Int, IStorage, Dictionary<String, object>)> storage = TileManager.Instance.FindAvailableStorage();
+            List<(Vector2Int, IStorage, Dictionary<String, object>)> itemStorage = TileManager.Instance.FindAvailableStorage();
 
-            if ((invFull || itemEntities.Count > 0) && storage.Count > 0) {
+            if ((invFull || itemEntities.Count > 0) && itemStorage.Count > 0) {
                 stateMachine.SetChildState(tidy);
+                return;
             }
 
-            else {
-                stateMachine.SetChildState(idle);
+            // Fermenting
+            Resource resource = new Resource(ItemTag.Fermentable);
+            List<(Vector2Int, BroodComb, Dictionary<String, object>)> fermentableStorage = TileManager.Instance.QueryTileEntities<BroodComb>(
+                tuple => tuple.Item2.CanStoreFermentable(tuple.Item3)
+            );
+            if (IsResourceAvailable(resource) && fermentableStorage.Count > 0) {
+                stateMachine.SetChildState(ferment);
+                return;
             }
-
+            
+            // Idle
+            stateMachine.SetChildState(idle);
             return;
         }
 

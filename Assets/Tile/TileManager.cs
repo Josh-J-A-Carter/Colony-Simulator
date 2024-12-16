@@ -92,8 +92,10 @@ public class TileManager : MonoBehaviour {
         return tileEntityStore.GetTileEntityData(position);
     }
 
-    public List<(Vector2Int, T, Dictionary<String, object>)> QueryTileEntities<T>() {
-        return tileEntityStore.Query<T>();
+    public List<(Vector2Int, T, Dictionary<String, object>)> QueryTileEntities<T>(Func<(Vector2Int, T, Dictionary<String, object>), bool> filter = null) {
+        if (filter == null) filter = _ => true;
+
+        return tileEntityStore.Query<T>().Where(filter).ToList();
     }
 
 

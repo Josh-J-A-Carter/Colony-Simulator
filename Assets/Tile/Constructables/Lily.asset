@@ -30,7 +30,7 @@ MonoBehaviour:
   maxPollenQuantity: 0
   isNectarProducer: 1
   nectar: {fileID: 11400000, guid: 73eaea258b6679441b5ee8b389bbb70f, type: 2}
-  minNectarDelay: 100
-  maxNectarDelay: 300
+  minNectarDelay: 10
+  maxNectarDelay: 20
   minNectarQuantity: 1
-  maxNectarQuantity: 2
+  maxNectarQuantity: 3

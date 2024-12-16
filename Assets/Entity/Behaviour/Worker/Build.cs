@@ -11,8 +11,6 @@ public class Build : State {
     [SerializeField]
     GetResources getResources;
     BuildTask task => (BuildTask) taskAgent.GetTask();
-
-    const float MAX_IDLE = 2.0f;
     
     public override void OnEntry() {
         if (inventory.HasResources(task.GetRequiredResources().ToList())) stateMachine.SetChildState(pathfind);

@@ -19,3 +19,4 @@ MonoBehaviour:
   itemTags: 000000000200000005000000
   components:
   - {fileID: 11400000, guid: 95d45ad78f2f1fd4089dc8cd1ce52701, type: 2}
+  - {fileID: 11400000, guid: fff0c68a0f7d15848b3bfad21672a9d7, type: 2}

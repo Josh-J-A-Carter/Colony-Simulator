@@ -98,7 +98,9 @@ public class Ferment__Store : State {
         if (step == stepsMax) {
             List<(Item item, uint)> taken = inventory.TakeResources(resourceRequirements);
 
-            targetType.TryStoreFermentable(targetData, taken);
+            Vector2 pos = entity.transform.position;
+            Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
+            targetType.TryStoreFermentable(gridPos, targetData, taken);
 
             CompleteState();
             return;

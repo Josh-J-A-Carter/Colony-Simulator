@@ -55,7 +55,7 @@ public class BuildTask : WorkerTask, ILocative, IConsumer {
 
         TileManager.Instance.Construct(startPos, constructable, configDataTemplate);
 
-        if (constructable is BroodComb broodComb) {
+        if (constructable is BroodComb broodComb && broodComb.CanStoreBrood(configDataTemplate)) {
             TaskManager.Instance.CreateTask(new LayTask(TaskPriority.Normal, startPos));
         }   
     }

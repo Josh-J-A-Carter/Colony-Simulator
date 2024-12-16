@@ -146,7 +146,7 @@ public class GetResources : State {
                 List<(Resource, uint)> remaining = inventory.FindRemainder(resources.ToList());
 
                 // Take from storage & store temporarily, while we make sure inventory has enough space
-                List<(Item, uint)> takenFromStorage = targetType.TakeResources(targetData, remaining);
+                List<(Item, uint)> takenFromStorage = targetType.TakeResources(targetLocation, targetData, remaining);
 
                 // Swap extraneous stuff, if necessary
                 // We can guarantee that storage has spaceRequired spaces free, so these can be used to swap

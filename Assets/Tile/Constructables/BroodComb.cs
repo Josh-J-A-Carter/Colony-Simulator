@@ -43,7 +43,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         /// <summary>Value is of type int</summary>
         public const String FERMENTABLE_DATA__TIME_LEFT = "fermentableData__timeLeft";
 
-        const int FERMENTATION_TIME = 20;
+        const int FERMENTATION_TIME = 60;
 
 
     /// <summary>Path leading to the inventory field. The value should be of type <c>Inventory</c></summary>
@@ -71,7 +71,8 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
 
     /// <summary>Variants to display when the comb contains brood of differing life stages.</summary>
     [SerializeField]
-    GridRow[] eggVariant, larvaVariant, larvaFedVariant, cappedVariant;
+    GridRow[] eggVariant, larvaVariant, larvaFedVariant, cappedVariant, itemVariant, 
+                nectarVariant, honeyVariant, pollenVariant, breadVariant;
 
     public override Dictionary<String, object> GenerateDefaultData() {
         Dictionary<String, object> data = new Dictionary<String, object>();
@@ -95,7 +96,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
 
         if ((StorageType) data[CURRENT_STORAGE_TYPE] == StorageType.Brood) TickBrood(position, data);
 
-        if ((StorageType) data[CURRENT_STORAGE_TYPE] == StorageType.Fermentable) TickFermentable(data);
+        if ((StorageType) data[CURRENT_STORAGE_TYPE] == StorageType.Fermentable) TickFermentable(position, data);
     }
 
     void TickBrood(Vector2Int position, Dictionary<String, object> data) {
@@ -127,7 +128,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
             data[BROOD_DATA__TIME_LEFT] = LARVA_STAGE_DURATION;
             data[BROOD_DATA__BROOD_STAGE] = BroodStage.Larva;
 
-            DrawVariant(position, GetTileAt__LarvaVariant);
+            DrawVariant(position, pos => larvaVariant[pos.y].gridEntries[pos.x].worldTile);
         }
 
         // Larva -> Pupa
@@ -148,56 +149,38 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         }
     }
 
-    void TickFermentable(Dictionary<String, object> instance) {
+    void TickFermentable(Vector2Int position, Dictionary<String, object> instance) {
         int timeLeft = (int) instance[FERMENTABLE_DATA__TIME_LEFT];
 
         timeLeft = timeLeft <= 0 ? 0 : timeLeft - 1;
         instance[FERMENTABLE_DATA__TIME_LEFT] = timeLeft;
 
         if (timeLeft <= 0) {
-            // Debug.Log("Ready for collection :)");
+            Item item = (instance[FERMENTABLE_DATA__ITEMS] as List<(Item, uint)>)[0].Item1;
+
+            if (item.HasItemTag(ItemTag.Nectar)) {
+                DrawVariant(position, pos => honeyVariant[pos.y].gridEntries[pos.x].worldTile);
+            }
+
+            else if (item.HasItemTag(ItemTag.Pollen)) {
+                DrawVariant(position, pos => breadVariant[pos.y].gridEntries[pos.x].worldTile);
+            }
+        #if UNITY_EDITOR
+            else throw new Exception("Unknown fermentable item type");
+        #endif
         }
-    }
-
-    TileBase GetTileAt__EggVariant(Vector2Int pos) {
-        int col = pos.x;
-        int row = pos.y;
-
-        return eggVariant[row].gridEntries[col].worldTile;
-    }
-
-    TileBase GetTileAt__LarvaVariant(Vector2Int pos) {
-        int col = pos.x;
-        int row = pos.y;
-
-        return larvaVariant[row].gridEntries[col].worldTile;
-    }
-
-    TileBase GetTileAt__LarvaFedVariant(Vector2Int pos) {
-        int col = pos.x;
-        int row = pos.y;
-
-        return larvaFedVariant[row].gridEntries[col].worldTile;
-    }
-
-    TileBase GetTileAt__CappedVariant(Vector2Int pos) {
-        int col = pos.x;
-        int row = pos.y;
-
-        return cappedVariant[row].gridEntries[col].worldTile;
     }
 
     public void GiveBrood(Vector2Int position, Dictionary<String, object> data, Item item, uint quantity) {
 
         if (item == beeswax) {
-            DrawVariant(position, GetTileAt__CappedVariant);
+            DrawVariant(position, pos => cappedVariant[pos.y].gridEntries[pos.x].worldTile);
         }
 
         else if (item == royalJelly) {
-            DrawVariant(position, GetTileAt__LarvaFedVariant);
+            DrawVariant(position, pos => larvaFedVariant[pos.y].gridEntries[pos.x].worldTile);
         }
     }
-
 
 
     Inventory GetInventory(Dictionary<String, object> instance) {
@@ -243,6 +226,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         }
 
         instance[CURRENT_STORAGE_TYPE] = StorageType.Item;
+        DrawVariant(defaultLocation, pos => itemVariant[pos.y].gridEntries[pos.x].worldTile);
     }
 
     public void Give(Vector2Int defaultLocation, Dictionary<String, object> instance, List<(Item, uint)> items) {
@@ -250,22 +234,28 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
     }
 
 
-    public bool Take(Dictionary<String, object> instance, Item item, uint quantity) {
+    public bool Take(Vector2Int location, Dictionary<String, object> instance, Item item, uint quantity) {
         if ((StorageType) instance[CURRENT_STORAGE_TYPE] != StorageType.Item) return false;
 
         Inventory inventory = GetInventory(instance);
         bool success = inventory.RemoveAtomic(item, quantity);
 
-        if (success && inventory.Carrying() == 0) instance[CURRENT_STORAGE_TYPE] = StorageType.Empty;
+        if (success && inventory.Carrying() == 0) {
+            instance[CURRENT_STORAGE_TYPE] = StorageType.Empty;
+            DrawVariant(location, GetTileAt);
+        }
 
         return success;
     }
 
-    public List<(Item, uint)> TakeResources(Dictionary<String, object> instance, List<(Resource, uint)> resources) {
+    public List<(Item, uint)> TakeResources(Vector2Int location, Dictionary<String, object> instance, List<(Resource, uint)> resources) {
         Inventory inventory = GetInventory(instance);
         List<(Item, uint)> taken = inventory.TakeResources(resources);
 
-        if (inventory.Carrying() == 0) instance[CURRENT_STORAGE_TYPE] = StorageType.Empty;
+        if (inventory.Carrying() == 0) {
+            instance[CURRENT_STORAGE_TYPE] = StorageType.Empty;
+            DrawVariant(location, GetTileAt);
+        }
 
         return taken;
     }
@@ -306,13 +296,26 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         return (bool) data[CAN_STORE_BROOD];
     }
 
-    public bool TryStoreFermentable(Dictionary<String, object> instance, List<(Item, uint)> fermentables) {
+    public bool TryStoreFermentable(Vector2Int position, Dictionary<String, object> instance, List<(Item, uint)> fermentables) {
         if (CanStoreFermentable(instance) == false) return false;
 
         instance[CURRENT_STORAGE_TYPE] = StorageType.Fermentable;
 
         instance[FERMENTABLE_DATA__ITEMS] = fermentables;
         instance[FERMENTABLE_DATA__TIME_LEFT] = FERMENTATION_TIME;
+
+        Item item = fermentables[0].Item1;
+
+        if (item.HasItemTag(ItemTag.Nectar)) {
+            DrawVariant(position, pos => nectarVariant[pos.y].gridEntries[pos.x].worldTile);
+        }
+
+        else if (item.HasItemTag(ItemTag.Pollen)) {
+            DrawVariant(position, pos => pollenVariant[pos.y].gridEntries[pos.x].worldTile);
+        }
+    #if UNITY_EDITOR
+        else throw new Exception("Unknown fermentable item type");
+    #endif
 
         return true;
     }
@@ -323,7 +326,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(location);
         if (CanStoreBrood(data) == false) return false;
         
-        DrawVariant(location, GetTileAt__EggVariant);
+        DrawVariant(location, pos => eggVariant[pos.y].gridEntries[pos.x].worldTile);
 
         data[CURRENT_STORAGE_TYPE] = StorageType.Brood;
 
@@ -340,13 +343,14 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         return (int) data[FERMENTABLE_DATA__TIME_LEFT] <= 0;
     }
 
-    public List<(Item, uint)> CollectFermentables(Dictionary<String, object> data) {
+    public List<(Item, uint)> CollectFermentables(Vector2Int position, Dictionary<String, object> data) {
     #if UNITY_EDITOR
         if (FermentablesReady(data) == false) throw new Exception("No fermentables are ready to collect");
     #else
         if (FermentablesReady(data) == false) return null;
     #endif
 
+        DrawVariant(position, GetTileAt);
         data[CURRENT_STORAGE_TYPE] = StorageType.Empty;
 
         List<(Item, uint)> items = (data[FERMENTABLE_DATA__ITEMS] as List<(Item, uint)>)
@@ -354,7 +358,8 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
                                         FermentableComponent comp = (FermentableComponent) tuple.Item1.GetItemComponent(ItemTag.Fermentable);
                                         return (comp.fermentationItem, tuple.Item2);
                                     })
-                                    .ToList();        
+                                    .ToList();
+        
         return items;
     }
 

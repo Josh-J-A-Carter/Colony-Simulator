@@ -48,3 +48,23 @@ MonoBehaviour:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: 7232138ca0952f141ba5d9499aa28d9a, type: 2}
       previewTile: {fileID: 0}
+  itemVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 69ee5eaf7ed697745986f066080627dd, type: 2}
+      previewTile: {fileID: 0}
+  nectarVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 186ee30b3dd75a4419a8801c12028d6f, type: 2}
+      previewTile: {fileID: 0}
+  honeyVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: accc404aa55cf5743a43f846aa0f357e, type: 2}
+      previewTile: {fileID: 0}
+  pollenVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: e0e35289b865dc140ac5792a0ee1584b, type: 2}
+      previewTile: {fileID: 0}
+  breadVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: fc6cc4f4cd086654b952a5406fcbec68, type: 2}
+      previewTile: {fileID: 0}

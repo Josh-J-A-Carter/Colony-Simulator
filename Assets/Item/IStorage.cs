@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public interface IStorage {
-    public bool Take(Dictionary<String, object> instance, Item item, uint quantity);
+    public bool Take(Vector2Int position, Dictionary<String, object> instance, Item item, uint quantity);
 
-    public List<(Item, uint)> TakeResources(Dictionary<String, object> instance, List<(Resource, uint)> resources);
+    public List<(Item, uint)> TakeResources(Vector2Int position, Dictionary<String, object> instance, List<(Resource, uint)> resources);
 
-    public void Give(Vector2Int defaultLocation, Dictionary<String, object> instance, Item item, uint quantity);
+    public void Give(Vector2Int position, Dictionary<String, object> instance, Item item, uint quantity);
 
-    public void Give(Vector2Int defaultLocation, Dictionary<String, object> instance, List<(Item, uint)> items);
+    public void Give(Vector2Int position, Dictionary<String, object> instance, List<(Item, uint)> items);
 
     public uint CountItem(Dictionary<String, object> instance, Item item);
 

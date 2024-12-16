@@ -235,6 +235,111 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: worker-brood-comb__item
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c04aecacfe118b34187124908df8ff51
+      internalID: -1143807482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: worker-brood-comb__nectar
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d590c1b5b4db8b4f8251039c6df15ef
+      internalID: -1251435892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: worker-brood-comb__honey
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfc023b5af8d90c40a232743890c684e
+      internalID: -1161653981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: worker-brood-comb__pollen
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08746ebd87f476b40a3f677fa9f89d8f
+      internalID: 931248194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: worker-brood-comb__bread
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d33a744baa610784faefc309fe86a33c
+      internalID: 1495383479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -246,11 +351,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      worker-brood-comb__bread: 1495383479
       worker-brood-comb__capped-brood: 436275424
       worker-brood-comb__egg: 34913262
       worker-brood-comb__empty: -1635639722
+      worker-brood-comb__honey: -1161653981
+      worker-brood-comb__item: -1143807482
       worker-brood-comb__larva: -580124457
       worker-brood-comb__larva-fed: -1423537366
+      worker-brood-comb__nectar: -1251435892
+      worker-brood-comb__pollen: 931248194
       worker-brood-comb__preview: -1959217967
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

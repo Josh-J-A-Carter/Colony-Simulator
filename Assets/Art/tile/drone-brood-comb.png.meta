@@ -235,6 +235,111 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: drone-brood-comb__item
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0dcd4b3ad2e33e74d88502d49ffa8d0c
+      internalID: -402964099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: drone-brood-comb__nectar
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a22cd49457c600341bdcf227d3c5460a
+      internalID: -1005982801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: drone-brood-comb__honey
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2caff95d260e02f478423e9b3306a3b4
+      internalID: -2044824352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: drone-brood-comb__pollen
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 027ae4dcc054abf4eb38a93e227023c8
+      internalID: 1332521016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: drone-brood-comb__bread
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a1221b98e5bbb546b8f18989c3364b9
+      internalID: 1927562555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -246,11 +351,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      drone-brood-comb__bread: 1927562555
       drone-brood-comb__capped-brood: 2083551288
       drone-brood-comb__egg: -1787155279
       drone-brood-comb__empty: -615253942
+      drone-brood-comb__honey: -2044824352
+      drone-brood-comb__item: -402964099
       drone-brood-comb__larva: -1413864831
       drone-brood-comb__larva-fed: 1885558732
+      drone-brood-comb__nectar: -1005982801
+      drone-brood-comb__pollen: 1332521016
       drone-brood-comb__preview: 931327938
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

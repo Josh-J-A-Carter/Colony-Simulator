@@ -20,7 +20,6 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
 
 
     /// <summary>Data relevant to brood stored in a comb tile. The corresponding value should be of type <c>Dictionary</c>.</summary>
-    public const String BROOD_DATA = "broodData";
 
         /// <summary>Part of the <c>BROOD_DATA</c> attribute, storing the type of brood currently inside. Value is of type <c>bool</c>.</summary>
         public const String BROOD_DATA__FERTILISED = "broodData__fertilised";
@@ -86,12 +85,10 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
     }
 
     void TickBrood(Vector2Int position, Dictionary<String, object> data) {
-        Dictionary<String, object> broodData = (Dictionary<String, object>) data[BROOD_DATA];
+        int timeLeft = (int) data[BROOD_DATA__TIME_LEFT] - 1;
+        data[BROOD_DATA__TIME_LEFT] = timeLeft;
 
-        int timeLeft = (int) broodData[BROOD_DATA__TIME_LEFT] - 1;
-        broodData[BROOD_DATA__TIME_LEFT] = timeLeft;
-
-        BroodStage broodStage = (BroodStage) broodData[BROOD_DATA__BROOD_STAGE];
+        BroodStage broodStage = (BroodStage) data[BROOD_DATA__BROOD_STAGE];
 
         // Developmental events
         if (broodStage == BroodStage.Larva) {
@@ -113,21 +110,21 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
 
         // Egg -> Larva
         if (broodStage == BroodStage.Egg) {
-            broodData[BROOD_DATA__TIME_LEFT] = LARVA_STAGE_DURATION;
-            broodData[BROOD_DATA__BROOD_STAGE] = BroodStage.Larva;
+            data[BROOD_DATA__TIME_LEFT] = LARVA_STAGE_DURATION;
+            data[BROOD_DATA__BROOD_STAGE] = BroodStage.Larva;
 
             DrawVariant(position, GetTileAt__LarvaVariant);
         }
 
         // Larva -> Pupa
         else if (broodStage == BroodStage.Larva) {
-            broodData[BROOD_DATA__TIME_LEFT] = PUPA_STAGE_DURATION;
-            broodData[BROOD_DATA__BROOD_STAGE] = BroodStage.Pupa;
+            data[BROOD_DATA__TIME_LEFT] = PUPA_STAGE_DURATION;
+            data[BROOD_DATA__BROOD_STAGE] = BroodStage.Pupa;
         }
 
         // Pupa -> Adult
         else {
-            bool fertilised = (bool) broodData[BROOD_DATA__FERTILISED];
+            bool fertilised = (bool) data[BROOD_DATA__FERTILISED];
             if (fertilised) EntityManager.Instance.InstantiateWorker(position);
             else EntityManager.Instance.InstantiateDrone(position);
 
@@ -286,11 +283,9 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
 
         data[CURRENT_STORAGE_TYPE] = StorageType.Brood;
 
-        Dictionary<String, object> broodData = new Dictionary<String, object>();
-        broodData[BROOD_DATA__TIME_LEFT] = EGG_STAGE_DURATION;
-        broodData[BROOD_DATA__BROOD_STAGE] = BroodStage.Egg;
-        broodData[BROOD_DATA__FERTILISED] = fertilised;
-        data[BROOD_DATA] = broodData;
+        data[BROOD_DATA__TIME_LEFT] = EGG_STAGE_DURATION;
+        data[BROOD_DATA__BROOD_STAGE] = BroodStage.Egg;
+        data[BROOD_DATA__FERTILISED] = fertilised;
 
         return true;
     }
@@ -329,13 +324,11 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
             InfoBranch broodCategory = new InfoBranch("Brood properties");
             root.AddChild(broodCategory);
 
-            Dictionary<String, object> broodData = (Dictionary<String, object>) instance[BROOD_DATA];
-
-            String fertilisedValue = broodData[BROOD_DATA__FERTILISED].ToString();
+            String fertilisedValue = instance[BROOD_DATA__FERTILISED].ToString();
             InfoLeaf fertilisedProperty = new InfoLeaf("Fertilised", fertilisedValue);
             broodCategory.AddChild(fertilisedProperty);
 
-            String stageValue = broodData[BROOD_DATA__BROOD_STAGE] switch {
+            String stageValue = instance[BROOD_DATA__BROOD_STAGE] switch {
                 BroodStage.Egg => "Egg",
                 BroodStage.Larva => "Larva",
                 BroodStage.Pupa => "Pupa",
@@ -344,7 +337,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
             InfoLeaf stageProperty = new InfoLeaf("Life stage", stageValue);
             broodCategory.AddChild(stageProperty);
 
-            int timeLeft = (int) (TileManager.TICKS_TO_SECONDS * (int) broodData[BROOD_DATA__TIME_LEFT]);
+            int timeLeft = (int) (TileManager.TICKS_TO_SECONDS * (int) instance[BROOD_DATA__TIME_LEFT]);
             InfoLeaf timeProperty = new InfoLeaf("Time to next stage", timeLeft + "s");
             broodCategory.AddChild(timeProperty);
         }

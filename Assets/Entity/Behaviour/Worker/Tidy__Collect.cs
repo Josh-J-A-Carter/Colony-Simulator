@@ -56,31 +56,16 @@ public class Tidy__Collect : State {
             return;
         }
 
-        // Choose some (limited) random item entities
-        List<ItemEntity> randomTargets = new List<ItemEntity>(TARGET_ATTEMPTS);
+        // Find a path to one of them, if possible
+        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, itemEntities.ToList(), entity => entity.transform.position, randomise: true);
 
-        for (int i = 0 ; i < TARGET_ATTEMPTS && i < itemEntities.Count ; i += 1) {
-            ItemEntity target = itemEntities[Random.Range(0, itemEntities.Count)];
+        if (path != null) {
+            this.path = path;
+            targetEntity = itemEntities[index];
 
-            randomTargets.Add(target);
-        }
-
-        // Order them by proximity to the agent; we shouldn't be going for items 20000 tiles away when there is one next to us
-        Vector2 pos = entity.transform.position;
-        Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
-        List<ItemEntity> orderedTargets = randomTargets
-                .OrderBy(entity => Math.Pow(entity.transform.position.x - gridPos.x, 2) + Math.Pow(entity.transform.position.y - gridPos.y, 2))
-                .ToList();
-        
-        // Choose the closest one that is reachable
-        foreach (ItemEntity target in orderedTargets) {
-            path = Pathfind.FindPath(transform.position, target.transform.position);
-            if (path != null) {
-                targetEntity = target;
-                step = 0;
-                stepsMax = path.Count * stepSpeed;
-                return;
-            }
+            step = 0;
+            stepsMax = path.Count * stepSpeed;
+            return;
         }
         
         // Couldn't find a path to an item - failure to find ANY item

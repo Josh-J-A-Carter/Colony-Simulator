@@ -39,26 +39,15 @@ public class Harvest__Pathfind : State {
     void TryFindPath() {
         ReadOnlyCollection<Vector2Int> interior = task.GetInteriorPoints();
 
-        Vector2 pos = entity.transform.position;
-        Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
-        List<Vector2Int> orderedInterior = interior.OrderBy(tile => Math.Pow(tile.x - gridPos.x, 2) + Math.Pow(tile.y - gridPos.y, 2)).ToList();
+        // Find a path to one of them, if possible
+        (path, _) = Pathfind.FindPathToOneOf(transform.position, interior.ToList(), p => p, false);
 
-        foreach (Vector2Int destination in orderedInterior) {
-            Path possiblePath = Pathfind.FindPath(gridPos, destination);
-
-            if (possiblePath == null) continue;
-
-            path = possiblePath;
-            break;
-        }
-
-        // We couldn't find a path to the task location :(
-        if (path == null) {
-            CompleteState(false);
+        if (path != null) {
+            step = 0;
+            stepsMax = path.Count * stepSpeed;
             return;
         }
 
-        step = 0;
-        stepsMax = path.Count * stepSpeed;
+        CompleteState(false);
     }
 }

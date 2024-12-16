@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public static class Pathfind {
 
     static TileManager tm => TileManager.Instance;
 
-    static readonly int CARDINAL_DIR_COST = 10;
-    static readonly int DIAGONAL_DIR_COST = 14;
+    const int CARDINAL_DIR_COST = 10;
+    const int DIAGONAL_DIR_COST = 14;
+
+    const int TARGET_ATTEMPTS = 30;
 
     /// <summary>
     /// Find all the neighbouring tiles and their cost to travel to each of them.
@@ -175,5 +178,31 @@ public static class Pathfind {
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Find a valid path out of a number of potential options, choosing the closest one to the given position.
+    /// This also returns the index of the chosen target in the original list.
+    /// </summary>
+    public static (Path, int) FindPathToOneOf<T>(Vector2 position, List<T> targets, Func<T, Vector2> location, bool randomise = false) {
+        List<T> limitedTargets = targets;
+
+
+        // If appropriate, limit the number of targets to choose from
+        if (randomise) {
+            limitedTargets = new(TARGET_ATTEMPTS);
+
+            for (int i = 0 ; i < TARGET_ATTEMPTS && i < targets.Count ; i += 1) limitedTargets.Add(targets[Random.Range(0, targets.Count)]);
+        }
+
+        List<T> orderedTargets = limitedTargets.OrderBy(instance => Vector2.Distance(position, location(instance))).ToList();
+        
+        // Choose the closest one that is reachable
+        foreach (T instance in orderedTargets) {
+            Path path = FindPath(position, location(instance));
+            if (path != null) return (path, targets.FindIndex(t => Equals(t, instance)));
+        }
+
+        return (null, -1);
     }
 }

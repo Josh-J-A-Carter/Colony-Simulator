@@ -53,9 +53,6 @@ public class GetResources : State {
     }
 
     bool TryFindItemTarget() {
-        Vector2 pos = entity.transform.position;
-        Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
-
         // Find all item entities that are relevant to the task requirements
         List<ItemEntity> itemEntities = EntityManager.Instance
                 .GetItemEntities()
@@ -64,26 +61,23 @@ public class GetResources : State {
                         if (res.ResourceType == ResourceType.Item && entity.item == res.Item ||
                         res.ResourceType == ResourceType.Tag && entity.item.HasItemTag(res.ItemTag)) return true;
                     }
-
                     return false;
                 })
-                .OrderBy(entity => 
-                    Math.Pow(entity.transform.position.x - gridPos.x, 2) + Math.Pow(entity.transform.position.y - gridPos.y, 2)
-                )
                 .ToList();
 
         // No entities to collect
         if (itemEntities.Count == 0) return false;
         
-        // Choose the closest one that is reachable
-        foreach (ItemEntity target in itemEntities) {
-            path = Pathfind.FindPath(transform.position, target.transform.position);
-            if (path != null) {
-                targetEntity = target;
-                step = 0;
-                stepsMax = path.Count * stepSpeed;
-                return true;
-            }
+        // Find a path to one of them, if possible
+        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, itemEntities.ToList(), entity => entity.transform.position, randomise: true);
+
+        if (path != null) {
+            this.path = path;
+            targetEntity = itemEntities[index];
+
+            step = 0;
+            stepsMax = path.Count * stepSpeed;
+            return true;
         }
         
         // No valid paths to any item entities
@@ -91,38 +85,29 @@ public class GetResources : State {
     }
 
     bool TryFindStorageTarget() {
-        Vector2 pos = entity.transform.position;
-        Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
-
         // Get all possible storage locations, and filter to those that contain required resources
         List<(Vector2Int, IStorage, Dictionary<String, object>)> storage = TileManager.Instance
                 .FindAvailableStorage()
                 .Where(val => {
                     (_, IStorage type, Dictionary<String, object> data) = val;
-                    
                     foreach ((Resource res, _) in resources) if (type.CountResource(data, res) > 0) return true;
-                    
                     return false;
-                })
-                .OrderBy(val => {
-                    (Vector2Int pos, _, _) = val;
-                    return Math.Pow(pos.x - gridPos.x, 2) + Math.Pow(pos.y - gridPos.y, 2);
                 })
                 .ToList();
 
         if (storage.Count == 0) return false;
 
-        foreach ((Vector2Int, IStorage, Dictionary<String, object>) tuple in storage) {
-            (targetLocation, targetType, targetData) = tuple;
+        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, storage, tuple => tuple.Item1);
 
-            path = Pathfind.FindPath(transform.position, targetLocation);
-            if (path != null) {
-                step = 0;
-                stepsMax = path.Count * stepSpeed;
-                return true;
-            }
+        if (path != null) {
+            this.path = path;
+            (targetLocation, targetType, targetData) = storage[index];
+
+            step = 0;
+            stepsMax = path.Count * stepSpeed;
+            return true;
         }
-        
+
         return false;
     }
 

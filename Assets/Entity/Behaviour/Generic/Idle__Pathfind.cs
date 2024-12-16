@@ -11,7 +11,7 @@ public class Idle__Pathfind : State {
     [SerializeField]
     AnimationClip anim;
 
-    static readonly int maxTargetAttempts = 20;
+    const int TARGET_ATTEMPTS = 20;
 
     Path path;
 
@@ -52,8 +52,7 @@ public class Idle__Pathfind : State {
 
         Vector2Int current = new Vector2Int(currentX, currentY);
 
-        bool targetFound = false;
-        for (int attempt = 0 ; attempt < maxTargetAttempts ; attempt += 1) {
+        for (int attempt = 0 ; attempt < TARGET_ATTEMPTS ; attempt += 1) {
             int signX = (int) Math.Pow(-1, Random.Range(0, 2));
             int displacementX = signX * Random.Range(minRange, maxRange);
             int targetX = currentX + displacementX;
@@ -67,19 +66,14 @@ public class Idle__Pathfind : State {
             Path path = Pathfind.FindPath(current, target);
             
             if (path != null) {
-                targetFound = true;
                 this.path = path;
-                break;
+                step = 0;
+                stepsMax = path.Count * stepSpeed;
+                return;
             }
         }
 
-        if (!targetFound) {
-            CompleteState();
-            return;
-        }
-
-        step = 0;
-        stepsMax = path.Count * stepSpeed;
+        CompleteState();
     }
 
 }

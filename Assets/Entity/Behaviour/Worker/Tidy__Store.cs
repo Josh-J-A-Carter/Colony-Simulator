@@ -13,7 +13,6 @@ public class Tidy__Store : State {
     Dictionary<String, object> targetData;
 
     Path path;
-    const int TARGET_ATTEMPTS = 5;
 
     int step, stepsMax;
     static readonly int stepSpeed = 15;
@@ -21,7 +20,6 @@ public class Tidy__Store : State {
     int pulse;
 
     const int PULSE_RATE = 25;
-
 
 
     public override void OnEntry() {
@@ -35,18 +33,19 @@ public class Tidy__Store : State {
             return;
         }
 
-        for (int i = 0 ; i < TARGET_ATTEMPTS ; i += 1) {
-            (targetLocation, targetType, targetData) = storage[Random.Range(0, storage.Count)];
+        // Find a path to one of them, if possible
+        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, storage, tuple => tuple.Item1, randomise: true);
 
-            path = Pathfind.FindPath(transform.position, targetLocation);
-            if (path != null) {
-                step = 0;
-                stepsMax = path.Count * stepSpeed;
-                return;
-            }
+        if (path != null) {
+            this.path = path;
+            (targetLocation, targetType, targetData) = storage[index];
+
+            step = 0;
+            stepsMax = path.Count * stepSpeed;
+            return;
         }
         
-        // Couldn't find a path to ANY storage
+        // Couldn't find a path to an item - failure to find ANY item
         CompleteState(false);
     }
 

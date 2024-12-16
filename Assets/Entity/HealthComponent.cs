@@ -9,17 +9,22 @@ public class HealthComponent : MonoBehaviour {
 
     [field: SerializeField]
     public uint MaxHealth { get; private set; }
+    public bool LowHealth => Health <= MaxHealth / 5;
+
 
     public uint Nutrition { get; private set; }
 
     [field: SerializeField]
     public uint MaxNutrition { get; private set; }
+    public bool LowNutrition => Nutrition <= MaxNutrition / 5;
 
     [SerializeField]
     uint hungerRate; // In seconds
-
-    int tick;
+    int tickHunger;
     const int TICKS_TO_SECONDS = 50;
+
+    int tickHungerDamage;
+    const int HUNGER_DAMAGE_RATE = 2; // In seconds
 
     public void Awake() {
         Health = MaxHealth;
@@ -27,18 +32,26 @@ public class HealthComponent : MonoBehaviour {
 
         IsDead = false;
 
-        tick = 0;
+        tickHunger = 0;
+        tickHungerDamage = 0;
     }
 
     public void FixedUpdate() {
         if (IsDead) return;
 
-        tick += 1;
+        tickHunger += 1;
 
-        if (tick >= TICKS_TO_SECONDS * hungerRate) {
-            tick = 0;
+        if (tickHunger >= TICKS_TO_SECONDS * hungerRate) {
+            tickHunger = 0;
 
             Nutrition = Nutrition == 0 ? 0 : Nutrition - 1;
+
+        }
+
+        tickHungerDamage += 1;
+
+        if (tickHungerDamage >= HUNGER_DAMAGE_RATE * TICKS_TO_SECONDS) {
+            tickHungerDamage = 0;
 
             if (Nutrition == 0) {
                 Damage(1);

@@ -12,8 +12,8 @@ public class Build : State {
     GetResources getResources;
     BuildTask task => (BuildTask) taskAgent.GetTask();
 
-    public ITaskAgent taskAgent;
-    public InventoryManager inventory;
+    ITaskAgent taskAgent;
+    InventoryManager inventory;
 
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();

@@ -9,8 +9,8 @@ public class Nurse__Administer : State {
     [SerializeField]
     AnimationClip anim;
 
-    public ITaskAgent taskAgent;
-    public InventoryManager inventory;
+    ITaskAgent taskAgent;
+    InventoryManager inventory;
 
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();

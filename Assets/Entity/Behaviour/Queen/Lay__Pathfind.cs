@@ -15,7 +15,7 @@ public class Lay__Pathfind : State {
     [SerializeField]
     AnimationClip anim;
 
-    public ITaskAgent taskAgent;
+    ITaskAgent taskAgent;
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();
     }

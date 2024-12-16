@@ -5,7 +5,7 @@ public class Harvest : State {
     [SerializeField]
     State pathfind, collect;
 
-    public ITaskAgent taskAgent;
+    ITaskAgent taskAgent;
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();
     }

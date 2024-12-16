@@ -6,9 +6,9 @@ public class Harvest__Collect : State {
     [SerializeField]
     AnimationClip anim;
 
-    public ITaskAgent taskAgent;
+    ITaskAgent taskAgent;
 
-    public InventoryManager inventory;
+    InventoryManager inventory;
 
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();

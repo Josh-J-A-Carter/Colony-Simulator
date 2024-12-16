@@ -9,7 +9,7 @@ public class Idle : State {
 
     Task task => taskAgent.GetTask();
 
-    public ITaskAgent taskAgent;
+    ITaskAgent taskAgent;
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();
     }

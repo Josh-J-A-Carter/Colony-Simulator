@@ -11,7 +11,7 @@ public class Ferment : State {
     GetResources getResources;
     List<(Resource, uint)> resourceRequirements;
 
-    public InventoryManager inventory;
+    InventoryManager inventory;
 
     public override void OnSetup() {
         inventory = entity.GetComponent<InventoryManager>();

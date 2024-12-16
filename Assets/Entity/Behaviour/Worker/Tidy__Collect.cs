@@ -20,7 +20,7 @@ public class Tidy__Collect : State {
     int step, stepsMax;
     static readonly int stepSpeed = 15;
 
-    public InventoryManager inventory;
+    InventoryManager inventory;
 
     public override void OnSetup() {
         inventory = entity.GetComponent<InventoryManager>();

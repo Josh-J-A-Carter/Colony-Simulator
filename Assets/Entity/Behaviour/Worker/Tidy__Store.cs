@@ -21,7 +21,7 @@ public class Tidy__Store : State {
 
     const int PULSE_RATE = 25;
 
-    public InventoryManager inventory;
+    InventoryManager inventory;
 
     public override void OnSetup() {
         inventory = entity.GetComponent<InventoryManager>();

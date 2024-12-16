@@ -44,10 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c00ace22f2a3c414db8259e85abaf183, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
-  inventory: {fileID: 0}
 --- !u!1 &994044572249963573
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,8 +89,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bca25d6184de2f94ca52b0aaa08fc044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &1129543561385129785
 GameObject:
@@ -139,10 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4c52dc58a9e9414388b5ceef8ba008b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
-  anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
-  inventory: {fileID: 0}
+  anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &1384241947847165291
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,8 +179,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52a97020dedaf1d498046b8943fe9fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &1825384299220627439
 GameObject:
@@ -237,12 +227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b713c90865332524e8ad8689c02840d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   pathfind: {fileID: 2535051914071567500}
   construct: {fileID: 6110178386457755492}
   getResources: {fileID: 7909127768614599062}
-  inventory: {fileID: 0}
 --- !u!1 &2013521393747470659
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,10 +274,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f3bf2f8f9049f44882d1468d2df9ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
-  inventory: {fileID: 0}
+--- !u!1 &2339822548591979520
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3937890245473981059}
+  - component: {fileID: 2044955323721512653}
+  m_Layer: 0
+  m_Name: Eat__GetResources
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3937890245473981059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2339822548591979520}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2310302943278053981}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2044955323721512653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2339822548591979520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f3bf2f8f9049f44882d1468d2df9ed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &3428250340048907298
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,12 +367,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e59b6ba2f01c3c4e943831236100e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   pathfind: {fileID: 8694058030150903680}
   administer: {fileID: 2143918346329946397}
   getResources: {fileID: 1534169623433054590}
-  inventory: {fileID: 0}
 --- !u!1 &3549341296443011130
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,10 +414,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63f9d0e5499c478498e5cdf4015548e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
-  inventory: {fileID: 0}
+--- !u!1 &3833009972769631634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2310302943278053981}
+  - component: {fileID: 7657159451167296912}
+  m_Layer: 0
+  m_Name: Eat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2310302943278053981
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3833009972769631634}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3937890245473981059}
+  m_Father: {fileID: 5405411461827431291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7657159451167296912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3833009972769631634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d7cfdb531dae5247bdd4370cff52acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  getResources: {fileID: 2044955323721512653}
 --- !u!1 &4430628740495362487
 GameObject:
   m_ObjectHideFlags: 0
@@ -433,6 +502,7 @@ Transform:
   - {fileID: 4354941086093276931}
   - {fileID: 1647731349896505615}
   - {fileID: 2883539734441149644}
+  - {fileID: 2310302943278053981}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &333776470971658172
@@ -571,6 +641,7 @@ MonoBehaviour:
   tidy: {fileID: 5819586312370582743}
   forage: {fileID: 5747646048528248155}
   ferment: {fileID: 7443480746491101835}
+  eat: {fileID: 7657159451167296912}
 --- !u!114 &8531101069963779304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -654,8 +725,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ee8a83b5016dea438a201f5e0144f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
 --- !u!1 &5114106759502051238
 GameObject:
@@ -701,8 +770,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84319336ddb259342bdc9b76e327049c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &5196552333843051619
 GameObject:
@@ -748,10 +815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61400409c5974f447bc356f747eaa168, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
-  inventory: {fileID: 0}
 --- !u!1 &5656565468674577035
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,10 +860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f3bf2f8f9049f44882d1468d2df9ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
-  inventory: {fileID: 0}
 --- !u!1 &6599584522742000199
 GameObject:
   m_ObjectHideFlags: 0
@@ -847,12 +908,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba972ba9478c1e14f926c8bce664f349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   store: {fileID: 3844709797778594445}
   collect: {fileID: 7408984841124088472}
   getResources: {fileID: 6866715991589670201}
-  inventory: {fileID: 0}
 --- !u!1 &6780914768193794047
 GameObject:
   m_ObjectHideFlags: 0
@@ -897,10 +955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5919d1075834e314199fff2bdb4cc98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
-  inventory: {fileID: 0}
 --- !u!1 &6786297765104256902
 GameObject:
   m_ObjectHideFlags: 0
@@ -945,8 +1000,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9658d00499a742746912ff4a2d0dd834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &6964715422792913627
 GameObject:
@@ -992,10 +1045,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c15794f835144647a5f73f12eaf27ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
-  inventory: {fileID: 0}
 --- !u!1 &7068056815192042691
 GameObject:
   m_ObjectHideFlags: 0
@@ -1042,11 +1092,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45d3ae8ef51f04e478b48d2b5a6475b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   Collect: {fileID: 1432687605925642583}
   Store: {fileID: 5766766275175161628}
-  inventory: {fileID: 0}
 --- !u!1 &7823918513654220410
 GameObject:
   m_ObjectHideFlags: 0
@@ -1091,10 +1138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f3bf2f8f9049f44882d1468d2df9ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
-  inventory: {fileID: 0}
 --- !u!1 &8122973212392184058
 GameObject:
   m_ObjectHideFlags: 0
@@ -1141,8 +1185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e86af0a7a80e9c46b2b3413c80576ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   stall: {fileID: 4775182616876843219}
   pathfind: {fileID: 3244078409357102006}
 --- !u!1 &8675112791791379743
@@ -1191,8 +1233,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d77fe2fdaeb58f54e9c0ea7893bbfc45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   pathfind: {fileID: 2450127168033958353}
   collect: {fileID: 2208695895270862180}
 --- !u!1 &9083523695122456465
@@ -1239,7 +1279,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae81793f69b4582408fa8fd8ef9c4a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
-  inventory: {fileID: 0}

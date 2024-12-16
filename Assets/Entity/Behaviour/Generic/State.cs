@@ -4,12 +4,12 @@ using UnityEngine;
 
 public abstract class State : MonoBehaviour {
 
-    public StateMachine parent;
+    protected StateMachine parent;
     public StateMachine stateMachine;
     protected State child => stateMachine.childState;
 
-    public Animator animator;
-    public GameObject entity;
+    protected Animator animator;
+    protected GameObject entity;
 
     public void Setup(GameObject entity, Animator animator, StateMachine parent) {
         stateMachine = new StateMachine(this);

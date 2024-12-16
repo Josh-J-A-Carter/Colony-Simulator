@@ -10,7 +10,7 @@ public class Lay : State {
 
     const float MAX_IDLE = 2.0f;
 
-    public ITaskAgent taskAgent;
+    ITaskAgent taskAgent;
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();
     }

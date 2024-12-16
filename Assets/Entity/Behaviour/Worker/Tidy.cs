@@ -12,7 +12,7 @@ public class Tidy : State {
 
     const int MAX_TIDY_CYCLES = 3;
 
-    public InventoryManager inventory;
+    InventoryManager inventory;
 
     public override void OnSetup() {
         inventory = entity.GetComponent<InventoryManager>();

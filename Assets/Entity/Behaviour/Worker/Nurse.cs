@@ -13,8 +13,8 @@ public class Nurse : State {
 
     NurseTask task => (NurseTask) taskAgent.GetTask();
 
-    public ITaskAgent taskAgent;
-    public InventoryManager inventory;
+    ITaskAgent taskAgent;
+    InventoryManager inventory;
 
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();

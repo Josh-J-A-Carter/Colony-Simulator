@@ -7,8 +7,8 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity {
     
     [SerializeField]
     State idle;
-    Animator animator;
-    StateMachine stateMachine;
+    protected Animator animator;
+    protected StateMachine stateMachine;
     // State currentState => stateMachine.childState;
 
     String nameInfo;

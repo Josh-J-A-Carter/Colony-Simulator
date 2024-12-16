@@ -22,7 +22,7 @@ public class Ferment__Store : State {
 
     List<(Resource, uint)> resourceRequirements;
 
-    public InventoryManager inventory;
+    InventoryManager inventory;
 
     public override void OnSetup() {
         inventory = entity.GetComponent<InventoryManager>();

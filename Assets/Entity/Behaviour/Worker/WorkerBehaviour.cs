@@ -6,7 +6,7 @@ using UnityEngine;
 public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ILiving {
 
     [SerializeField]
-    State idle, build, nurse, tidy, forage, ferment;
+    State idle, build, nurse, tidy, forage, ferment, eat;
     Animator animator;
 
     WorkerTask task;
@@ -132,17 +132,17 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     }
 
     void DecideState() {
-        if (task == null) {
-            /// Tidying
-            bool invFull = inventory.RemainingCapacity() <= inventory.MaxCapacity() / 5;
-            ReadOnlyCollection<ItemEntity> itemEntities = EntityManager.Instance.GetItemEntities();
-            List<(Vector2Int, IStorage, Dictionary<String, object>)> itemStorage = TileManager.Instance.FindAvailableStorage();
 
-            if ((invFull || itemEntities.Count > 0) && itemStorage.Count > 0) {
-                stateMachine.SetChildState(tidy);
+        // Low nutrition -> immediate action, if there is food available
+        if (HealthComponent.LowNutrition) {
+            Resource resource = new Resource(ItemTag.Food);
+            if (IsResourceAvailable(resource)) {
+                stateMachine.SetChildState(eat);
                 return;
             }
+        }
 
+        if (task == null) {
             /// Fermenting
 
             // Stuff to store
@@ -164,6 +164,23 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
                 return;
             }
 
+            /// Tidying
+            bool invFull = inventory.RemainingCapacity() <= inventory.MaxCapacity() / 5;
+            ReadOnlyCollection<ItemEntity> itemEntities = EntityManager.Instance.GetItemEntities();
+            List<(Vector2Int, IStorage, Dictionary<String, object>)> itemStorage = TileManager.Instance.FindAvailableStorage();
+
+            if ((invFull || itemEntities.Count > 0) && itemStorage.Count > 0) {
+                stateMachine.SetChildState(tidy);
+                return;
+            }
+
+            if (HealthComponent.Nutrition <= 3 * HealthComponent.MaxNutrition / 4) {
+                resource = new Resource(ItemTag.Food);
+                if (IsResourceAvailable(resource)) {
+                    stateMachine.SetChildState(eat);
+                    return;
+                }
+            }
             
             /// Idle
             stateMachine.SetChildState(idle);

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DroneBehaviour : MonoBehaviour, IInformative, Entity {
+public class DroneBehaviour : MonoBehaviour, IInformative, IEntity {
     
     [SerializeField]
     State idle;
@@ -24,7 +24,7 @@ public class DroneBehaviour : MonoBehaviour, IInformative, Entity {
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
-            child.GetComponent<State>().Setup(gameObject, null, animator, stateMachine);
+            child.GetComponent<State>().Setup(gameObject, animator, stateMachine);
         }
     }
 

@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
@@ -19,7 +16,7 @@ public class TaskManager : MonoBehaviour {
     List<Task> pendingAdditionTasks;
 
     List<Task> tasks;
-    List<TaskAgent> assignedAgents, unassignedAgents;
+    List<ITaskAgent> assignedAgents, unassignedAgents;
 
     public void Awake() {
         // Instantiate singleton
@@ -64,7 +61,7 @@ public class TaskManager : MonoBehaviour {
 
     void OccupyUnassignedAgents() {
         for (int i = 0 ; i < unassignedAgents.Count ; i += 1) {
-            TaskAgent agent = unassignedAgents[i];
+            ITaskAgent agent = unassignedAgents[i];
             SortTasksByUrgency();
 
             foreach (Task task in tasks) {
@@ -94,34 +91,6 @@ public class TaskManager : MonoBehaviour {
         });
     }
 
-    // Task GetMostUrgent() {
-    //     if (tasks.Count == 0) return null;
-
-    //     Task mostUrgent = tasks[0];
-
-    //     foreach (Task task in tasks) {
-    //         if (task.priority > mostUrgent.priority) continue;
-    //         else if (task.priority < mostUrgent.priority) {
-    //             mostUrgent = task;
-    //             continue;
-    //         }
-
-    //         if (task.assignment > mostUrgent.assignment) continue;
-    //         else if (task.assignment < mostUrgent.assignment) {
-    //             mostUrgent = task;
-    //             continue;
-    //         }
-
-    //         if (task.creationTime > mostUrgent.creationTime) continue;
-    //         else if (task.creationTime < mostUrgent.creationTime) {
-    //             mostUrgent = task;
-    //             continue;
-    //         }
-    //     }
-
-    //     return mostUrgent;
-    // }
-
     void ClearPendingCompletion() {
         foreach (Task task in pendingCompletionTasks) {
             
@@ -133,7 +102,7 @@ public class TaskManager : MonoBehaviour {
 
             // Reset all those agents whose task is set to this one
             for (int i = 0 ; i < assignedAgents.Count ; i += 1) {
-                TaskAgent agent = assignedAgents[i];
+                ITaskAgent agent = assignedAgents[i];
 
                 if (agent.GetTask() != task) continue;
 
@@ -241,11 +210,11 @@ public class TaskManager : MonoBehaviour {
         }
     }
 
-    public void RegisterAgent(TaskAgent agent) {
+    public void RegisterAgent(ITaskAgent agent) {
         unassignedAgents.Add(agent);
     }
 
-    public void DeregisterAgent(TaskAgent agent) {
+    public void DeregisterAgent(ITaskAgent agent) {
         if (unassignedAgents.Remove(agent)) return;
 
         agent.GetTask().DecrementAssignment();
@@ -253,7 +222,7 @@ public class TaskManager : MonoBehaviour {
         assignedAgents.Remove(agent);
     }
 
-    public void UnassignAgent(TaskAgent agent) {
+    public void UnassignAgent(ITaskAgent agent) {
         // Remove from assigned workers list. If it wasn't there, then don't continue with this function
         if (!assignedAgents.Remove(agent)) return;
 

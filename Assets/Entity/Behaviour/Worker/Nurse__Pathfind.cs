@@ -18,6 +18,12 @@ public class Nurse__Pathfind : State {
     [SerializeField]
     AnimationClip anim;
 
+    public ITaskAgent taskAgent;
+
+    public override void OnSetup() {
+        taskAgent = entity.GetComponent<ITaskAgent>();
+    }
+
     public override void OnEntry() {
         animator.Play(anim.name);
 
@@ -41,7 +47,7 @@ public class Nurse__Pathfind : State {
         ReadOnlyCollection<Vector2Int> interior = task.GetExteriorPoints();
 
         // Find a path to one of them, if possible
-        (path, _) = Pathfind.FindPathToOneOf(transform.position, interior.ToList(), p => p, false);
+        (path, _) = Pathfind.FindPathToOneOf(transform.position, interior.ToList(), p => p);
 
         if (path != null) {
             step = 0;

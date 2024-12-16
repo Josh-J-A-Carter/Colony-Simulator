@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
+public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ILiving {
 
     [SerializeField]
     State idle, build, nurse, tidy, forage, ferment;
@@ -11,6 +11,8 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
     WorkerTask task;
     InventoryManager inventory;
+    public HealthComponent HealthComponent { get; private set; }
+    public bool IsDead { get; private set; }
 
     StateMachine stateMachine;
     State currentState => stateMachine.childState;
@@ -21,21 +23,28 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
         return gameObject;
     }
 
+    public HealthComponent GetHealthComponent() {
+        return HealthComponent;
+    }
+
     public void Start() {
         stateMachine = new StateMachine();
         
-        inventory = GetComponent<InventoryManager>();
         animator = GetComponent<Animator>();
+        inventory = GetComponent<InventoryManager>();
+        HealthComponent = GetComponent<HealthComponent>();
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
-            child.GetComponent<State>().Setup(gameObject, this, animator, stateMachine, inventory);
+            child.GetComponent<State>().Setup(gameObject, animator, stateMachine);
         }
 
         TaskManager.Instance.RegisterAgent(this);
     }
 
     public bool OfferTask(Task task) {
+        if (IsDead) return false;
+
         // *Prefer* continuing with the current task
         if (this.task != null) return false;
 
@@ -47,7 +56,6 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
         if (task is WorkerTask workerTask) {
             this.task = workerTask;
-            // if (currentState == Idle) stateMachine.ResetChildState();
             return true;
         } else return false;
     }
@@ -107,6 +115,13 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
     }
 
     public void Update() {
+        if (IsDead) return;
+
+        if (HealthComponent.IsDead) {
+            OnDeath();
+            return;
+        }
+
         if (stateMachine.EmptyState()) DecideState();
 
         stateMachine.Run();
@@ -172,6 +187,15 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
         }
     }
 
+    void OnDeath() {
+        if (task != null) (this as ITaskAgent).CancelAssignment();
+
+        stateMachine.ResetChildState();
+        IsDead = true;
+
+        Debug.Log("ded");
+    }
+
     public String GetName() {
         return nameInfo;
     }
@@ -198,7 +222,7 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
         genericCategory.AddChild(nameProperty);
 
         // Task
-        InfoBranch taskCategory = new InfoBranch("Task information");
+        InfoBranch taskCategory = new InfoBranch("Task Information");
         root.AddChild(taskCategory);
 
         if (task == null) {
@@ -214,6 +238,9 @@ public class WorkerBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
         InfoLeaf stateProperty = new InfoLeaf("State", DeepestChildState() + "");
         taskCategory.AddChild(stateProperty);
     #endif
+
+        // Health
+        root.AddChild(HealthComponent.GetInfoBranch());
 
         // Inventory
         InfoBranch inventoryCategory = inventory.GetInfoTree();

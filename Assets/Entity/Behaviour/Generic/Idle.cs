@@ -7,7 +7,12 @@ public class Idle : State {
     [SerializeField]
     State stall, pathfind;
 
-    Task task => taskAgent?.GetTask();
+    Task task => taskAgent.GetTask();
+
+    public ITaskAgent taskAgent;
+    public override void OnSetup() {
+        taskAgent = entity.GetComponent<ITaskAgent>();
+    }
 
     public override void OnEntry() {
         stateMachine.SetChildState(pathfind);

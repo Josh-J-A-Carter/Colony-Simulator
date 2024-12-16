@@ -12,6 +12,14 @@ public class Nurse : State {
     GetResources getResources;
 
     NurseTask task => (NurseTask) taskAgent.GetTask();
+
+    public ITaskAgent taskAgent;
+    public InventoryManager inventory;
+
+    public override void OnSetup() {
+        taskAgent = entity.GetComponent<ITaskAgent>();
+        inventory = entity.GetComponent<InventoryManager>();
+    }
  
     public override void OnEntry() {
         if (inventory.HasResources(task.GetRequiredResources().ToList())) stateMachine.SetChildState(pathfind);

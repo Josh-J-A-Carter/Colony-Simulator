@@ -46,8 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
+  inventory: {fileID: 0}
 --- !u!1 &994044572249963573
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +94,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &1129543561385129785
 GameObject:
@@ -142,8 +141,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
+  inventory: {fileID: 0}
 --- !u!1 &1384241947847165291
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +189,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &1825384299220627439
 GameObject:
@@ -241,10 +239,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   pathfind: {fileID: 2535051914071567500}
   construct: {fileID: 6110178386457755492}
   getResources: {fileID: 7909127768614599062}
+  inventory: {fileID: 0}
 --- !u!1 &2013521393747470659
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,8 +289,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+  inventory: {fileID: 0}
 --- !u!1 &3428250340048907298
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,10 +340,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   pathfind: {fileID: 8694058030150903680}
   administer: {fileID: 2143918346329946397}
   getResources: {fileID: 1534169623433054590}
+  inventory: {fileID: 0}
 --- !u!1 &3549341296443011130
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,8 +390,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+  inventory: {fileID: 0}
 --- !u!1 &4430628740495362487
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,6 +406,7 @@ GameObject:
   - component: {fileID: 8629193414152886075}
   - component: {fileID: 6462901615722084809}
   - component: {fileID: 8531101069963779304}
+  - component: {fileID: 4870670698135158782}
   m_Layer: 0
   m_Name: Worker Bee
   m_TagString: Untagged
@@ -596,6 +595,21 @@ MonoBehaviour:
     maxQuantity: 1
     minDelaySeconds: 15
     maxDelaySeconds: 30
+--- !u!114 &4870670698135158782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4430628740495362487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c693b80a73b3864dae4e8c1331222df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <MaxHealth>k__BackingField: 30
+  <MaxNutrition>k__BackingField: 30
+  hungerRate: 30
 --- !u!1 &4983428824839234900
 GameObject:
   m_ObjectHideFlags: 0
@@ -642,7 +656,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
 --- !u!1 &5114106759502051238
 GameObject:
@@ -690,7 +703,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &5196552333843051619
 GameObject:
@@ -738,8 +750,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
+  inventory: {fileID: 0}
 --- !u!1 &5656565468674577035
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,8 +798,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+  inventory: {fileID: 0}
 --- !u!1 &6599584522742000199
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,10 +849,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   store: {fileID: 3844709797778594445}
   collect: {fileID: 7408984841124088472}
   getResources: {fileID: 6866715991589670201}
+  inventory: {fileID: 0}
 --- !u!1 &6780914768193794047
 GameObject:
   m_ObjectHideFlags: 0
@@ -887,8 +899,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+  inventory: {fileID: 0}
 --- !u!1 &6786297765104256902
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,7 +947,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
 --- !u!1 &6964715422792913627
 GameObject:
@@ -983,8 +994,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: bfbcd65673e19a44baf2a0bda5ee7308, type: 2}
+  inventory: {fileID: 0}
 --- !u!1 &7068056815192042691
 GameObject:
   m_ObjectHideFlags: 0
@@ -1033,9 +1044,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   Collect: {fileID: 1432687605925642583}
   Store: {fileID: 5766766275175161628}
+  inventory: {fileID: 0}
 --- !u!1 &7823918513654220410
 GameObject:
   m_ObjectHideFlags: 0
@@ -1082,8 +1093,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+  inventory: {fileID: 0}
 --- !u!1 &8122973212392184058
 GameObject:
   m_ObjectHideFlags: 0
@@ -1132,7 +1143,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   stall: {fileID: 4775182616876843219}
   pathfind: {fileID: 3244078409357102006}
 --- !u!1 &8675112791791379743
@@ -1183,7 +1193,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   pathfind: {fileID: 2450127168033958353}
   collect: {fileID: 2208695895270862180}
 --- !u!1 &9083523695122456465
@@ -1232,5 +1241,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+  inventory: {fileID: 0}

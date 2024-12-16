@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public interface TaskAgent {
+public interface ITaskAgent {
 
     /// <summary>
     /// Offer a task to the agent, which they may either accept or decline.
@@ -29,9 +26,4 @@ public interface TaskAgent {
     public abstract void SetTask(Task task);
 
     public abstract Task GetTask();
-
-    public virtual InventoryManager GetInventory() {
-        return null;
-    }
-
 }

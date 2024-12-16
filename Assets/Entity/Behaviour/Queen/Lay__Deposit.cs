@@ -9,6 +9,11 @@ public class Lay__Deposit : State {
     [SerializeField]
     AnimationClip anim;
 
+    public ITaskAgent taskAgent;
+    public override void OnSetup() {
+        taskAgent = entity.GetComponent<ITaskAgent>();
+    }
+
     public override void OnEntry() {
         animator.Play(anim.name);
     }

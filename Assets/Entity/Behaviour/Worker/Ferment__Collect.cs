@@ -20,6 +20,12 @@ public class Ferment__Collect : State {
 
     const int PULSE_RATE = 25;
 
+    public InventoryManager inventory;
+
+    public override void OnSetup() {
+        inventory = entity.GetComponent<InventoryManager>();
+    }
+
     public override void OnEntry() {
         animator.Play(anim.name);
 
@@ -34,7 +40,7 @@ public class Ferment__Collect : State {
         }
 
         // Find a path to one of them, if possible
-        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, storage, tuple => tuple.Item1, true);
+        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, storage, tuple => tuple.Item1, randomise: true);
 
         if (path != null) {
             this.path = path;

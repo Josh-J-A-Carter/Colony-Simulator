@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ItemEntity : MonoBehaviour, IInformative, Entity {
+public class ItemEntity : MonoBehaviour, IInformative, IEntity {
 
     public Item item { get; private set; }
     public uint quantity { get; private set; }

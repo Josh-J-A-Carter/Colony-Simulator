@@ -10,6 +10,14 @@ public class Build__Construct : State {
     [SerializeField]
     AnimationClip anim;
 
+    public ITaskAgent taskAgent;
+    public InventoryManager inventory;
+
+    public override void OnSetup() {
+        taskAgent = entity.GetComponent<ITaskAgent>();
+        inventory = entity.GetComponent<InventoryManager>();
+    }
+
     public override void OnEntry() {
         animator.Play(anim.name);
 

@@ -8,25 +8,25 @@ public abstract class State : MonoBehaviour {
     public StateMachine stateMachine;
     protected State child => stateMachine.childState;
 
-    public TaskAgent taskAgent;
     public Animator animator;
     public GameObject entity;
-    public InventoryManager inventory;
 
-    public void Setup(GameObject entity, TaskAgent taskAgent, Animator animator, StateMachine parent, InventoryManager inventory = null) {
+    public void Setup(GameObject entity, Animator animator, StateMachine parent) {
         stateMachine = new StateMachine(this);
 
         this.entity = entity;
-        this.taskAgent = taskAgent;
         this.animator = animator;
         this.parent = parent;
-        this.inventory = inventory;
 
         // Recursively set up child states, if present
         foreach (Transform child in gameObject.transform) {
-            child.GetComponent<State>().Setup(entity, taskAgent, animator, stateMachine, inventory);
+            child.GetComponent<State>().Setup(entity, animator, stateMachine);
         }
+
+        OnSetup();
     }
+
+    public virtual void OnSetup() {}
 
     public virtual void OnEntry() {}
 

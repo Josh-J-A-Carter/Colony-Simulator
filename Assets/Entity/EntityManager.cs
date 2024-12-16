@@ -104,7 +104,7 @@ public class EntityManager : MonoBehaviour {
         return obj;
     }
 
-    public void DestroyEntity(Entity entity) {
+    public void DestroyEntity(IEntity entity) {
         if (entity is ItemEntity itemEntity) {
             itemEntities.Remove(itemEntity);
         }

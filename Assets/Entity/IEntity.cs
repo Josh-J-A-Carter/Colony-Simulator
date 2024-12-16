@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface Entity {
+public interface IEntity {
     
     // public virtual void OnCreation() {}
 

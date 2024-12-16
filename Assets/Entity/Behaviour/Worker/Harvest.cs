@@ -5,6 +5,11 @@ public class Harvest : State {
     [SerializeField]
     State pathfind, collect;
 
+    public ITaskAgent taskAgent;
+    public override void OnSetup() {
+        taskAgent = entity.GetComponent<ITaskAgent>();
+    }
+
     public override void OnEntry() {
         stateMachine.SetChildState(pathfind);
     }

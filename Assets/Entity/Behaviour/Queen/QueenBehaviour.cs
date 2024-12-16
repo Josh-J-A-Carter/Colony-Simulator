@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QueenBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
+public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity {
     
     [SerializeField]
     State Idle, Lay;
@@ -25,7 +25,7 @@ public class QueenBehaviour : MonoBehaviour, TaskAgent, IInformative, Entity {
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
-            child.GetComponent<State>().Setup(gameObject, this, animator, stateMachine);
+            child.GetComponent<State>().Setup(gameObject, animator, stateMachine);
         }
 
         TaskManager.Instance.RegisterAgent(this);

@@ -9,6 +9,11 @@ public class Lay : State {
     LayTask task => (LayTask) taskAgent.GetTask();
 
     const float MAX_IDLE = 2.0f;
+
+    public ITaskAgent taskAgent;
+    public override void OnSetup() {
+        taskAgent = entity.GetComponent<ITaskAgent>();
+    }
     
     public override void OnEntry() {
         if (task == null) {

@@ -52,7 +52,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         if (this.task != null) return false;
 
         // Check resource requirements. If they aren't met, can't help
-        if (task is IConsumer consumer && !AreResourcesAvailable(consumer.GetRequiredResources())) return false;
+        if (task is IConsumer consumer && !ResourceManager.Instance.Available(inventory, consumer.GetRequiredResources())) return false;
 
         // Make sure pathfinding to the task is possible, if applicable
         if (task is ILocative locative && !IsPathAvailable(locative)) return false;
@@ -69,28 +69,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
             Path path = Pathfind.FindPath(transform.position, destination);
             if (path != null) return true;
         }
-            
-        return false;
-    }
-
-    bool AreResourcesAvailable(IEnumerable<(Resource, uint)> resources) {
-        foreach ((Resource res, uint quantity) in resources) if (IsResourceAvailable(res, quantity) == false) return false;
-
-        return true;
-    }
-
-    bool IsResourceAvailable(Resource resource, uint quantity = 1) {
-        ///
-        /// Note: potential source of bug here - we aren't adding up the subtotals across
-        /// inventory, entities, and storage; e.g. could have 1/3 in each but the test would fail
-        ///
-
-        if (inventory.CountResource(resource) >= quantity) return true;
-
-        if (EntityManager.Instance.FindItemEntities(resource, quantity, out _)) return true;
-
-        if (TileManager.Instance.FindResourceInStorage(resource, quantity, out _)) return true;
-
+        
         return false;
     }
 
@@ -139,7 +118,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         // Low nutrition -> immediate action, if there is food available
         if (HealthComponent.LowNutrition) {
             Resource resource = new Resource(ItemTag.Food);
-            if (IsResourceAvailable(resource)) {
+            if (ResourceManager.Instance.Available(inventory, resource)) {
                 stateMachine.SetChildState(eat);
                 return;
             }
@@ -153,7 +132,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
             List<(Vector2Int, BroodComb, Dictionary<String, object>)> fermentableStorage = TileManager.Instance.QueryTileEntities<BroodComb>(
                 tuple => tuple.Item2.CanStoreFermentable(tuple.Item3)
             );
-            if (IsResourceAvailable(resource) && fermentableStorage.Count > 0) {
+            if (ResourceManager.Instance.Available(inventory, resource) && fermentableStorage.Count > 0) {
                 stateMachine.SetChildState(ferment);
                 return;
             }
@@ -177,9 +156,10 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
                 return;
             }
 
+            // Eat (with less urgency)
             if (HealthComponent.Nutrition <= 3 * HealthComponent.MaxNutrition / 4) {
                 resource = new Resource(ItemTag.Food);
-                if (IsResourceAvailable(resource)) {
+                if (ResourceManager.Instance.Available(inventory, resource)) {
                     stateMachine.SetChildState(eat);
                     return;
                 }
@@ -216,8 +196,6 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         inventory.EmptyInventory();
 
         gravity.Enable();
-
-        Debug.Log("ded");
     }
 
     public String GetName() {

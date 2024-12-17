@@ -1,27 +1,48 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Collections.ObjectModel;
-// using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using UnityEngine;
 
-// public class ResourceManager : MonoBehaviour {
+public class ResourceManager : MonoBehaviour {
 
-//     public static ResourceManager Instance { get; private set; }
+    public static ResourceManager Instance { get; private set; }
 
-//     // Dictionary<Item, uint> itemRecord;
+    // Dictionary<Item, uint> itemRecord;
 
-//     List<ItemEntity> itemEntities;
-//     List<Vector2Int> storageTileEntities;
+    // List<ItemEntity> itemEntities;
+    // List<Vector2Int> storageTileEntities;
 
-//     public void Awake() {
-//         if (Instance != null) {
-//             Destroy(this);
-//             return;
-//         } else Instance = this;
+    public void Awake() {
+        if (Instance != null) {
+            Destroy(this);
+            return;
+        } else Instance = this;
 
-//         // itemRecord = new();
-//         itemEntities = new();
-//         storageTileEntities = new();
-//     }
+        // itemRecord = new();
+        // itemEntities = new();
+        // storageTileEntities = new();
+    }
+
+    public bool Available(InventoryManager inventory, IEnumerable<(Resource, uint)> resources) {
+        foreach ((Resource res, uint quantity) in resources) if (Available(inventory, res, quantity) == false) return false;
+
+        return true;
+    }
+
+    public bool Available(InventoryManager inventory, Resource resource, uint quantity = 1) {
+        ///
+        /// Note: potential source of bug here - we aren't adding up the subtotals across
+        /// inventory, entities, and storage; e.g. could have 1/3 in each but the test would fail
+        ///
+
+        if (inventory.CountResource(resource) >= quantity) return true;
+
+        if (EntityManager.Instance.FindItemEntities(resource, quantity, out _)) return true;
+
+        if (TileManager.Instance.FindResourceInStorage(resource, quantity, out _)) return true;
+
+        return false;
+    }
 
 //     /// <summary>
 //     /// In the nest, are there at least <c>quantity</c> units of <c>item</c>, as item entities or in storage?
@@ -107,4 +128,4 @@
 
 //         // foreach ((Item item, uint quantity) in inventoryContents) UpdateCount(item, (int) -quantity);
 //     }
-// }
+}

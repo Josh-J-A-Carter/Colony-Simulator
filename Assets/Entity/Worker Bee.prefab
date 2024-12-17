@@ -704,7 +704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 026cbdc21ed218142bc438d5343f0a32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCapacity: 20
+  maxCapacity: 10
   passivelyProducedItems:
   - item: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
     minQuantity: 0
@@ -714,8 +714,8 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: e51afdb714c6eb346b5ad286646c97ca, type: 2}
     minQuantity: 0
     maxQuantity: 1
-    minDelaySeconds: 15
-    maxDelaySeconds: 30
+    minDelaySeconds: 30
+    maxDelaySeconds: 45
 --- !u!114 &4870670698135158782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,9 +728,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c693b80a73b3864dae4e8c1331222df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <MaxHealth>k__BackingField: 30
-  <MaxNutrition>k__BackingField: 30
-  hungerRate: 30
+  <MaxHealth>k__BackingField: 2
+  <MaxNutrition>k__BackingField: 20
+  hungerRate: 60
 --- !u!114 &-6640970176211023583
 MonoBehaviour:
   m_ObjectHideFlags: 0

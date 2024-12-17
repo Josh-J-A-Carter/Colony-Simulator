@@ -100,6 +100,9 @@ public class BuildTask : WorkerTask, ILocative, IConsumer {
     }
 
     public (InventoryManager, List<(Item, uint)>) Deallocate() {
+        allocation = null;
+        allocator = null;
+        hasAllocation = false;
         return (allocator, allocation);
     }
 

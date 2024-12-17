@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Idle : State {
@@ -7,7 +5,7 @@ public class Idle : State {
     [SerializeField]
     State stall, pathfind;
 
-    Task task => taskAgent.GetTask();
+    Task task => taskAgent?.GetTask();
 
     ITaskAgent taskAgent;
     public override void OnSetup() {

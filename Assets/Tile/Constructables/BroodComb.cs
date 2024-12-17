@@ -344,11 +344,7 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
     }
 
     public List<(Item, uint)> CollectFermentables(Vector2Int position, Dictionary<String, object> data) {
-    #if UNITY_EDITOR
-        if (FermentablesReady(data) == false) throw new Exception("No fermentables are ready to collect");
-    #else
         if (FermentablesReady(data) == false) return null;
-    #endif
 
         DrawVariant(position, GetTileAt);
         data[CURRENT_STORAGE_TYPE] = StorageType.Empty;

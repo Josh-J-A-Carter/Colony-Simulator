@@ -42,8 +42,8 @@ public class EntityManager : MonoBehaviour {
     }
 
     public void Start() {
-        // InstantiateWorker(new Vector2Int(2, 2));
-        // InstantiateWorker(new Vector2Int(3, 2));
+        InstantiateWorker(new Vector2Int(2, 2));
+        InstantiateWorker(new Vector2Int(3, 2));
         InstantiateWorker(new Vector2Int(-10, 4));
         InstantiateQueen(new Vector2Int(10, 10));
     }

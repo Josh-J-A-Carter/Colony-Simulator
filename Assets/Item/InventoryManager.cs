@@ -13,7 +13,9 @@ public class InventoryManager : MonoBehaviour {
     [SerializeField]
     List<PassiveProduce> passivelyProducedItems;
 
-    const int FIXED_FRAMES_PER_SECOND = 50;    
+    bool passiveProductionEnabled = true;
+
+    const int FIXED_FRAMES_PER_SECOND = 50;
 
     int step = 0;
 
@@ -26,6 +28,8 @@ public class InventoryManager : MonoBehaviour {
     }
 
     public void FixedUpdate() {
+        if (passiveProductionEnabled == false) return;
+
         step += 1;
 
         if (step >= FIXED_FRAMES_PER_SECOND) {
@@ -132,6 +136,14 @@ public class InventoryManager : MonoBehaviour {
 
             EntityManager.Instance.InstantiateItemEntity(destination, item, quantity);
         }
+    }
+
+    public void EnablePassiveProduction() {
+        passiveProductionEnabled = true;
+    }
+
+    public void DisablePassiveProduction() {
+        passiveProductionEnabled = false;
     }
 }
 

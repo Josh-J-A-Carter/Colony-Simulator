@@ -5,15 +5,14 @@ public class Eat : State {
     [SerializeField]
     GetResources getResources;
 
-    InventoryManager inventory;
-    HealthComponent health;
+    [SerializeField]
+    State consume;
 
+    InventoryManager inventory;
     List<(Resource, uint)> resourceRequirements;
 
     public override void OnSetup() {
         inventory = entity.GetComponent<InventoryManager>();
-        health = entity.GetComponent<HealthComponent>();
-
         resourceRequirements = new() { ( new(ItemTag.Food), 1) };
     }
 
@@ -21,9 +20,14 @@ public class Eat : State {
         DecideState();
     }
 
-    public override void OnChildExit(State _, bool success) {
+    public override void OnChildExit(State exitingChild, bool success) {
         if (success == false) {
             CompleteState(false);
+            return;
+        }
+
+        if (exitingChild == consume) {
+            CompleteState();
             return;
         }
 
@@ -33,16 +37,7 @@ public class Eat : State {
 
     void DecideState() {
         if (inventory.HasResources(resourceRequirements)) {
-            List<(Item, uint)> eaten = inventory.TakeResources(resourceRequirements);
-
-        #if UNITY_EDITOR
-            Debug.Assert(eaten.Count == 1);
-        #endif
-
-            (Item item, uint quantity) = eaten[0];
-            health.Feed(item, quantity);
-
-            CompleteState();
+            stateMachine.SetChildState(consume);
         } else {
             getResources.SetResourceRequirements(resourceRequirements.AsReadOnly());
             stateMachine.SetChildState(getResources);

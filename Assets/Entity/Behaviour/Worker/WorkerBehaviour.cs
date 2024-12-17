@@ -6,13 +6,15 @@ using UnityEngine;
 public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ILiving {
 
     [SerializeField]
-    State idle, build, nurse, tidy, forage, ferment, eat;
+    State idle, build, nurse, tidy, forage, ferment, eat, die;
     Animator animator;
 
     WorkerTask task;
     InventoryManager inventory;
     public HealthComponent HealthComponent { get; private set; }
     public bool IsDead { get; private set; }
+
+    GravityComponent gravity;
 
     StateMachine stateMachine;
     State currentState => stateMachine.childState;
@@ -33,6 +35,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         animator = GetComponent<Animator>();
         inventory = GetComponent<InventoryManager>();
         HealthComponent = GetComponent<HealthComponent>();
+        gravity = GetComponent<GravityComponent>();
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
@@ -207,8 +210,12 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     void OnDeath() {
         if (task != null) (this as ITaskAgent).CancelAssignment();
 
-        stateMachine.ResetChildState();
+        stateMachine.SetChildState(die);
         IsDead = true;
+
+        inventory.EmptyInventory();
+
+        gravity.Enable();
 
         Debug.Log("ded");
     }

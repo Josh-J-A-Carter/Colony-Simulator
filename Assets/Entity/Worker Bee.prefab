@@ -476,6 +476,7 @@ GameObject:
   - component: {fileID: 6462901615722084809}
   - component: {fileID: 8531101069963779304}
   - component: {fileID: 4870670698135158782}
+  - component: {fileID: -6640970176211023583}
   m_Layer: 0
   m_Name: Worker Bee
   m_TagString: Untagged
@@ -503,6 +504,7 @@ Transform:
   - {fileID: 1647731349896505615}
   - {fileID: 2883539734441149644}
   - {fileID: 2310302943278053981}
+  - {fileID: 9078308149336151787}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &333776470971658172
@@ -554,7 +556,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &5114259265025303363
@@ -642,6 +644,7 @@ MonoBehaviour:
   forage: {fileID: 5747646048528248155}
   ferment: {fileID: 7443480746491101835}
   eat: {fileID: 7657159451167296912}
+  die: {fileID: 4157886100282825499}
 --- !u!114 &8531101069963779304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -681,6 +684,18 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 30
   <MaxNutrition>k__BackingField: 30
   hungerRate: 30
+--- !u!114 &-6640970176211023583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4430628740495362487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc7a5aaa623d8144aa48b0948128a498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4983428824839234900
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,6 +876,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
+--- !u!1 &6412665205753418779
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9078308149336151787}
+  - component: {fileID: 4157886100282825499}
+  m_Layer: 0
+  m_Name: Die
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9078308149336151787
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6412665205753418779}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5405411461827431291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4157886100282825499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6412665205753418779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c198bf248b54d2040a2fc20dbcfbb5a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 7400000, guid: 4b9c668a5d436e44487531bd6bda823b, type: 2}
 --- !u!1 &6599584522742000199
 GameObject:
   m_ObjectHideFlags: 0

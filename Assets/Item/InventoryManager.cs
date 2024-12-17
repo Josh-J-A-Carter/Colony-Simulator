@@ -119,6 +119,20 @@ public class InventoryManager : MonoBehaviour {
     public InfoBranch GetInfoTree() {
         return inventory.GetInfoTree();
     }
+
+    public void EmptyInventory() {
+        foreach ((Item item, uint quantity) in inventory.GetContents()) {
+            int signX = (int) Math.Pow(-1, Random.Range(0, 2));
+            float displacementX = signX * Random.Range(-0.5f, 0.5f);
+
+            int signY = (int) Math.Pow(-1, Random.Range(0, 2));
+            float displacementY = signY * Random.Range(0f, 1f);
+            
+            Vector2 destination = ((Vector2) transform.position) + new Vector2(displacementX, displacementY);
+
+            EntityManager.Instance.InstantiateItemEntity(destination, item, quantity);
+        }
+    }
 }
 
 [Serializable]

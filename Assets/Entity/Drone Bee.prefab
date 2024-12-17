@@ -44,9 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52a97020dedaf1d498046b8943fe9fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 0e2a02db7e521dc4e97611e6599081e6, type: 2}
 --- !u!1 &2650003497700141771
 GameObject:
@@ -92,9 +89,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ee8a83b5016dea438a201f5e0144f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
-  inventory: {fileID: 0}
   anim: {fileID: 7400000, guid: 8d38619686877a043a40a02d4ecacb38, type: 2}
 --- !u!1 &7181809681829478707
 GameObject:
@@ -173,12 +167,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0813a4d2f31c2c848a5b2e9dab7af3d3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3733a81ad184f034f877e738b555125a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -221,7 +215,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1, y: 1}
-    newSize: {x: 0.16, y: 0.16}
+    newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -309,8 +303,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e86af0a7a80e9c46b2b3413c80576ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  entity: {fileID: 0}
-  inventory: {fileID: 0}
   stall: {fileID: 1501111766138377873}
   pathfind: {fileID: 29767822843929400}

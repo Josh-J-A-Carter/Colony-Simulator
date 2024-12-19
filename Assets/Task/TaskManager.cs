@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TaskManager : MonoBehaviour {
 
-    const int ASSIGNMENT_RATE = 50;
+    const int ASSIGNMENT_RATE = 25;
     public static TaskManager Instance { get; private set; }
 
 
@@ -214,6 +214,8 @@ public class TaskManager : MonoBehaviour {
             inventory.Give(allocation);
             return;
         }
+
+        if (allocation == null) return;
 
         Vector2Int pos = consumer.GetDefaultDeallocationPosition();
         foreach ((Item item, uint quantity) in allocation) {

@@ -48,6 +48,10 @@ public class ForageTask : WorkerTask, ILocative, IReward {
         return startPos;
     }
 
+    public bool CanCoexist() {
+        return false;
+    }
+
     public List<Item> GetAvailableRewardItems() {
         Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(startPos);
         return forageStructure.AvailableProductionItemTypes(data);

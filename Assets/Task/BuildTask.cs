@@ -84,6 +84,10 @@ public class BuildTask : WorkerTask, ILocative, IConsumer {
         return startPos;
     }
 
+    public bool CanCoexist() {
+        return false;
+    }
+
 
     public ReadOnlyCollection<(Resource, uint)> GetRequiredResources() {
         return constructable.GetRequiredResources();

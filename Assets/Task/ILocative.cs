@@ -11,4 +11,5 @@ public interface ILocative {
 
     public abstract Vector2Int GetStartPosition();
 
+    public bool CanCoexist();
 }

@@ -19,6 +19,8 @@ public class LocativeTaskStore {
 
             if (!exists) continue;
 
+            if (possibleConflict.CanCoexist()) continue;
+
             conflictingTasks.Add(possibleConflict as Task);
         }
 

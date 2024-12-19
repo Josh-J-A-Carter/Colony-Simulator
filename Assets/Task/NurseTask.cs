@@ -69,6 +69,10 @@ public class NurseTask : WorkerTask, ILocative, IConsumer {
         return startPos;
     }
 
+    public bool CanCoexist() {
+        return true;
+    }
+
 
     public ReadOnlyCollection<(Resource, uint)> GetRequiredResources() {
         return requiredResources;

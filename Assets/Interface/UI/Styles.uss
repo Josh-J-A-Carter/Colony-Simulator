@@ -156,8 +156,7 @@
     flex-grow: 1;
     flex-direction: row;
     align-items: stretch;
-    height: auto;
-    max-height: 160px;
+    max-height: 90px;
     align-self: auto;
     padding-top: 4px;
     padding-right: 4px;
@@ -165,7 +164,25 @@
     padding-left: 4px;
 }
 
-.rule-display Label {
+.rule-display__preview {
+    width: 80px;
+    height: 80px;
+    background-color: rgb(93, 93, 93);
+}
+
+.rule-display__label {
+    background-color: rgb(93, 93, 93);
     color: white;
+    font-size: 24px;
+    width: 500px;
+    height: 80px;
+    -unity-text-align: middle-center;
+}
+
+.rule-display__operation {
+    background-color: rgb(93, 93, 93);
+    color: white;
+    width: 140px;
+    height: 80px;
     font-size: 24px;
 }

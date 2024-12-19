@@ -20,9 +20,11 @@ public class RuleDisplay : VisualElement {
 
         // Visual & textual preview of ForageRule.Type
         Button preview = new();
+        preview.AddToClassList("rule-display__preview");
         Add(preview);
 
         Label label = new($"Foraging for {name}");
+        label.AddToClassList("rule-display__label");
         Add(label);
 
         preview.style.backgroundImage = new StyleBackground(sprite);
@@ -45,6 +47,7 @@ public class RuleDisplay : VisualElement {
 
         // Confirmation operation (i.e. Add or Remove)
         Button confirmOperation = new();
+        confirmOperation.AddToClassList("rule-display__operation");
         Add(confirmOperation);
 
         confirmOperation.text = confirmationText;

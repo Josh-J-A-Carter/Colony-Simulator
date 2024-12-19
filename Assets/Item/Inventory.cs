@@ -237,7 +237,7 @@ public class Inventory {
                 // Add the remainder of this item
                 itemsRemaining = new List<(Item, uint)>() { (item, remaining) };
                 // Add rest of the list
-                for (int i = index + 1 ; index < itemsIn.Count ; i += 1) itemsRemaining.Add(itemsIn[i]);
+                for (int i = index + 1 ; i < itemsIn.Count ; i += 1) itemsRemaining.Add(itemsIn[i]);
                 return false;
             }
         }

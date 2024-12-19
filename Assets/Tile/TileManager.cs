@@ -29,7 +29,7 @@ public class TileManager : MonoBehaviour {
     TileBase dirt, grass;
 
     [SerializeField]
-    Constructable flower;
+    Constructable flower, flower2;
 
     TileEntityStore tileEntityStore;
 
@@ -60,8 +60,10 @@ public class TileManager : MonoBehaviour {
         worldLoader.LoadOrGenerateWorld(worldMap, obstacles, MIN_X, MIN_Y, WORLD_WIDTH, WORLD_HEIGHT, dirt, grass);
 
 
-        Vector2Int loc = new Vector2Int(0, 1);
-        Construct(loc, flower);
+        Construct(new Vector2Int(0, 1), flower);
+
+
+        Construct(new Vector2Int(10, 1), flower2);
     }
 
     public void FixedUpdate() {

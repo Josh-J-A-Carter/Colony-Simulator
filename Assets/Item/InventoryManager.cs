@@ -86,6 +86,8 @@ public class InventoryManager : MonoBehaviour {
 
     public void Give(List<(Item, uint)> items) {
 
+        if (items == null) return;
+
         List<(Item, uint)> remaining;
         if (inventory.TryAdd(items, out remaining)) return;
 

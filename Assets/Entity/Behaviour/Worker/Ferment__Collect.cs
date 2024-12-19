@@ -79,8 +79,7 @@ public class Ferment__Collect : State {
         if (step == stepsMax) {
             Vector2 pos = entity.transform.position;
             Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
-            List<(Item item, uint)> fermentables = targetType.CollectFermentables(gridPos, targetData);
-            
+            List<(Item item, uint)> fermentables = targetType.CollectFermentables(gridPos, targetData);            
             inventory.Give(fermentables);
 
             CompleteState();

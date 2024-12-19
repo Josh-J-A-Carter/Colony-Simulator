@@ -957,6 +957,7 @@ MonoBehaviour:
   dirt: {fileID: 11400000, guid: 9fedad7ae1d80b04480107e70c1807b8, type: 2}
   grass: {fileID: 11400000, guid: 0630222ea713a194ebe50eea7acfac51, type: 2}
   flower: {fileID: 11400000, guid: 451bf6435a8101c4c8cf6de14df6bcbe, type: 2}
+  flower2: {fileID: 11400000, guid: c3e39fa19db140341aeda3f5e1a49e60, type: 2}
 --- !u!1 &1077591157
 GameObject:
   m_ObjectHideFlags: 0
@@ -1164,8 +1165,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nectar: {fileID: 11400000, guid: 73eaea258b6679441b5ee8b389bbb70f, type: 2}
-  pollen: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
-  sap: {fileID: 11400000, guid: acd8b364247c3594985223d5ef8d0125, type: 2}
+  pollen: {fileID: 11400000, guid: 51e2f2635efe6c546a43ddf28685bafd, type: 2}
+  sap: {fileID: 11400000, guid: bc34a4d6ddcb84b4cb2de5e5308859c6, type: 2}
 --- !u!1 &1470879822
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,11 +14,15 @@ public class InterfaceManager : MonoBehaviour {
 
     VisualElement infoContainerRoot, infoContainerContentRoot;
 
+
+    VisualElement forageContainerRoot, forageNewContainerRoot, forageOldContainerRoot;
+    Button forageMenuQuit;
+
     List<Button> toolButtons;
 
     InputManager tm => InputManager.Instance;
 
-    void Awake() {
+    public void Awake() {
         // Instantiate singleton
         if (Instance != null) {
             Destroy(this);
@@ -48,6 +52,12 @@ public class InterfaceManager : MonoBehaviour {
         // Configurable container
         infoContainerRoot = containerRoot.Q(name: "info-container-root");
         infoContainerContentRoot = containerRoot.Q(name: "info-container-content-root");
+
+        // Forage menu
+        forageContainerRoot = containerRoot.Q(name: "forage-menu");
+        forageNewContainerRoot = containerRoot.Q(name: "new-rule-contents");
+        forageOldContainerRoot = containerRoot.Q(name: "old-rule-contents");
+        forageMenuQuit = containerRoot.Q(name: "forage-menu-quit") as Button;
     }
 
 
@@ -122,11 +132,37 @@ public class InterfaceManager : MonoBehaviour {
         containerRoot.Q(name: "destroy-tool").AddToClassList("selected");
     }
 
-        void ClickedForageTool(ClickEvent evt) {
+    void ClickedForageTool(ClickEvent evt) {
         tm.SetTool(ToolType.Forage);
 
         DeselectAllButtons();
 
         containerRoot.Q(name: "forage-tool").AddToClassList("selected");
+    }
+
+
+    public void ShowForageMenu() {
+        forageContainerRoot.style.visibility = Visibility.Visible;
+    }
+
+    public void HideForageMenu() {
+        forageContainerRoot.style.visibility = Visibility.Hidden;
+    }
+
+    public void SetForageQuitCallback(EventCallback<ClickEvent> callback) {
+        forageMenuQuit.RegisterCallback(callback);
+    }
+
+    public void AddOldForageContent(RuleDisplay display) {
+        forageOldContainerRoot.Add(display);
+    }
+
+    public void ResetOldForageContent() {
+        forageOldContainerRoot.Clear();
+    }
+
+    public void SetNewForageContent(RuleDisplay display) {
+        forageNewContainerRoot.Clear();
+        forageNewContainerRoot.Add(display);
     }
 }

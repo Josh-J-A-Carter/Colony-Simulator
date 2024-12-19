@@ -34,6 +34,8 @@ public class TaskManager : MonoBehaviour {
         pendingCompletionTasks = new();
         pendingAdditionTasks = new();
 
+        taskRules = new();
+
         tasks = new();
         assignedAgents = new();
         unassignedAgents = new();

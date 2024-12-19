@@ -1,26 +1,96 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ForageTool : Tool {
-  
-    public override void Run(HoverData hoverData) {
-        if (Input.GetKeyDown(KeyCode.Mouse0)) UpdateSelection(hoverData);
+
+    [SerializeField]
+    Item nectar, pollen, sap;
+
+    List<(Sprite, String, int)> options;
+
+    ForageRule newRule;
+
+    List<ForageRule> rules;
+
+    public void Awake() {
+        options = new() {
+            (nectar.GetPreviewSprite(), nectar.GetName(), (int) ForageRule.Type.Nectar),
+            (pollen.GetPreviewSprite(), pollen.GetName(), (int) ForageRule.Type.Pollen),
+            (sap.GetPreviewSprite(), sap.GetName(), (int) ForageRule.Type.Sap)
+        };
+
+        rules = new();
+
+        InterfaceManager.Instance.SetForageQuitCallback(_ => parent.SetTool(ToolType.Select));
     }
 
-    void UpdateSelection(HoverData data) {
-        
-        HoverType type = data.GetHoverType();
+    void AddNewRule() {
+        if (newRule != null) {
+            rules.Add(newRule);
+            TaskManager.Instance.RegisterRule(newRule);
 
-        // Interacting with UI should not remove the selection
-        if (type != HoverType.Tile) return;
-
-        Vector2Int pos = data.GetGridPosition();
-
-        // Careful - there may not even be a tile here
-        (_, Constructable constructable) = TileManager.Instance.GetConstructableAt(pos);
-        if (constructable is IProducer producer) {
-            TaskManager.Instance.CreateTask(new ForageTask(pos, producer));
-            Debug.Log("Task created :)");
+            InterfaceManager.Instance.AddOldForageContent(
+                new (options,
+                    (int) newRule.type, 
+                    (input) => newRule.SetType((ForageRule.Type) input),
+                    "Remove",
+                    () => RemoveRule(newRule)
+                )
+            );
         }
 
+        SetNewRule();
     }
+
+    void SetNewRule() {
+        newRule = new(ForageRule.Type.Nectar, new(), parent.GetPriority());
+
+        InterfaceManager.Instance.SetNewForageContent(
+            new (options,
+                (int) newRule.type,
+                (input) => newRule.SetType((ForageRule.Type) input),
+                "Add",
+                () => AddNewRule()
+            )
+        );
+
+    }
+
+    void RemoveRule(ForageRule rule) {
+        rules.Remove(rule);
+        TaskManager.Instance.DeregisterRule(rule);
+
+        RefreshOldRuleDisplay();
+    }
+
+    void RefreshOldRuleDisplay() {
+        InterfaceManager.Instance.ResetOldForageContent();
+        
+        foreach (ForageRule rule in rules) {
+            InterfaceManager.Instance.AddOldForageContent(
+                new (options,
+                    (int) rule.type,
+                    (input) => rule.SetType((ForageRule.Type) input),
+                    "Remove",
+                    () => RemoveRule(rule)
+                )
+            );
+        }
+    }
+
+    public override void OnEquip() {
+        SetNewRule();
+
+        RefreshOldRuleDisplay();
+
+        InterfaceManager.Instance.ShowForageMenu();
+    }
+
+    public override void OnDequip() {
+        InterfaceManager.Instance.HideForageMenu();
+    }
+
 }

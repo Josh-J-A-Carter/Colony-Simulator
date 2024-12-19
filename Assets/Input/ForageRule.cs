@@ -10,7 +10,7 @@ public class ForageRule : TaskRule {
         Sap
     }
 
-    Type type;
+    public Type type { get; protected set; }
     ItemTag mainTag;
 
     List<ItemTag> tags;

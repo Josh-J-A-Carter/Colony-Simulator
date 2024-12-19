@@ -17,6 +17,8 @@ public class InputManager : MonoBehaviour {
     // Tool selections that should be persistent, even across tool changes
     Constructable currentConstructable;
 
+    TaskPriority currentPriority;
+
     public void Awake() {
         // Instantiate singleton
         if (Instance != null) {
@@ -109,6 +111,14 @@ public class InputManager : MonoBehaviour {
 
     public void SetConstructable(Constructable constructable) {
         currentConstructable = constructable;
+    }
+
+    public TaskPriority GetPriority() {
+        return currentPriority;
+    }
+
+    public void SetPriority(TaskPriority priority) {
+        currentPriority = priority;
     }
 }
 

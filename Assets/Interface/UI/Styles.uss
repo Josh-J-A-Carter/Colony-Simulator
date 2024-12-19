@@ -151,3 +151,21 @@
 .checkboxlabel__label {
     margin-left: 14px;
 }
+
+.rule-display {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: stretch;
+    height: auto;
+    max-height: 160px;
+    align-self: auto;
+    padding-top: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+}
+
+.rule-display Label {
+    color: white;
+    font-size: 24px;
+}

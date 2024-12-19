@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public abstract class TaskRule {
 
-    protected TaskPriority priority;
+    public TaskPriority priority { get; protected set; }
 
     ///<summary> Tell the <c>TaskRule</c> to check for any updates, and create or destroy tasks as needed. </summary>
     public abstract void Refresh();

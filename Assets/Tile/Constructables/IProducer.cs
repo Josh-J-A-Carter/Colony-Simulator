@@ -5,14 +5,9 @@ using System.Collections.ObjectModel;
 public interface IProducer {
 
     /// <summary>
-    /// Is this instance of IProducer ready to have <c>item</c> harvested?
+    /// What item types are currently available?
     /// </summary>
-    public bool IsReady(Dictionary<String, object> instance, Item item);
-
-    /// <summary>
-    /// Does this instance of IProducer have anything ready to harvest?
-    /// </summary>
-    public bool IsReady(Dictionary<String, object> instance);
+    public List<Item> AvailableProductionItemTypes(Dictionary<String, object> instance);
 
     /// <summary>
     /// What items can this IProducer create?

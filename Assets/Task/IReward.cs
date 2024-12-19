@@ -1,7 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
 
 public interface IReward {
 
-    public List<(Item, uint)> GetRewardItems();
+    public List<(Item, uint)> CollectRewardItems();
+
+    public List<Item> GetAvailableRewardItems();
 }

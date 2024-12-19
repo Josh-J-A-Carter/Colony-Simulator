@@ -48,7 +48,12 @@ public class ForageTask : WorkerTask, ILocative, IReward {
         return startPos;
     }
 
-    public List<(Item, uint)> GetRewardItems() {
+    public List<Item> GetAvailableRewardItems() {
+        Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(startPos);
+        return forageStructure.AvailableProductionItemTypes(data);
+    }
+
+    public List<(Item, uint)> CollectRewardItems() {
         if (allocatedReward) return new();
 
         allocatedReward = true;

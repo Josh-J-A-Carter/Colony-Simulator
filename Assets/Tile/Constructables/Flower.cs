@@ -140,24 +140,13 @@ public class Flower : TileEntity, IProducer {
         return (nectar, quantity);
     }
 
-    public bool IsReady(Dictionary<string, object> instance, Item item) {
-        if (item == nectar) {
-            return (bool) instance[NECTAR__IS_READY];
-        }
+    public List<Item> AvailableProductionItemTypes(Dictionary<String, object> instance) {
+        List<Item> available = new();
 
-        else if (item == pollen) {
-            return (bool) instance[POLLEN__IS_READY];
-        }
+        if (isNectarProducer && (bool) instance[NECTAR__IS_READY]) available.Add(nectar);
+        else if (isPollenProducer && (bool) instance[POLLEN__IS_READY]) available.Add(pollen);
 
-        else {
-            throw new Exception($"This Flower does not produce {item}");
-        }
-    }
-
-    public bool IsReady(Dictionary<string, object> instance) {
-        foreach (Item item in ProductionItemTypes()) if (IsReady(instance, item)) return true;
-
-        return false;
+        return available;
     }
 
     public List<(Item, uint)> CollectAll(Dictionary<string, object> instance) {

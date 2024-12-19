@@ -15,6 +15,8 @@ public class TaskManager : MonoBehaviour {
     List<Task> pendingCompletionTasks;
     List<Task> pendingAdditionTasks;
 
+    List<TaskRule> taskRules;
+
     List<Task> tasks;
     List<ITaskAgent> assignedAgents, unassignedAgents;
 
@@ -39,6 +41,9 @@ public class TaskManager : MonoBehaviour {
 
     public void FixedUpdate() {
 
+        // Refresh task rules; give them an opportunity to cancel tasks, create new ones, etc.
+        RefreshTaskRules();
+
         // Deal with the queue of tasks that have been marked as complete
         ClearPendingCompletion();
 
@@ -57,6 +62,10 @@ public class TaskManager : MonoBehaviour {
             tick = 0;
             OccupyUnassignedAgents();
         }
+    }
+
+    void RefreshTaskRules() {
+        foreach (TaskRule rule in taskRules) rule.Refresh();
     }
 
     void OccupyUnassignedAgents() {
@@ -159,7 +168,7 @@ public class TaskManager : MonoBehaviour {
         return true;
     }
 
-    void CancelTask(Task task) {
+    public void CancelTask(Task task) {
         
         // Tell the task that it has been cancelled
         task.OnCancellation();
@@ -229,6 +238,25 @@ public class TaskManager : MonoBehaviour {
         agent.GetTask().DecrementAssignment();
         agent.SetTask(null);
         unassignedAgents.Add(agent);
+    }
+
+    /// <summary>
+    /// Register a new <c>TaskRule</c> - this is assumed to not be a recursive process, i.e. rules cannot create other rules.
+    /// Otherwise, this operation may lead to concurrent modification exceptions.
+    /// </summary>
+    public void RegisterRule(TaskRule rule) {
+        if (taskRules.Contains(rule)) return;
+
+        taskRules.Add(rule);
+    }
+
+    /// <summary>
+    /// Deregister a new <c>TaskRule</c>. We assume that the instance is NOT calling this itself, otherwise it could
+    /// create a concurrent modification exception.
+    /// </summary>
+    public void DeregisterRule(TaskRule rule) {
+        taskRules.Remove(rule);
+        rule.OnDestruction();
     }
 
     public void CreateTask(Task task) {

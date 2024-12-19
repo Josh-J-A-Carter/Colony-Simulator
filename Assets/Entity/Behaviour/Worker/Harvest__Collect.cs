@@ -24,7 +24,7 @@ public class Harvest__Collect : State {
 
         task.IncrementProgress();
         if (task.IsComplete()) {
-            inventory.Give(task.GetRewardItems());
+            inventory.Give(task.CollectRewardItems());
             CompleteState();
         }
     }

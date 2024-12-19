@@ -172,11 +172,11 @@ public class TaskManager : MonoBehaviour {
 
     public void CancelTask(Task task) {
         
+        // Remove the task from the list
+        if (tasks.Remove(task) == false) return;
+        
         // Tell the task that it has been cancelled
         task.OnCancellation();
-
-        // Remove the task from the list
-        tasks.Remove(task);
 
         // If applicable, de-allocate the task's resources (i.e. items needed for its completion)
         if (task is IConsumer consumer) Deallocate(consumer);

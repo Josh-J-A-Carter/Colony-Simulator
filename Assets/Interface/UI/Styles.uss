@@ -182,7 +182,6 @@
     background-color: rgb(73, 73, 73);
 }
 
-
 .rule-display__label {
     background-color: rgb(93, 93, 93);
     color: white;
@@ -220,7 +219,7 @@
     background-color: rgb(93, 93, 93);
     color: white;
     font-size: 24px;
-    width: 240px;
+    width: 280px;
     max-height: 80px;
     height: 80px;
     -unity-text-align: middle-center;

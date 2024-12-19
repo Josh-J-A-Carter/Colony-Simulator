@@ -82,6 +82,7 @@ public class ForageRule : TaskRule {
             ForageTask task = childTasks[index];
             if (task.priority != priority || !SatisfyTags(task.GetAvailableRewardItems())) {
                 TaskManager.Instance.CancelTask(task);
+                childTasks.RemoveAt(index);
                 index -= 1;
             }
         }

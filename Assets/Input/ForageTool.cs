@@ -8,18 +8,25 @@ public class ForageTool : Tool {
     [SerializeField]
     Item nectar, pollen, sap;
 
-    List<(Sprite, String, int)> options;
+    List<(Sprite, String, int)> typeOptions;
+
+    List<(String, TaskPriority)> priorityOptions;
 
     ForageRule newRule;
 
     List<ForageRule> rules;
 
     public void Awake() {
-        options = new() {
+        typeOptions = new() {
             (nectar.GetPreviewSprite(), nectar.GetName(), (int) ForageRule.Type.Nectar),
             (pollen.GetPreviewSprite(), pollen.GetName(), (int) ForageRule.Type.Pollen),
             (sap.GetPreviewSprite(), sap.GetName(), (int) ForageRule.Type.Sap)
         };
+
+        priorityOptions = new();
+        foreach (TaskPriority priority in Enum.GetValues(typeof(TaskPriority))) {
+            priorityOptions.Add((Enum.GetName(typeof(TaskPriority), priority), priority));
+        }
 
         rules = new();
 
@@ -33,11 +40,9 @@ public class ForageTool : Tool {
             TaskManager.Instance.RegisterRule(thisRule);
 
             InterfaceManager.Instance.AddOldForageContent(
-                new (options,
-                    (int) thisRule.type, 
-                    (input) => thisRule.SetType((ForageRule.Type) input),
-                    "Remove",
-                    () => RemoveRule(thisRule)
+                new (typeOptions, (int) thisRule.type, (input) => thisRule.SetType((ForageRule.Type) input),
+                    priorityOptions, (int) thisRule.priority, (priority) => thisRule.SetPriority(priority),
+                    "Remove", () => RemoveRule(thisRule)
                 )
             );
         }
@@ -49,11 +54,9 @@ public class ForageTool : Tool {
         newRule = new(ForageRule.Type.Nectar, new(), parent.GetPriority());
 
         InterfaceManager.Instance.SetNewForageContent(
-            new (options,
-                (int) newRule.type,
-                (input) => newRule.SetType((ForageRule.Type) input),
-                "Add",
-                () => AddNewRule()
+            new (typeOptions, (int) newRule.type, (input) => newRule.SetType((ForageRule.Type) input),
+                priorityOptions, (int) newRule.priority, (priority) => newRule.SetPriority(priority),
+                "Add", () => AddNewRule()
             )
         );
     }
@@ -70,11 +73,9 @@ public class ForageTool : Tool {
         
         foreach (ForageRule rule in rules) {
             InterfaceManager.Instance.AddOldForageContent(
-                new (options,
-                    (int) rule.type,
-                    (input) => rule.SetType((ForageRule.Type) input),
-                    "Remove",
-                    () => RemoveRule(rule)
+                new (typeOptions, (int) rule.type, (input) => rule.SetType((ForageRule.Type) input),
+                    priorityOptions, (int) rule.priority, (priority) => rule.SetPriority(priority),
+                    "Remove", () => RemoveRule(rule)
                 )
             );
         }

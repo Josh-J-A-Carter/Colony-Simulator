@@ -27,6 +27,8 @@ public class InputManager : MonoBehaviour {
         } else Instance = this;
 
         // Tool
+        currentPriority = TaskPriority.Normal;
+
         selectTool = GetComponentInChildren<SelectTool>();
         buildTool = GetComponentInChildren<BuildTool>();
         destroyTool = GetComponentInChildren<DestroyTool>();

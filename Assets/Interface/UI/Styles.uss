@@ -166,23 +166,89 @@
 
 .rule-display__preview {
     width: 80px;
+    max-height: 80px;
     height: 80px;
+    align-self: center;
     background-color: rgb(93, 93, 93);
+    border-width: 2px;
+    border-color: rgb(150, 150, 150);
 }
+
+.rule-display__preview:hover {
+    background-color: rgb(83, 83, 83);
+}
+
+.rule-display__preview:active {
+    background-color: rgb(73, 73, 73);
+}
+
 
 .rule-display__label {
     background-color: rgb(93, 93, 93);
     color: white;
     font-size: 24px;
     width: 500px;
+    max-height: 80px;
     height: 80px;
+    align-self: center;
     -unity-text-align: middle-center;
+    border-width: 2px;
+    border-color: rgb(150, 150, 150);
 }
 
 .rule-display__operation {
     background-color: rgb(93, 93, 93);
     color: white;
     width: 140px;
+    max-height: 80px;
     height: 80px;
+    align-self: center;
     font-size: 24px;
+    border-width: 2px;
+    border-color: rgb(150, 150, 150);
+}
+
+.rule-display__operation:hover {
+    background-color: rgb(83, 83, 83);
+}
+
+.rule-display__operation:active {
+    background-color: rgb(73, 73, 73);
+}
+
+.rule-display__priority-label {
+    background-color: rgb(93, 93, 93);
+    color: white;
+    font-size: 24px;
+    width: 240px;
+    max-height: 80px;
+    height: 80px;
+    -unity-text-align: middle-center;
+    flex-direction: row;
+    justify-content: space-between;
+    align-self: center;
+    border-width: 2px;
+    border-color: rgb(150, 150, 150);
+}
+
+.rule-display__priority-left {
+    width: 30px;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("project://database/Assets/Interface/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-3753015318093942961&guid=1d959dfbd75fccb4aaf6d3243e2d5f8a&type=3#arrow-left");
+}
+
+.rule-display__priority-left:hover, .rule-display__priority-right:hover {
+    background-color: rgb(83, 83, 83);
+}
+
+.rule-display__priority-left:active, .rule-display__priority-right:active {
+    background-color: rgb(73, 73, 73);
+}
+
+.rule-display__priority-right {
+    width: 30px;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("project://database/Assets/Interface/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-4521532143779581420&guid=1d959dfbd75fccb4aaf6d3243e2d5f8a&type=3#arrow-right");
 }

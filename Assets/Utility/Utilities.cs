@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
 
 
 public static class Utilities {
@@ -15,5 +17,22 @@ public static class Utilities {
         }
 
         return copy;
+    }
+
+
+    /// <summary>
+    /// Get human-readable description for an Enum variant; Each variant must be tagged with '[Description("...")]'
+    /// </summary>
+    public static String GetDescription(this Enum value) {
+        Type type = value.GetType();
+        String name = Enum.GetName(type, value);
+        if (name == null) return null;
+
+        FieldInfo field = type.GetField(name);
+        if (field == null) return null;
+        DescriptionAttribute attr = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
+
+        if (attr == null) return null;
+        return attr.Description;
     }
 }

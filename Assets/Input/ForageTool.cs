@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ForageTool : Tool {
 
@@ -24,20 +23,21 @@ public class ForageTool : Tool {
 
         rules = new();
 
-        InterfaceManager.Instance.SetForageQuitCallback(_ => parent.SetTool(ToolType.Select));
+        InterfaceManager.Instance.SetForageQuitCallback(_ => InterfaceManager.Instance.ClickedSelectTool(null));
     }
 
     void AddNewRule() {
         if (newRule != null) {
-            rules.Add(newRule);
-            TaskManager.Instance.RegisterRule(newRule);
+            ForageRule thisRule = newRule;
+            rules.Add(thisRule);
+            TaskManager.Instance.RegisterRule(thisRule);
 
             InterfaceManager.Instance.AddOldForageContent(
                 new (options,
-                    (int) newRule.type, 
-                    (input) => newRule.SetType((ForageRule.Type) input),
+                    (int) thisRule.type, 
+                    (input) => thisRule.SetType((ForageRule.Type) input),
                     "Remove",
-                    () => RemoveRule(newRule)
+                    () => RemoveRule(thisRule)
                 )
             );
         }
@@ -56,7 +56,6 @@ public class ForageTool : Tool {
                 () => AddNewRule()
             )
         );
-
     }
 
     void RemoveRule(ForageRule rule) {

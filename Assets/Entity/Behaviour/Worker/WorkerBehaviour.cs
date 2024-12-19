@@ -194,6 +194,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         IsDead = true;
 
         inventory.EmptyInventory();
+        inventory.DisablePassiveProduction();
 
         gravity.Enable();
     }

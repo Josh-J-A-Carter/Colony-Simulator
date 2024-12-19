@@ -108,7 +108,7 @@ public class InterfaceManager : MonoBehaviour {
         foreach (Button b in toolButtons) b.RemoveFromClassList("selected");
     }
 
-    void ClickedSelectTool(ClickEvent evt) {
+    public void ClickedSelectTool(ClickEvent evt) {
         tm.SetTool(ToolType.Select);
 
         DeselectAllButtons();

@@ -428,7 +428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c693b80a73b3864dae4e8c1331222df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <MaxHealth>k__BackingField: 4
+  <MaxHealth>k__BackingField: 20
   <MaxNutrition>k__BackingField: 20
   hungerRate: 30
 --- !u!114 &1575752087398310986

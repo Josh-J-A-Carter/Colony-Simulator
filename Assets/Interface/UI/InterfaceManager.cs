@@ -63,6 +63,13 @@ public class InterfaceManager : MonoBehaviour {
         MakeTogglesUnfocusable();
     }
 
+    public void Start() {
+        containerRoot.Q(name: "toolbar").Add(new PriorityDisplay(
+            InputManager.Instance.GetPriority(),
+            priority => InputManager.Instance.SetPriority(priority)
+        ));
+    }
+
 
     void MakeTogglesUnfocusable() {
         foreach (Toggle toggle in containerRoot.Query<Toggle>().Build()) {

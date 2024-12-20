@@ -24,13 +24,13 @@ MonoBehaviour:
   requiredResources: []
   isPollenProducer: 1
   pollen: {fileID: 11400000, guid: 51e2f2635efe6c546a43ddf28685bafd, type: 2}
-  minPollenDelay: 10
-  maxPollenDelay: 20
+  minPollenDelay: 120
+  maxPollenDelay: 240
   minPollenQuantity: 1
   maxPollenQuantity: 3
-  isNectarProducer: 0
+  isNectarProducer: 1
   nectar: {fileID: 11400000, guid: 73eaea258b6679441b5ee8b389bbb70f, type: 2}
-  minNectarDelay: 70
-  maxNectarDelay: 250
+  minNectarDelay: 240
+  maxNectarDelay: 480
   minNectarQuantity: 0
   maxNectarQuantity: 2

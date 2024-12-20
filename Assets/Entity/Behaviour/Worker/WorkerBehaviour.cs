@@ -115,11 +115,20 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
 
     void DecideState() {
 
-        // Low nutrition -> immediate action, if there is food available
+        // Low nutrition -> immediate action, provided there is food available
         if (HealthComponent.LowNutrition) {
             Resource resource = new Resource(ItemTag.Food);
             if (ResourceManager.Instance.Available(inventory, resource)) {
                 stateMachine.SetChildState(eat);
+                return;
+            }
+        }
+
+        // Full inventory -> immediate action, provided storage available
+        if (inventory.RemainingCapacity() == 0) {
+            List<(Vector2Int, IStorage, Dictionary<String, object>)> itemStorage = TileManager.Instance.FindAvailableStorage();
+            if (itemStorage.Count > 0) {
+                stateMachine.SetChildState(tidy);
                 return;
             }
         }
@@ -181,9 +190,13 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         else if (task is ForageTask) {
             stateMachine.SetChildState(forage);
         }
-
+        
         else {
+        #if UNITY_EDITOR
             throw new Exception("Unknown/incompatible task type");
+        #else
+            stateMachine.SetChildState(idle);
+        #endif
         }
     }
 

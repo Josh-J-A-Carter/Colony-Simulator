@@ -709,8 +709,8 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
     minQuantity: 0
     maxQuantity: 1
-    minDelaySeconds: 5
-    maxDelaySeconds: 10
+    minDelaySeconds: 20
+    maxDelaySeconds: 40
   - item: {fileID: 11400000, guid: e51afdb714c6eb346b5ad286646c97ca, type: 2}
     minQuantity: 0
     maxQuantity: 1
@@ -728,8 +728,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c693b80a73b3864dae4e8c1331222df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <MaxHealth>k__BackingField: 2
-  <MaxNutrition>k__BackingField: 20
+  <MaxHealth>k__BackingField: 10
+  <MaxNutrition>k__BackingField: 10
   hungerRate: 60
 --- !u!114 &-6640970176211023583
 MonoBehaviour:

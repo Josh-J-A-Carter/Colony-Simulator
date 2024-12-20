@@ -6,11 +6,8 @@ using UnityEngine.UIElements;
 public class RuleDisplay : VisualElement {
 
     int currentTypeIndex;
-
-    int currentPriorityIndex;
-
     public RuleDisplay(List<(Sprite, String, int)> typeOptions, int initialTypeIndex, Action<int> onSetType,
-                        List<(String, TaskPriority)> priorityOptions, int initialPriorityIndex, Action<TaskPriority> onSetPriority,
+                        TaskPriority initialPriority, Action<TaskPriority> onSetPriority,
                         String confirmationText, Action onConfirmation) {
         AddToClassList("rule-display");
 
@@ -18,10 +15,11 @@ public class RuleDisplay : VisualElement {
         Debug.Assert(typeOptions.Count > initialTypeIndex);
     #endif
 
+
+        // Visual & textual preview of ForageRule.Type
         currentTypeIndex = initialTypeIndex;
         (Sprite sprite, String name, _) = typeOptions[currentTypeIndex];
 
-        // Visual & textual preview of ForageRule.Type
         Button preview = new();
         preview.AddToClassList("rule-display__preview");
         Add(preview);
@@ -42,45 +40,44 @@ public class RuleDisplay : VisualElement {
             onSetType(newType);
         });
 
-    #if UNITY_EDITOR
-        Debug.Assert(priorityOptions.Count > initialPriorityIndex);
-    #endif
 
         // Priority
-        String priorityText = priorityOptions[initialPriorityIndex].Item1;
-        currentPriorityIndex = initialPriorityIndex;
-
-        Label priority = new(priorityText);
-        priority.AddToClassList("rule-display__priority-label");
+        PriorityDisplay priority = new PriorityDisplay(initialPriority, onSetPriority);
         Add(priority);
+        // String priorityText = priorityOptions[initialPriorityIndex].Item1;
+        // currentPriorityIndex = initialPriorityIndex;
 
-        Button priority__left = new();
-        priority__left.AddToClassList("rule-display__priority-left");
-        priority.Add(priority__left);
+        // Label priority = new(priorityText);
+        // priority.AddToClassList("priority__label");
+        // Add(priority);
 
-        Button priority__right = new();
-        priority__right.AddToClassList("rule-display__priority-right");
-        priority.Add(priority__right);
+        // Button priority__left = new();
+        // priority__left.AddToClassList("priority__left");
+        // priority.Add(priority__left);
 
-        priority__left.RegisterCallback<ClickEvent>(_ => {
-            // Increment, or do nothing if at max value
-            if (currentPriorityIndex == priorityOptions.Count - 1) return;
-            currentPriorityIndex = currentPriorityIndex + 1;
-            (String newName, TaskPriority newPriority) = priorityOptions[currentPriorityIndex];
+        // Button priority__right = new();
+        // priority__right.AddToClassList("priority__right");
+        // priority.Add(priority__right);
 
-            priority.text = newName;
-            onSetPriority(newPriority);
-        });
+        // priority__left.RegisterCallback<ClickEvent>(_ => {
+        //     // Increment, or do nothing if at max value
+        //     if (currentPriorityIndex == priorityOptions.Count - 1) return;
+        //     currentPriorityIndex = currentPriorityIndex + 1;
+        //     (String newName, TaskPriority newPriority) = priorityOptions[currentPriorityIndex];
 
-        priority__right.RegisterCallback<ClickEvent>(_ => {
-            // Decrement, or do nothing if at min value
-            if (currentPriorityIndex == 0) return;
-            currentPriorityIndex = currentPriorityIndex - 1;
-            (String newName, TaskPriority newPriority) = priorityOptions[currentPriorityIndex];
+        //     priority.text = newName;
+        //     onSetPriority(newPriority);
+        // });
 
-            priority.text = newName;
-            onSetPriority(newPriority);
-        });
+        // priority__right.RegisterCallback<ClickEvent>(_ => {
+        //     // Decrement, or do nothing if at min value
+        //     if (currentPriorityIndex == 0) return;
+        //     currentPriorityIndex = currentPriorityIndex - 1;
+        //     (String newName, TaskPriority newPriority) = priorityOptions[currentPriorityIndex];
+
+        //     priority.text = newName;
+        //     onSetPriority(newPriority);
+        // });
 
 
         // Confirmation operation (i.e. Add or Remove)

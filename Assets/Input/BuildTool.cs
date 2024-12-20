@@ -156,15 +156,28 @@ public class BuildTool : Tool {
     }
 
     InfoBranch GetConstructableConfigInfo(Constructable newConstructable) {
-        InfoBranch root = new InfoBranch(null);
+        InfoBranch root = new(String.Empty);
 
-        InfoBranch genericCategory = new InfoBranch("Generic properties");
+        // Generic
+        InfoBranch genericCategory = new("Generic properties");
         root.AddChild(genericCategory);
 
-        InfoLeaf nameProperty = new InfoLeaf(newConstructable.GetName(), description: newConstructable.GetDescription());
+        InfoLeaf nameProperty = new(newConstructable.GetName(), description: newConstructable.GetDescription());
         genericCategory.AddChild(nameProperty);
 
+        // Build reqs
+        InfoBranch reqsCategory = new("Required resources");
+        root.AddChild(reqsCategory);
 
+        foreach ((Resource res, uint quantity) in newConstructable.GetRequiredResources()) {
+            String reqName = res.Item.GetName();
+            if (res.ResourceType == ResourceType.Tag) reqName = res.ItemTag.GetDescription();
+
+            InfoLeaf reqProperty = new(reqName, $"x {quantity}");
+            reqsCategory.AddChild(reqProperty);
+        }
+
+        // Configuration data, if applicable
         if (newConstructable is IConfigurable configurable) {
             // Only update preview data if it's a different constructable - reloading shouldn't change config
             if (newConstructable != constructable) previewConfigDataTemplate = (configurable as TileEntity).GenerateDefaultData();

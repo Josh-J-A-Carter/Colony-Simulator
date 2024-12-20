@@ -22,15 +22,15 @@ MonoBehaviour:
     and pollen.
   previewSprite: {fileID: 21300000, guid: ba9bcdd07430386419dcb76db9578e23, type: 3}
   requiredResources: []
-  isPollenProducer: 0
+  isPollenProducer: 1
   pollen: {fileID: 11400000, guid: 51e2f2635efe6c546a43ddf28685bafd, type: 2}
-  minPollenDelay: 50
-  maxPollenDelay: 200
-  minPollenQuantity: 0
+  minPollenDelay: 120
+  maxPollenDelay: 480
+  minPollenQuantity: 1
   maxPollenQuantity: 2
   isNectarProducer: 1
   nectar: {fileID: 11400000, guid: 73eaea258b6679441b5ee8b389bbb70f, type: 2}
-  minNectarDelay: 10
-  maxNectarDelay: 20
+  minNectarDelay: 120
+  maxNectarDelay: 480
   minNectarQuantity: 1
   maxNectarQuantity: 2

@@ -10,8 +10,6 @@ public class ForageTool : Tool {
 
     List<(Sprite, String, int)> typeOptions;
 
-    List<(String, TaskPriority)> priorityOptions;
-
     ForageRule newRule;
 
     List<ForageRule> rules;
@@ -23,10 +21,6 @@ public class ForageTool : Tool {
             (sap.GetPreviewSprite(), sap.GetName(), (int) ForageRule.Type.Sap)
         };
 
-        priorityOptions = new();
-        foreach (TaskPriority priority in Enum.GetValues(typeof(TaskPriority))) {
-            priorityOptions.Add((Enum.GetName(typeof(TaskPriority), priority), priority));
-        }
 
         rules = new();
 
@@ -41,7 +35,7 @@ public class ForageTool : Tool {
 
             InterfaceManager.Instance.AddOldForageContent(
                 new (typeOptions, (int) thisRule.type, (input) => thisRule.SetType((ForageRule.Type) input),
-                    priorityOptions, (int) thisRule.priority, (priority) => thisRule.SetPriority(priority),
+                    thisRule.priority, (priority) => thisRule.SetPriority(priority),
                     "Remove", () => RemoveRule(thisRule)
                 )
             );
@@ -55,7 +49,7 @@ public class ForageTool : Tool {
 
         InterfaceManager.Instance.SetNewForageContent(
             new (typeOptions, (int) newRule.type, (input) => newRule.SetType((ForageRule.Type) input),
-                priorityOptions, (int) newRule.priority, (priority) => newRule.SetPriority(priority),
+                newRule.priority, (priority) => newRule.SetPriority(priority),
                 "Add", () => AddNewRule()
             )
         );
@@ -74,7 +68,7 @@ public class ForageTool : Tool {
         foreach (ForageRule rule in rules) {
             InterfaceManager.Instance.AddOldForageContent(
                 new (typeOptions, (int) rule.type, (input) => rule.SetType((ForageRule.Type) input),
-                    priorityOptions, (int) rule.priority, (priority) => rule.SetPriority(priority),
+                    rule.priority, (priority) => rule.SetPriority(priority),
                     "Remove", () => RemoveRule(rule)
                 )
             );

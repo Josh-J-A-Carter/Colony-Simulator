@@ -12,6 +12,11 @@ public static class InfoToUI {
             DisplayInfoRecursive(node, infoContainer);
         }
 
+        // Make sure toggles are unfocusable - issues with default Unity manipulators and this is the easiest way to disable them
+        foreach (Toggle toggle in infoContainer.Query<Toggle>().Build()) {
+            toggle.focusable = false;
+        }
+
         InterfaceManager.Instance.SetInfoContainerContent(infoContainer);
     }
 
@@ -21,6 +26,11 @@ public static class InfoToUI {
         
         foreach (InfoNode node in root.GetChildren()) {
             DisplayInfoRecursive(node, infoContainer, callback);
+        }
+
+        // Make sure toggles are unfocusable - issues with default Unity manipulators and this is the easiest way to disable them
+        foreach (Toggle toggle in infoContainer.Query<Toggle>().Build()) {
+            toggle.focusable = false;
         }
 
         InterfaceManager.Instance.SetConfigInfoContainerContent(infoContainer);

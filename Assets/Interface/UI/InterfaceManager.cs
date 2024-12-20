@@ -58,8 +58,17 @@ public class InterfaceManager : MonoBehaviour {
         forageNewContainerRoot = containerRoot.Q(name: "new-rule-contents");
         forageOldContainerRoot = containerRoot.Q(name: "old-rule-contents");
         forageMenuQuit = containerRoot.Q(name: "forage-menu-quit") as Button;
+
+
+        MakeTogglesUnfocusable();
     }
 
+
+    void MakeTogglesUnfocusable() {
+        foreach (Toggle toggle in containerRoot.Query<Toggle>().Build()) {
+            toggle.focusable = false;
+        }
+    }
 
     public void SetConfigurableContainerContent(VisualElement content) {
         configurableContainerContentRoot.Clear();
@@ -134,10 +143,6 @@ public class InterfaceManager : MonoBehaviour {
 
     void ClickedForageTool(ClickEvent evt) {
         tm.SetTool(ToolType.Forage);
-
-        DeselectAllButtons();
-
-        containerRoot.Q(name: "forage-tool").AddToClassList("selected");
     }
 
 

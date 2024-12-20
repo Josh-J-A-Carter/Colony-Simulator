@@ -30,7 +30,7 @@ public class ForageTool : Tool {
 
         rules = new();
 
-        InterfaceManager.Instance.SetForageQuitCallback(_ => InterfaceManager.Instance.ClickedSelectTool(null));
+        InterfaceManager.Instance.SetForageQuitCallback(_ => parent.RestorePreviousTool());
     }
 
     void AddNewRule() {

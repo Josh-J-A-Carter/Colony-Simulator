@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour {
 
     // Tool references
     Tool selectTool, buildTool, destroyTool, forageTool;
-    Tool currentTool;
+    Tool currentTool, previousTool;
 
     // Tool selections that should be persistent, even across tool changes
     Constructable currentConstructable;
@@ -40,6 +40,7 @@ public class InputManager : MonoBehaviour {
         forageTool.SetUp(this);
 
         currentTool = selectTool;
+        previousTool = selectTool;
 
         // Camera
         cameraManager = GetComponentInChildren<CameraManager>();
@@ -91,9 +92,7 @@ public class InputManager : MonoBehaviour {
 
     public void SetTool(ToolType type) {
 
-        Tool oldTool = currentTool;
-
-        currentTool = type switch {
+        Tool newTool = type switch {
             ToolType.Select => selectTool,
             ToolType.Build => buildTool,
             ToolType.Destroy => destroyTool,
@@ -101,10 +100,21 @@ public class InputManager : MonoBehaviour {
             _ => throw new Exception("Unknown tool type")
         };
 
-        if (oldTool != currentTool) {
-            oldTool.OnDequip();
-            currentTool.OnEquip();
-        }
+        if (newTool == currentTool) return;
+
+        previousTool = currentTool;
+        currentTool = newTool;
+
+        previousTool.OnDequip();
+        currentTool.OnEquip();
+    }
+
+    public void RestorePreviousTool() {
+        if (currentTool == previousTool) return;
+
+        currentTool.OnDequip();
+        currentTool = previousTool;
+        currentTool.OnEquip();
     }
 
     public Constructable GetConstructable() {

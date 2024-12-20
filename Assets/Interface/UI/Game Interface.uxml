@@ -4,18 +4,18 @@
         <ui:VisualElement name="interaction-container" picking-mode="Ignore" style="flex-grow: 1; justify-content: space-between; flex-direction: row; align-items: flex-end;">
             <ui:VisualElement name="config-displays" picking-mode="Ignore" style="flex-grow: 1; align-items: flex-end; flex-direction: row; align-self: auto; max-height: 100%; min-height: 100%;">
                 <ui:Foldout text="Select structure" name="configurable-container-root" value="true" class="display-window" style="-unity-font: url(&quot;project://database/Assets/Interface/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=1d959dfbd75fccb4aaf6d3243e2d5f8a&amp;type=3#NotInter-Regular&quot;);">
-                    <ui:ScrollView name="scroll-view" horizontal-scroller-visibility="Hidden" mouse-wheel-scroll-size="300" class="display-window__scroll-container">
+                    <ui:ScrollView name="scroll-view" horizontal-scroller-visibility="Hidden" mouse-wheel-scroll-size="800" class="display-window__scroll-container">
                         <ui:VisualElement name="configurable-container-content-root" style="flex-grow: 1;" />
                     </ui:ScrollView>
                 </ui:Foldout>
                 <ui:Foldout text="Select structure" name="config-info-container-root" value="true" class="display-window" style="-unity-font: url(&quot;project://database/Assets/Interface/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=1d959dfbd75fccb4aaf6d3243e2d5f8a&amp;type=3#NotInter-Regular&quot;);">
-                    <ui:ScrollView name="scroll-view" horizontal-scroller-visibility="Hidden" mouse-wheel-scroll-size="300" class="display-window__scroll-container">
+                    <ui:ScrollView name="scroll-view" horizontal-scroller-visibility="Hidden" mouse-wheel-scroll-size="800" class="display-window__scroll-container">
                         <ui:VisualElement name="config-info-container-content-root" style="flex-grow: 1;" />
                     </ui:ScrollView>
                 </ui:Foldout>
             </ui:VisualElement>
             <ui:Foldout text="Selection information" name="info-container-root" value="true" class="display-window">
-                <ui:ScrollView name="scroll-view" horizontal-scroller-visibility="Hidden" mouse-wheel-scroll-size="300" class="display-window__scroll-container">
+                <ui:ScrollView name="scroll-view" horizontal-scroller-visibility="Hidden" mouse-wheel-scroll-size="800" class="display-window__scroll-container">
                     <ui:VisualElement name="info-container-content-root" style="flex-grow: 1;" />
                 </ui:ScrollView>
             </ui:Foldout>

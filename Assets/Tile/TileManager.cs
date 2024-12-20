@@ -60,10 +60,10 @@ public class TileManager : MonoBehaviour {
         worldLoader.LoadOrGenerateWorld(worldMap, obstacles, MIN_X, MIN_Y, WORLD_WIDTH, WORLD_HEIGHT, dirt, grass);
 
 
+        Construct(new Vector2Int(-10, 1), flower);
         Construct(new Vector2Int(0, 1), flower);
-
-
         Construct(new Vector2Int(10, 1), flower2);
+        Construct(new Vector2Int(11, 1), flower2);
     }
 
     public void FixedUpdate() {

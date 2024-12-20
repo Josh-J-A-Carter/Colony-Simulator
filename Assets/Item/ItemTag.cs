@@ -14,5 +14,7 @@ public enum ItemTag {
     [Description("Sap")]
     Sap,
     [Description("Fermentable(s)")]
-    Fermentable
+    Fermentable,
+    [Description("Beeswax")]
+    Beeswax,
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/Brood Comb Constructable")]
+[CreateAssetMenu(menuName = "ScriptableObjects/Constructable/Brood Comb Constructable")]
 public class BroodComb : TileEntity, IConfigurable, IStorage {
 
     // Constants for TileEntityData attribute names
@@ -64,9 +64,6 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
     [Serializable]
     public enum BroodCombSize { Worker, Drone, Queen };
 
-    [SerializeField]
-    Item beeswax, royalJelly;
-
     // Visual Variants to display with a change of state
 
     /// <summary>Variants to display when the comb contains brood of differing life stages.</summary>
@@ -108,13 +105,13 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         // Developmental events
         if (broodStage == BroodStage.Larva) {
             if (timeLeft == LARVA_FEED) {
-                List<(Resource, uint)> res = new() { (new(royalJelly), 1) };
+                List<(Resource, uint)> res = new() { (new(ItemTag.RoyalJelly), 1) };
 
                 TaskManager.Instance.CreateTask(new NurseTask(TaskPriority.Important, position, this, res));
             }
 
             else if (timeLeft == LARVA_SEAL) {
-                List<(Resource, uint)> res = new() { (new(beeswax), 1) };
+                List<(Resource, uint)> res = new() { (new(ItemTag.Beeswax), 1) };
 
                 TaskManager.Instance.CreateTask(new NurseTask(TaskPriority.Important, position, this, res));
             }
@@ -140,8 +137,10 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         // Pupa -> Adult
         else {
             bool fertilised = (bool) data[BROOD_DATA__FERTILISED];
-            if (fertilised) EntityManager.Instance.InstantiateWorker(position);
-            else EntityManager.Instance.InstantiateDrone(position);
+            if (fertilised) {
+                if (broodCombSize == BroodCombSize.Worker) EntityManager.Instance.InstantiateWorker(position);
+                else EntityManager.Instance.InstantiateQueen(position);
+            } else EntityManager.Instance.InstantiateDrone(position);
 
             data[CURRENT_STORAGE_TYPE] = StorageType.Empty;
 
@@ -173,11 +172,11 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
 
     public void GiveBrood(Vector2Int position, Dictionary<String, object> data, Item item, uint quantity) {
 
-        if (item == beeswax) {
+        if (item.HasItemTag(ItemTag.Beeswax)) {
             DrawVariant(position, pos => cappedVariant[pos.y].gridEntries[pos.x].worldTile);
         }
 
-        else if (item == royalJelly) {
+        else if (item.HasItemTag(ItemTag.RoyalJelly)) {
             DrawVariant(position, pos => larvaFedVariant[pos.y].gridEntries[pos.x].worldTile);
         }
     }

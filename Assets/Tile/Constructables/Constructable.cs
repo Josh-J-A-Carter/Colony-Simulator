@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/Generic Constructable")]
+[CreateAssetMenu(menuName = "ScriptableObjects/Constructable/Generic Constructable")]
 public class Constructable : ScriptableObject, IInformative {
 
     [SerializeField]

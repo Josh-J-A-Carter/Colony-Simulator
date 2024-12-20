@@ -27,11 +27,9 @@ MonoBehaviour:
       <Item>k__BackingField: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
       <ItemTag>k__BackingField: 0
     quantity: 1
-  maxCapacity: 75
+  maxCapacity: 50
   broodCombSize: 0
   toFertilise: 1
-  beeswax: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
-  royalJelly: {fileID: 11400000, guid: e51afdb714c6eb346b5ad286646c97ca, type: 2}
   eggVariant:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: de1b806782fa05b469dc345401178c73, type: 2}

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/Flower Constructable")]
+[CreateAssetMenu(menuName = "ScriptableObjects/Constructable/Flower Constructable")]
 public class Flower : TileEntity, IProducer {
 
     ReadOnlyCollection<Item> productionItemTypes;

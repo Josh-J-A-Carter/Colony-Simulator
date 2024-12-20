@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b002a6ec99a46224db011f2d8f8c29b4, type: 3}
-  m_Name: Drone Brood Comb 1
+  m_Name: Drone Brood Comb
   m_EditorClassIdentifier: 
   gridData:
   - gridEntries:
@@ -27,11 +27,9 @@ MonoBehaviour:
       <Item>k__BackingField: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
       <ItemTag>k__BackingField: 0
     quantity: 2
-  maxCapacity: 200
+  maxCapacity: 150
   broodCombSize: 1
   toFertilise: 0
-  beeswax: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
-  royalJelly: {fileID: 11400000, guid: e51afdb714c6eb346b5ad286646c97ca, type: 2}
   eggVariant:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: 36179af20efd4904a8cd7b5d12a075d3, type: 2}

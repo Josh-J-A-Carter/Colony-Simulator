@@ -109,7 +109,9 @@ public class SelectTool : Tool {
             tilePreview = data.GetGridPosition();
 
             // Careful - there may not even be a tile here
-            (_, tilePreviewConstructable) = TM.GetConstructableAt(tilePreview);
+            (Vector2Int startPos, Constructable constructable) = TM.GetConstructableAt(tilePreview);
+            tilePreviewConstructable = constructable;
+            
             if (tilePreviewConstructable == null) {
                 selectionType = SelectionType.None;
                 IM.HideInfoContainer();
@@ -118,7 +120,7 @@ public class SelectTool : Tool {
 
             TM.SetPreview(tilePreview, preview);
 
-            if (tilePreviewConstructable is TileEntity) tilePreviewData = TM.GetTileEntityData(tilePreview);
+            if (tilePreviewConstructable is TileEntity) tilePreviewData = TM.GetTileEntityData(startPos);
             else tilePreviewData = null;
             
             // Show the info tree in the display panel

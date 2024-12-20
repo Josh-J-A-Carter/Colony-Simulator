@@ -17,3 +17,4 @@ MonoBehaviour:
   constructables:
   - {fileID: 11400000, guid: 928cb5dc22216df48a239ce0372de8fa, type: 2}
   - {fileID: 11400000, guid: 683c30eb214c4e144a43809d29aa8f82, type: 2}
+  - {fileID: 11400000, guid: 87c4af2f115933646af74fbb7325d64e, type: 2}

@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635f5ca61f4f59647bd1e8bb4ca8965e, type: 3}
+  m_Name: Hornet Nest
+  m_EditorClassIdentifier: 
+  gridData:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 18104ec869cf64b47a771fd589dab6c3, type: 2}
+      previewTile: {fileID: 0}
+    - worldTile: {fileID: 11400000, guid: cdebe8ffea695044996527349cb8804d, type: 2}
+      previewTile: {fileID: 0}
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: d12cfd1bcb440874390fa0a512e09c22, type: 2}
+      previewTile: {fileID: 0}
+    - worldTile: {fileID: 11400000, guid: bf8d30f51b1972d409a86207def47eea, type: 2}
+      previewTile: {fileID: 0}
+  obstructive: 0
+  nameInfo: Hornet Nest
+  descriptionInfo: A small nest made from plant fibers and wasp saliva, perfect for
+    housing a colony of hornets.
+  previewSprite: {fileID: 0}
+  requiredResources: []
+  oneVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 70a70741946561f41b00b68abcae719b, type: 2}
+      previewTile: {fileID: 0}
+    - worldTile: {fileID: 11400000, guid: 397e2a76079be2247af41a03978e0763, type: 2}
+      previewTile: {fileID: 0}
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 08b4dc27e9ee6524b91a5f78a5ffe475, type: 2}
+      previewTile: {fileID: 0}
+    - worldTile: {fileID: 11400000, guid: 434212c1ece68a945bf2b737daf4369e, type: 2}
+      previewTile: {fileID: 0}
+  twoVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: bdda80ddec71a5a47a5018d2ec94b0d9, type: 2}
+      previewTile: {fileID: 0}
+    - worldTile: {fileID: 11400000, guid: 62ae7eabb1a55734aa05a71b7c2efb9b, type: 2}
+      previewTile: {fileID: 0}
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 9db9020735e998247abdea1d98ddc028, type: 2}
+      previewTile: {fileID: 0}
+    - worldTile: {fileID: 11400000, guid: bcd7e3330ebe77e4aab7412fb6dabe7d, type: 2}
+      previewTile: {fileID: 0}
+  threeVariant:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: b877d7d3e4ec3c64b9781d8ec5430149, type: 2}
+      previewTile: {fileID: 0}
+    - worldTile: {fileID: 11400000, guid: 7bdaea5de1625d840b5ad0cb8e9587df, type: 2}
+      previewTile: {fileID: 0}
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 99de46ac40b86b44c8b67d87d861c56b, type: 2}
+      previewTile: {fileID: 0}
+    - worldTile: {fileID: 11400000, guid: 2c4d7a6479ac72946b95677fb9b2090a, type: 2}
+      previewTile: {fileID: 0}

@@ -6,67 +6,53 @@ using Random = UnityEngine.Random;
 
 public class Patrol : State {
 
-    HornetBehaviour wasp;
+    [SerializeField]
+    State patrolWander, patrolReturn;
 
-    Vector2Int home => wasp.Home;
+    HornetBehaviour hornet;
 
-    Path path;
+    Vector2Int home => hornet.Home;
 
-
-    const int DISTANCE_BEFORE_RETURN = 40;
-
-    const int MIN_DISTANCE_X = 50, MAX_DISTANCE_X = 60;
-    const int MIN_DISTANCE_Y = 2, MAX_DIStANCE_Y = 7;
-
-    const int MAX_PATHFIND_ATTEMPTS = 10;
-
-    static readonly int stepSpeed = 18;
-
-    int stepsMax, step;
-
+    const int DISTANCE_BEFORE_RETURN = 20;
 
     public override void OnSetup() {
-        wasp = entity.GetComponent<HornetBehaviour>();
+        hornet = entity.GetComponent<HornetBehaviour>();
     }
 
     public override void OnEntry() {
         if (Vector2.Distance(transform.position, home) >= DISTANCE_BEFORE_RETURN) {
-            path = Pathfind.FindPath(transform.position, home);
-            
-            if (path != null) {
-                step = 0;
-                stepsMax = stepSpeed * path.Count;
-                return;
-            }
+            stateMachine.SetChildState(patrolReturn);
         }
 
-        for (int attempt = 0 ; attempt < MAX_PATHFIND_ATTEMPTS ; attempt += 1) {
-            int signX = (int) Math.Pow(-1, Random.Range(0, 2));
-            int signY = (int) Math.Pow(-1, Random.Range(0, 2));
-            Vector2Int dst = new(signX * Random.Range(MIN_DISTANCE_X, MAX_DISTANCE_X + 1), signY * Random.Range(MIN_DISTANCE_Y, MAX_DIStANCE_Y + 1));
-
-            path = Pathfind.FindPath(transform.position, dst);
-            if (path != null) {
-                step = 0;
-                stepsMax = stepSpeed * path.Count;
-                return;
-            }
-        }
-
-        CompleteState(false);
+        else stateMachine.SetChildState(patrolWander);
     }
 
-    public override void FixedRun() {
-        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
-
-        step += 1;
-
-        if (step >= stepsMax) {
-            CompleteState();
+    public override void OnChildExit(State exitingChild, bool success) {
+        if (success == false) {
+            CompleteState(false);
             return;
         }
 
-        if (success == false) CompleteState(false);
-    }
+        if (exitingChild == patrolWander) {
+            stateMachine.SetChildState(patrolReturn);
+        }
 
+        // We must be at the nest
+        // So randomly choose to either enter nest or continue patrolling
+        else if (Utilities.RandBool()) {
+            stateMachine.SetChildState(patrolWander);
+        }
+
+        else {
+            Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(home);
+            (Vector2Int pos, Constructable constructable) = TileManager.Instance.GetConstructableAt(home);
+            HornetNest nest = constructable as HornetNest;
+            if (data == null || nest == null) {
+                CompleteState(false);
+                return;
+            }
+
+            if (nest.TryAddToNest(pos, data, hornet) == false) CompleteState(false);
+        }
+    }
 }

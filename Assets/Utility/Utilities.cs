@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using Random = UnityEngine.Random;
 
 
 public static class Utilities {
@@ -34,5 +35,13 @@ public static class Utilities {
 
         if (attr == null) return null;
         return attr.Description;
+    }
+
+    public static bool RandBool() {
+        return Random.Range(0, 2) == 0;
+    }
+
+    public static int RandSign() {
+        return (int) Math.Pow(-1, Random.Range(0, 2));
     }
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HornetBehaviour : MonoBehaviour {
@@ -13,10 +15,16 @@ public class HornetBehaviour : MonoBehaviour {
     Animator animator;
 
     [SerializeField]
-    State patrol, nest;
+    State patrol, nest, sting;
 
     [SerializeField]
     HornetNest nestConst;
+
+    const int MAX_TARGET_DISTANCE = 25, MAX_FOLLOW_DISTANCE = 35, TARGET_PULSE_RATE = 25, STING_COOL_OFF = 5;
+
+    public ITargetable CurrentTarget { get; private set; }
+    float beganStingCoolOff;
+    int targetPulse;
 
 
     public void Start() {
@@ -34,14 +42,21 @@ public class HornetBehaviour : MonoBehaviour {
         TileManager.Instance.Construct(Home, nestConst);
     }
 
-    public void Update() {
-        if (state == nest) return;
+    public void FixedUpdate() {
+        if (state == null) DecideState();
 
-        if (state == null) stateMachine.SetChildState(patrol);
+        stateMachine.FixedRun();
+
+        UpdateTargets();
     }
 
-    public void FixedUpdate() {
-        stateMachine.FixedRun();
+    void DecideState() {
+        if (ReadyToSting()) {
+            stateMachine.SetChildState(sting);
+            return;
+        }
+
+        stateMachine.SetChildState(patrol);
     }
 
     public void OnNestEntry() {
@@ -54,5 +69,53 @@ public class HornetBehaviour : MonoBehaviour {
         stateMachine.ResetChildState();
 
         render.enabled = true;
+    }
+
+    void UpdateTargets() {
+        targetPulse += 1;
+
+        if (targetPulse < TARGET_PULSE_RATE) return;
+        targetPulse = 0;
+
+        // Target still exists & is reachable?
+        bool needNewTarget = false;
+
+        if (CurrentTarget == null) needNewTarget = true;
+
+        else if (Vector2.Distance(transform.position, CurrentTarget.GetPosition()) > MAX_FOLLOW_DISTANCE) needNewTarget = true;
+
+        else {
+            Path p = Pathfind.FindPath(transform.position, CurrentTarget.GetPosition());
+            needNewTarget = p == null;
+        }
+
+        // Yes, quit now
+        if (needNewTarget == false) return;
+
+        // No, try find another target
+        CurrentTarget = null;
+
+        List<ITargetable> potentialTargets = EntityManager.Instance.QueryEntities<ITargetable>(t => {
+            if (t.Friendliness() <= 0) return false;
+            if (t.IsDead) return false;
+            if (Vector2.Distance(transform.position, t.GetPosition()) > MAX_TARGET_DISTANCE) return false;
+
+            Path p = Pathfind.FindPath(transform.position, t.GetPosition());
+            return p != null;
+        });
+
+        if (potentialTargets == null || potentialTargets.Count == 0) return;
+
+        potentialTargets.OrderBy(t => Vector2.Distance(transform.position, t.GetPosition()));
+
+        CurrentTarget = potentialTargets[0];
+    }
+
+    public bool ReadyToSting() {
+        return CurrentTarget != null && beganStingCoolOff + STING_COOL_OFF < Time.time;
+    }
+
+    public void InitiateStingCoolOff() {
+        beganStingCoolOff = Time.time;
     }
 }

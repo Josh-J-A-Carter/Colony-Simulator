@@ -9,6 +9,9 @@ public class Patrol : State {
     [SerializeField]
     State patrolWander, patrolReturn;
 
+    [SerializeField]
+    AnimationClip anim;
+
     HornetBehaviour hornet;
 
     Vector2Int home => hornet.Home;
@@ -20,11 +23,18 @@ public class Patrol : State {
     }
 
     public override void OnEntry() {
+        animator.Play(anim.name);
+
         if (Vector2.Distance(transform.position, home) >= DISTANCE_BEFORE_RETURN) {
             stateMachine.SetChildState(patrolReturn);
         }
 
         else stateMachine.SetChildState(patrolWander);
+    }
+
+    public override void FixedRun() {
+        // Debug.Log("Try leave patrol: " + hornet.ReadyToSting());
+        if (hornet.ReadyToSting()) CompleteState();
     }
 
     public override void OnChildExit(State exitingChild, bool success) {

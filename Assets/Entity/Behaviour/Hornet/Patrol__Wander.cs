@@ -6,9 +6,9 @@ using Random = UnityEngine.Random;
 
 public class Patrol__Wander : State {
 
-    HornetBehaviour wasp;
+    HornetBehaviour hornet;
 
-    Vector2Int home => wasp.Home;
+    Vector2Int home => hornet.Home;
 
     Path path;
 
@@ -23,7 +23,7 @@ public class Patrol__Wander : State {
 
 
     public override void OnSetup() {
-        wasp = entity.GetComponent<HornetBehaviour>();
+        hornet = entity.GetComponent<HornetBehaviour>();
     }
 
     public override void OnEntry() {

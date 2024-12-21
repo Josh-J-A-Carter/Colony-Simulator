@@ -97,6 +97,10 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     }
 
     public void Update() {
+        stateMachine.Run();
+    }
+
+    public void FixedUpdate() {
         if (IsDead) return;
 
         if (HealthComponent.IsDead) {
@@ -106,10 +110,6 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
 
         if (stateMachine.EmptyState()) DecideState();
 
-        stateMachine.Run();
-    }
-
-    public void FixedUpdate() {
         stateMachine.FixedRun();
     }
 

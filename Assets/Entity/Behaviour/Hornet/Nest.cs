@@ -11,6 +11,8 @@ public class Nest : State {
 
     const int MIN_WAIT_TIME = 10, MAX_WAIT_TIME = 20;
 
+    const int MIN_REAGGRAVATION_TIME = 2;
+
     int chosenTime;
 
     public override void OnEntry() {
@@ -20,7 +22,7 @@ public class Nest : State {
     }
 
     public override void FixedRun() {
-        if (parent.activeFor >= chosenTime) {
+        if (parent.activeFor >= chosenTime || hornet.ReadyToSting() && parent.activeFor >= MIN_REAGGRAVATION_TIME) {
             Dictionary<String, object> data = TileManager.Instance.GetTileEntityData(home);
             (Vector2Int pos, Constructable constructable) = TileManager.Instance.GetConstructableAt(home);
             HornetNest nest = constructable as HornetNest;

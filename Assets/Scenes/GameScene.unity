@@ -857,6 +857,7 @@ GameObject:
   - component: {fileID: 936653171}
   - component: {fileID: 936653170}
   - component: {fileID: 936653169}
+  - component: {fileID: 936653172}
   m_Layer: 0
   m_Name: Hornet
   m_TagString: Untagged
@@ -878,6 +879,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patrol: {fileID: 1542486518}
   nest: {fileID: 1587561928}
+  sting: {fileID: 1818997744}
   nestConst: {fileID: 11400000, guid: 565a7a5dec66d1342a7ee23cab3103f7, type: 2}
 --- !u!212 &936653170
 SpriteRenderer:
@@ -946,8 +948,30 @@ Transform:
   m_Children:
   - {fileID: 1542486519}
   - {fileID: 1587561929}
+  - {fileID: 1818997745}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &936653172
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936653168}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b5e273ae18a0c9749845a03e47715727, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &952128795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1436,6 +1460,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patrolWander: {fileID: 952128797}
   patrolReturn: {fileID: 662908351}
+  anim: {fileID: 7400000, guid: b5df1ece0f790c348b57c96e4f4e2c96, type: 2}
 --- !u!4 &1542486519
 Transform:
   m_ObjectHideFlags: 0
@@ -46541,6 +46566,51 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1818997743
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1818997745}
+  - component: {fileID: 1818997744}
+  m_Layer: 0
+  m_Name: Sting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1818997744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818997743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecfff8bcf80dc494285c882f46ea939a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 7400000, guid: 4c8ad84ebbe118a43a99566d2af1ebc3, type: 2}
+--- !u!4 &1818997745
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818997743}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 936653171}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

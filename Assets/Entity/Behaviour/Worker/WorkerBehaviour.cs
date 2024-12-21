@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ILiving {
+public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ITargetable {
 
     [SerializeField]
     State idle, build, nurse, tidy, forage, ferment, eat, die;
@@ -39,7 +39,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
-            child.GetComponent<State>().Setup(gameObject, animator, stateMachine);
+            child.GetComponent<State>()?.Setup(gameObject, animator, stateMachine);
         }
 
         TaskManager.Instance.RegisterAgent(this);
@@ -274,4 +274,17 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
 
         return curr;
     }
+
+    public int Friendliness() {
+        return 1;
+    }
+
+    public void Damage(uint amount) {
+        HealthComponent.Damage(amount);
+    }
+
+    public Vector2 GetPosition() {
+        return transform.position;
+    }
+
 }

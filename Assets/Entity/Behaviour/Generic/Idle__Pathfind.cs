@@ -27,8 +27,6 @@ public class Idle__Pathfind : State {
         ChooseTarget();
     }
 
-    public override void OnExit() {}
-
     public override void FixedRun() {
         bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
 

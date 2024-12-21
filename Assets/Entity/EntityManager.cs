@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,6 +13,8 @@ public class EntityManager : MonoBehaviour {
     GameObject workerBeePrefab, queenBeePrefab, itemEntityPrefab, droneBeePrefab;
 
     List<ItemEntity> itemEntities;
+
+    List<IEntity> entities;
 
 
     String[] awesomeWorkerBeeNames = new String[] {
@@ -39,6 +42,8 @@ public class EntityManager : MonoBehaviour {
         } else Instance = this;
 
         itemEntities = new();
+
+        entities = new();
     }
 
     public void Start() {
@@ -56,6 +61,8 @@ public class EntityManager : MonoBehaviour {
         int index = Random.Range(0, awesomeWorkerBeeNames.Length);
         worker.SetName(awesomeWorkerBeeNames[index]);
 
+        entities.Add(worker);
+
         return obj;
     }
 
@@ -65,6 +72,8 @@ public class EntityManager : MonoBehaviour {
         DroneBehaviour drone = obj.GetComponent<DroneBehaviour>();
         int index = Random.Range(0, awesomeDroneBeeNames.Length);
         drone.SetName(awesomeDroneBeeNames[index]);
+
+        entities.Add(drone);
 
         return obj;
     }
@@ -90,6 +99,8 @@ public class EntityManager : MonoBehaviour {
         String name = $"Queen {baseName} {genName}";
         queen.SetName(name);
 
+        entities.Add(queen);
+
         return obj;
     }
 
@@ -101,6 +112,8 @@ public class EntityManager : MonoBehaviour {
 
         itemEntities.Add(itemEntity);
 
+        entities.Add(itemEntity);
+
         return obj;
     }
 
@@ -108,6 +121,8 @@ public class EntityManager : MonoBehaviour {
         if (entity is ItemEntity itemEntity) {
             itemEntities.Remove(itemEntity);
         }
+
+        entities.Remove(entity);
 
         Destroy(entity.GetGameObject());
     }
@@ -132,5 +147,17 @@ public class EntityManager : MonoBehaviour {
 
     public ReadOnlyCollection<ItemEntity> GetItemEntities() {
         return itemEntities.AsReadOnly();
+    }
+
+    public List<T> QueryEntities<T>(Func<T, bool> filter = null) {
+        if (filter == null) filter = _ => true;
+
+        List<T> result = new(entities.Count);
+
+        foreach (IEntity entity in entities) {
+            if (entity is T t && filter(t)) result.Add(t);
+        }
+
+        return result;
     }
 }

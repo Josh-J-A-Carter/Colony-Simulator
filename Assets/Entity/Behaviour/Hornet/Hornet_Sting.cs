@@ -1,7 +1,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Sting : State {
+public class Hornet_Sting : State {
 
     [SerializeField]
     AnimationClip anim;
@@ -14,7 +14,7 @@ public class Sting : State {
 
     Path path;
     int stepSpeed = 10;
-    
+
     public override void OnSetup() {
         hornet = entity.GetComponent<HornetBehaviour>();
     }
@@ -36,7 +36,7 @@ public class Sting : State {
         bool withinDistance = Vector2.Distance(entity.transform.position, target.GetPosition()) < DISTANCE_EPSILON;
 
         if (withinDistance) {
-            target.Damage((uint) (DMG_AMOUNT + Random.Range(DMG_RAND_MIN, DMG_RAND_MAX)));
+            target.Damage((uint) (DMG_AMOUNT + Random.Range(DMG_RAND_MIN, DMG_RAND_MAX)), hornet);
             CompleteState();
             hornet.InitiateStingCoolOff();
             return;

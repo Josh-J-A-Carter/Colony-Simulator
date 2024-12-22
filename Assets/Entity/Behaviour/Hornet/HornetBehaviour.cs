@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class HornetBehaviour : MonoBehaviour {
+public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
 
     public Vector2Int Home { get; private set; }
 
@@ -11,11 +11,14 @@ public class HornetBehaviour : MonoBehaviour {
     State state => stateMachine.childState;
 
     Renderer render;
-
     Animator animator;
+    HealthComponent healthComponent;
+    GravityComponent gravity;
+
+    bool isDead;
 
     [SerializeField]
-    State patrol, nest, sting;
+    State patrol, nest, sting, die;
 
     [SerializeField]
     HornetNest nestConst;
@@ -26,12 +29,17 @@ public class HornetBehaviour : MonoBehaviour {
     float beganStingCoolOff;
     int targetPulse;
 
+    public GameObject GetGameObject() {
+        return gameObject;
+    }
 
     public void Start() {
         stateMachine = new();
 
         animator = GetComponent<Animator>();
         render = GetComponent<Renderer>();
+        healthComponent = GetComponent<HealthComponent>();
+        gravity = GetComponent<GravityComponent>();
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
@@ -43,7 +51,14 @@ public class HornetBehaviour : MonoBehaviour {
     }
 
     public void FixedUpdate() {
-        if (state == null) DecideState();
+        if (isDead) return;
+
+        if (healthComponent.IsDead) {
+            OnDeath();
+            return;
+        }
+
+        if (stateMachine.EmptyState()) DecideState();
 
         stateMachine.FixedRun();
 
@@ -57,6 +72,13 @@ public class HornetBehaviour : MonoBehaviour {
         }
 
         stateMachine.SetChildState(patrol);
+    }
+
+    void OnDeath() {
+        stateMachine.SetChildState(die);
+        isDead = true;
+
+        gravity.Enable();
     }
 
     public void OnNestEntry() {
@@ -118,5 +140,21 @@ public class HornetBehaviour : MonoBehaviour {
     public void InitiateStingCoolOff() {
         beganStingCoolOff = Time.time;
         CurrentTarget = null;
+    }
+
+    public int Friendliness() {
+        return -1;
+    }
+
+    public void Damage(uint amount, ITargetable attacker = null) {
+        healthComponent.Damage(amount);
+    }
+
+    public Vector2 GetPosition() {
+        return transform.position;
+    }
+
+    public bool IsDead() {
+        return healthComponent.IsDead;
     }
 }

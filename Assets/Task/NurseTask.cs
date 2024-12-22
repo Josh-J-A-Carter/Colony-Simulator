@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class NurseTask : WorkerTask, ILocative, IConsumer {
+public class NurseTask : Task, ILocative, IConsumer {
     
     BroodComb broodComb;
     Vector2Int startPos;
@@ -27,10 +27,6 @@ public class NurseTask : WorkerTask, ILocative, IConsumer {
         this.requiredResources = requiredResources.AsReadOnly();
 
         creationTime = Time.time;
-    }
-
-    public override WorkerTaskType GetCategory() {
-        return WorkerTaskType.Nurse;
     }
 
     public override void OnCompletion() {

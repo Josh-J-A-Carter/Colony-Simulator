@@ -6,12 +6,12 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
     [SerializeField]
     State idle, lay, eat, die;
     Animator animator;
-    QueenTask task;
+    Task task;
     StateMachine stateMachine;
     State currentState => stateMachine.childState;
 
     InventoryManager inventory;
-    public HealthComponent HealthComponent { get; private set; }
+    HealthComponent healthComponent;
     bool isDead;
 
     GravityComponent gravity;
@@ -27,7 +27,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
 
         animator = GetComponent<Animator>();
         inventory = GetComponent<InventoryManager>();
-        HealthComponent = GetComponent<HealthComponent>();
+        healthComponent = GetComponent<HealthComponent>();
         gravity = GetComponent<GravityComponent>();
 
         // Recursively set up the states
@@ -39,8 +39,8 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
     }
 
     public bool OfferTask(Task task) {
-        if (task is QueenTask queenTask) {
-            this.task = queenTask;
+        if (task.IsQueenTask()) {
+            this.task = task;
             return true;
         } else return false;
     }
@@ -48,12 +48,16 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
     public void SetTask(Task task) {
         if (task == null) {
             this.task = null;
+            stateMachine.ResetChildState();
             return;
         }
 
-        if (task is QueenTask queenTask) {
-            this.task = queenTask;
-        }
+        if (task.IsQueenTask()) {
+            this.task = task;
+        } else throw new Exception("Cannot accept the task as it is not of type WorkerTask");
+
+        stateMachine.ResetChildState();
+
     }
     
     public void CancelTask() {
@@ -68,7 +72,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
     public void Update() {
         if (isDead) return;
 
-        if (HealthComponent.IsDead) {
+        if (healthComponent.IsDead) {
             OnDeath();
             return;
         }
@@ -84,7 +88,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
 
     void DecideState() {
         // Low nutrition -> immediate action, if there is food available
-        if (HealthComponent.LowNutrition) {
+        if (healthComponent.LowNutrition) {
             Resource resource = new Resource(ItemTag.Food);
             if (ResourceManager.Instance.Available(inventory, resource)) {
                 stateMachine.SetChildState(eat);
@@ -94,7 +98,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
 
         if (task == null) {
             // Eat (with less urgency)
-            if (HealthComponent.Nutrition <= 3 * HealthComponent.MaxNutrition / 4) {
+            if (healthComponent.Nutrition <= 3 * healthComponent.MaxNutrition / 4) {
                 Resource resource = new Resource(ItemTag.Food);
                 if (ResourceManager.Instance.Available(inventory, resource)) {
                     stateMachine.SetChildState(eat);
@@ -157,7 +161,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
     #endif
 
         // Health
-        root.AddChild(HealthComponent.GetInfoBranch());
+        root.AddChild(healthComponent.GetInfoBranch());
 
         // Inventory
         InfoBranch inventoryCategory = inventory.GetInfoTree();
@@ -177,7 +181,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
     }
 
     public bool IsDead() {
-        return HealthComponent.IsDead;
+        return healthComponent.IsDead;
     }
 
     public int Friendliness() {
@@ -188,7 +192,11 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
         return transform.position;
     }
 
-    public void Damage(uint amount) {
-        HealthComponent.Damage(amount);
+    public void Damage(uint amount, ITargetable attacker = null) {
+        healthComponent.Damage(amount);
+
+        if (attacker != null) {
+            TaskManager.Instance.CreateTask(new AttackTask(attacker, TaskPriority.Critical));
+        }
     }
 }

@@ -552,6 +552,7 @@ Transform:
   - {fileID: 2883539734441149644}
   - {fileID: 2310302943278053981}
   - {fileID: 9078308149336151787}
+  - {fileID: 6393057338895057564}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &333776470971658172
@@ -692,6 +693,7 @@ MonoBehaviour:
   ferment: {fileID: 7443480746491101835}
   eat: {fileID: 7657159451167296912}
   die: {fileID: 4157886100282825499}
+  sting: {fileID: 6257514487397700297}
 --- !u!114 &8531101069963779304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1201,6 +1203,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Collect: {fileID: 1432687605925642583}
   Store: {fileID: 5766766275175161628}
+--- !u!1 &7567939900872331261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6393057338895057564}
+  - component: {fileID: 6257514487397700297}
+  m_Layer: 0
+  m_Name: Sting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6393057338895057564
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7567939900872331261}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5405411461827431291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6257514487397700297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7567939900872331261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a9b8cd7ae6caea41a3fd9308782d9d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 7400000, guid: 23e34d50d87c2ca4e90ad05a35c3e2ea, type: 2}
 --- !u!1 &7823918513654220410
 GameObject:
   m_ObjectHideFlags: 0

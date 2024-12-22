@@ -31,6 +31,13 @@ public abstract class Task : IInformative {
     }
 
     /// <summary>
+    /// Give control to the Task implementation so that it can decide whether to end early
+    /// </summary>
+    public virtual bool EarlyCompletion() {
+        return false;
+    }
+
+    /// <summary>
     /// Before the task is confirmed, this method is called to decide whether the task should be
     /// aborted, or if it can be continued with.
     /// </summary>
@@ -71,6 +78,14 @@ public abstract class Task : IInformative {
     public abstract String GetDescription();
 
     public abstract InfoBranch GetInfoTree(object obj = null);
+
+    public virtual bool IsWorkerTask() {
+        return true;
+    }
+
+    public virtual bool IsQueenTask() {
+        return false;
+    }
 }
 
 public enum TaskPriority {

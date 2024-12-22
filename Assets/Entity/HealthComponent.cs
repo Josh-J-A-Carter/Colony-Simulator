@@ -39,13 +39,14 @@ public class HealthComponent : MonoBehaviour {
     public void FixedUpdate() {
         if (IsDead) return;
 
-        tickHunger += 1;
+        if (hungerRate > 0) {
+            tickHunger += 1;
 
-        if (tickHunger >= TICKS_TO_SECONDS * hungerRate) {
-            tickHunger = 0;
+            if (tickHunger >= TICKS_TO_SECONDS * hungerRate) {
+                tickHunger = 0;
 
-            Nutrition = Nutrition == 0 ? 0 : Nutrition - 1;
-
+                Nutrition = Nutrition == 0 ? 0 : Nutrition - 1;
+            }
         }
 
         tickHungerDamage += 1;

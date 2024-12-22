@@ -6,12 +6,12 @@ using UnityEngine;
 public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ITargetable {
 
     [SerializeField]
-    State idle, build, nurse, tidy, forage, ferment, eat, die;
+    State idle, build, nurse, tidy, forage, ferment, eat, die, sting;
     Animator animator;
 
-    WorkerTask task;
+    Task task;
     InventoryManager inventory;
-    public HealthComponent HealthComponent { get; private set; }
+    HealthComponent healthComponent;
     bool isDead;
 
     GravityComponent gravity;
@@ -21,12 +21,15 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
 
     String nameInfo;
 
+    const int STING_COOL_OFF = 3;
+    float beganStingCoolOff;
+
     public GameObject GetGameObject() {
         return gameObject;
     }
 
     public HealthComponent GetHealthComponent() {
-        return HealthComponent;
+        return healthComponent;
     }
 
     public void Start() {
@@ -34,7 +37,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         
         animator = GetComponent<Animator>();
         inventory = GetComponent<InventoryManager>();
-        HealthComponent = GetComponent<HealthComponent>();
+        healthComponent = GetComponent<HealthComponent>();
         gravity = GetComponent<GravityComponent>();
 
         // Recursively set up the states
@@ -57,8 +60,8 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         // Make sure pathfinding to the task is possible, if applicable
         if (task is ILocative locative && !IsPathAvailable(locative)) return false;
 
-        if (task is WorkerTask workerTask) {
-            this.task = workerTask;
+        if (task.IsWorkerTask()) {
+            this.task = task;
             return true;
         } else return false;
     }
@@ -80,8 +83,8 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
             return;
         }
 
-        if (task is WorkerTask workerTask) {
-            this.task = workerTask;
+        if (task.IsWorkerTask()) {
+            this.task = task;
         } else throw new Exception("Cannot accept the task as it is not of type WorkerTask");
 
         stateMachine.ResetChildState();
@@ -103,7 +106,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     public void FixedUpdate() {
         if (isDead) return;
 
-        if (HealthComponent.IsDead) {
+        if (healthComponent.IsDead) {
             OnDeath();
             return;
         }
@@ -116,7 +119,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     void DecideState() {
 
         // Low nutrition -> immediate action, provided there is food available
-        if (HealthComponent.LowNutrition) {
+        if (healthComponent.LowNutrition) {
             Resource resource = new Resource(ItemTag.Food);
             if (ResourceManager.Instance.Available(inventory, resource)) {
                 stateMachine.SetChildState(eat);
@@ -166,7 +169,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
             }
 
             // Eat (with less urgency)
-            if (HealthComponent.Nutrition <= 3 * HealthComponent.MaxNutrition / 4) {
+            if (healthComponent.Nutrition <= 3 * healthComponent.MaxNutrition / 4) {
                 resource = new Resource(ItemTag.Food);
                 if (ResourceManager.Instance.Available(inventory, resource)) {
                     stateMachine.SetChildState(eat);
@@ -189,6 +192,16 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
 
         else if (task is ForageTask) {
             stateMachine.SetChildState(forage);
+        }
+
+        else if (task is AttackTask) {
+            if (beganStingCoolOff + STING_COOL_OFF < Time.time) {
+                stateMachine.SetChildState(sting);
+            }
+
+            else {
+                stateMachine.SetChildState(idle);
+            }
         }
         
         else {
@@ -256,7 +269,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     #endif
 
         // Health
-        root.AddChild(HealthComponent.GetInfoBranch());
+        root.AddChild(healthComponent.GetInfoBranch());
 
         // Inventory
         InfoBranch inventoryCategory = inventory.GetInfoTree();
@@ -279,8 +292,12 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         return 1;
     }
 
-    public void Damage(uint amount) {
-        HealthComponent.Damage(amount);
+    public void Damage(uint amount, ITargetable attacker = null) {
+        healthComponent.Damage(amount);
+
+        if (attacker != null) {
+            TaskManager.Instance.CreateTask(new AttackTask(attacker, TaskPriority.Urgent));
+        }
     }
 
     public Vector2 GetPosition() {
@@ -288,6 +305,11 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     }
 
     public bool IsDead() {
-        return HealthComponent.IsDead;
+        return healthComponent.IsDead;
+    }
+
+    public void InitiateStingCoolOff() {
+        beganStingCoolOff = Time.time;
+        (this as ITaskAgent).CancelAssignment();
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class BuildTask : WorkerTask, ILocative, IConsumer {
+public class BuildTask : Task, ILocative, IConsumer {
     
     Constructable constructable;
     Vector2Int startPos;
@@ -26,10 +26,6 @@ public class BuildTask : WorkerTask, ILocative, IConsumer {
         this.configDataTemplate = configDataTemplate;
 
         creationTime = Time.time;
-    }
-
-    public override WorkerTaskType GetCategory() {
-        return WorkerTaskType.House;
     }
 
     public override bool MustAbort() {

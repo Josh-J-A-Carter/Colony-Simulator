@@ -11,7 +11,7 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable 
     State currentState => stateMachine.childState;
     
     InventoryManager inventory;
-    public HealthComponent HealthComponent { get; private set; }
+    HealthComponent healthComponent;
     bool isDead;
 
     GravityComponent gravity;
@@ -27,7 +27,7 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable 
 
         animator = GetComponent<Animator>();
         inventory = GetComponent<InventoryManager>();
-        HealthComponent = GetComponent<HealthComponent>();
+        healthComponent = GetComponent<HealthComponent>();
         gravity = GetComponent<GravityComponent>();
 
         // Recursively set up the states
@@ -37,25 +37,25 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable 
     }
 
     public void Update() {
+        stateMachine.Run();
+    }
+
+    public void FixedUpdate() {
         if (isDead) return;
 
-        if (HealthComponent.IsDead) {
+        if (healthComponent.IsDead) {
             OnDeath();
             return;
         }
 
         if (stateMachine.EmptyState()) DecideState();
 
-        stateMachine.Run();
-    }
-
-    public void FixedUpdate() {
         stateMachine.FixedRun();
     }
 
     void DecideState() {
         // Low nutrition -> immediate action, if there is food available
-        if (HealthComponent.Nutrition <= 3 * HealthComponent.MaxNutrition / 4) {
+        if (healthComponent.Nutrition <= 3 * healthComponent.MaxNutrition / 4) {
             Resource resource = new Resource(ItemTag.Food);
             if (ResourceManager.Instance.Available(inventory, resource)) {
                 stateMachine.SetChildState(eat);
@@ -112,7 +112,7 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable 
     #endif
 
         // Health
-        root.AddChild(HealthComponent.GetInfoBranch());
+        root.AddChild(healthComponent.GetInfoBranch());
 
         // Inventory
         InfoBranch inventoryCategory = inventory.GetInfoTree();
@@ -132,7 +132,7 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable 
     }
 
     public bool IsDead() {
-        return HealthComponent.IsDead;
+        return healthComponent.IsDead;
     }
 
     public int Friendliness() {
@@ -143,7 +143,11 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable 
         return transform.position;
     }
 
-    public void Damage(uint amount) {
-        HealthComponent.Damage(amount);
+    public void Damage(uint amount, ITargetable attacker = null) {
+        healthComponent.Damage(amount);
+
+        if (attacker != null) {
+            TaskManager.Instance.CreateTask(new AttackTask(attacker, TaskPriority.Important));
+        }
     }
 }

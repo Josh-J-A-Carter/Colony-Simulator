@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class ForageTask : WorkerTask, ILocative, IReward {
+public class ForageTask : Task, ILocative, IReward {
     
     IProducer forageStructure;
 
@@ -86,7 +86,4 @@ public class ForageTask : WorkerTask, ILocative, IReward {
         return root;
     }
 
-    public override WorkerTaskType GetCategory() {
-        return WorkerTaskType.Forage;
-    }
 }

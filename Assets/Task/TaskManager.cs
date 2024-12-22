@@ -46,6 +46,9 @@ public class TaskManager : MonoBehaviour {
         // Refresh task rules; give them an opportunity to cancel tasks, create new ones, etc.
         RefreshTaskRules();
 
+        // Check for tasks that should be completed early
+        EarlyTaskCompletion();
+
         // Deal with the queue of tasks that have been marked as complete
         ClearPendingCompletion();
 
@@ -68,6 +71,10 @@ public class TaskManager : MonoBehaviour {
 
     void RefreshTaskRules() {
         foreach (TaskRule rule in taskRules) rule.Refresh();
+    }
+
+    void EarlyTaskCompletion() {
+        foreach (Task task in tasks) if (task.EarlyCompletion()) MarkComplete(task);
     }
 
     void OccupyUnassignedAgents() {

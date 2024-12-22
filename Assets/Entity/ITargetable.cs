@@ -8,5 +8,5 @@ public interface ITargetable {
 
     public Vector2 GetPosition();
     
-    public void Damage(uint amount);
+    public void Damage(uint amount, ITargetable attacker = null);
 }

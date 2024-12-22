@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LayTask : QueenTask {
+public class LayTask : Task {
     Vector2Int location;
 
     public LayTask(TaskPriority priority, Vector2Int location) {
@@ -44,5 +42,13 @@ public class LayTask : QueenTask {
         root.AddChild(progressProperty);
 
         return root;
+    }
+
+    public override bool IsWorkerTask() {
+        return false;
+    }
+
+    public override bool IsQueenTask() {
+        return true;
     }
 }

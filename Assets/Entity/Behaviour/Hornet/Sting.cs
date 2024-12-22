@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Sting : State {
 
@@ -10,13 +9,12 @@ public class Sting : State {
     HornetBehaviour hornet;
 
     ITargetable target => hornet.CurrentTarget;
-    const float DISTANCE_EPSILON = 0.5f;
-    const int DMG_AMOUNT = 10;
+    const float DISTANCE_EPSILON = 0.75f;
+    const int DMG_AMOUNT = 10, DMG_RAND_MIN = 0, DMG_RAND_MAX = 2;
 
     Path path;
-    int pathPulse, step, stepsMax, stepSpeed = 10;
-    const int PATH_PULSE_RATE = 25;
-
+    int stepSpeed = 10;
+    
     public override void OnSetup() {
         hornet = entity.GetComponent<HornetBehaviour>();
     }
@@ -28,39 +26,41 @@ public class Sting : State {
     }
 
     public override void FixedRun() {
-        if (target == null) {
-            CompleteState(false);
-            return;
-        }
-
-        Pathfind.MoveAlongPath(entity, path, step, stepsMax);
-
-        if (Vector2.Distance(entity.transform.position, target.GetPosition()) < DISTANCE_EPSILON) {
-            target.Damage(DMG_AMOUNT);
+        if (target == null || hornet.ReadyToSting() == false) {
             CompleteState();
             return;
         }
 
-        step += 1;
+        bool success = path.Increment();
 
-        pathPulse += 1;
+        bool withinDistance = Vector2.Distance(entity.transform.position, target.GetPosition()) < DISTANCE_EPSILON;
 
-        if (pathPulse >= PATH_PULSE_RATE) {
-            pathPulse = 0;
+        if (withinDistance) {
+            target.Damage((uint) (DMG_AMOUNT + Random.Range(DMG_RAND_MIN, DMG_RAND_MAX)));
+            CompleteState();
+            hornet.InitiateStingCoolOff();
+            return;
+        }
 
+        if (path.IsComplete() && withinDistance) {
+            CompleteState();
+            return;
+        }
+
+        if (!success || path.IsComplete()) {
             CalculatePath();
         }
     }
 
     void CalculatePath() {
-        path = Pathfind.FindPath(entity.transform.position, target.GetPosition());
+        Vector2 startPos = entity.transform.position;
+        path = Pathfind.FindPath(startPos, target.GetPosition());
     
         if (path == null) {
             CompleteState(false);
             return;
         }
 
-        step = 0;
-        stepsMax = path.Count * stepSpeed;
+        path.Initialise(entity, stepSpeed);
     }
 }

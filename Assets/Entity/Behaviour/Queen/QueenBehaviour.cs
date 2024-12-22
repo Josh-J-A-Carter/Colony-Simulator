@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ILiving {
+public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ITargetable {
     
     [SerializeField]
     State idle, lay, eat, die;
@@ -12,7 +12,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
 
     InventoryManager inventory;
     public HealthComponent HealthComponent { get; private set; }
-    public bool IsDead { get; private set; }
+    bool isDead;
 
     GravityComponent gravity;
 
@@ -66,7 +66,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
 
 
     public void Update() {
-        if (IsDead) return;
+        if (isDead) return;
 
         if (HealthComponent.IsDead) {
             OnDeath();
@@ -114,7 +114,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
         if (task != null) (this as ITaskAgent).CancelAssignment();
 
         stateMachine.SetChildState(die);
-        IsDead = true;
+        isDead = true;
 
         inventory.EmptyInventory();
         inventory.DisablePassiveProduction();
@@ -174,5 +174,21 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
         while (curr.stateMachine.childState != null) curr = curr.stateMachine.childState;
 
         return curr;
+    }
+
+    public bool IsDead() {
+        return HealthComponent.IsDead;
+    }
+
+    public int Friendliness() {
+        return 1;
+    }
+
+    public Vector2 GetPosition() {
+        return transform.position;
+    }
+
+    public void Damage(uint amount) {
+        HealthComponent.Damage(amount);
     }
 }

@@ -154,33 +154,6 @@ public static class Pathfind {
     }
 
     /// <summary>
-    /// Move <c>entity</c> along <c>path</c> using linear interpolation.
-    /// </summary>
-    /// <returns><c>true</c> if the path is still valid, false otherwise.</returns>
-    public static bool MoveAlongPath(GameObject entity, Path path, int step, int stepsMax) {
-        int currentX = (int) Math.Floor(entity.transform.position.x);
-        int currentY = (int) Math.Floor(entity.transform.position.y);
-
-        Vector2Int current = new Vector2Int(currentX, currentY);
-
-        if (path.IsValidFrom(current)) {
-            
-            // Linearly interpolate to next point
-            Vector2 nextPoint = path.LinearlyInterpolate(step, stepsMax);
-            Vector2 translation = nextPoint - (Vector2) entity.transform.position;
-            entity.transform.Translate(translation);
-
-            /// Remember to flip the character's sprite as needed
-            int sign = Math.Sign(translation.x);
-            if (sign != 0) entity.transform.localScale = new Vector3(sign, 1, 1);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// Find a valid path out of a number of potential options, choosing the closest one to the given position.
     /// This also returns the index of the chosen target in the original list.
     /// </summary>

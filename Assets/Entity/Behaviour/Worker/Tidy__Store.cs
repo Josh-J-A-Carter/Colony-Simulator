@@ -13,8 +13,6 @@ public class Tidy__Store : State {
     Dictionary<String, object> targetData;
 
     Path path;
-
-    int step, stepsMax;
     static readonly int stepSpeed = 15;
 
     int pulse;
@@ -44,9 +42,7 @@ public class Tidy__Store : State {
         if (path != null) {
             this.path = path;
             (targetLocation, targetType, targetData) = storage[index];
-
-            step = 0;
-            stepsMax = path.Count * stepSpeed;
+            path.Initialise(entity, stepSpeed);
             return;
         }
         
@@ -71,11 +67,9 @@ public class Tidy__Store : State {
             }
         }
 
-        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
+        bool success = path.Increment();
 
-        step += 1;
-
-        if (step > stepsMax) {
+        if (path.IsComplete()) {
             // Get the first N items in inventory (N = space available in storage)
             int space = (int) targetType.RemainingCapacity(targetData);
 

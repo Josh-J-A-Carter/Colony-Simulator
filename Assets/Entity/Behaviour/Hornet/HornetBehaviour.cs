@@ -20,7 +20,7 @@ public class HornetBehaviour : MonoBehaviour {
     [SerializeField]
     HornetNest nestConst;
 
-    const int MAX_TARGET_DISTANCE = 25, MAX_FOLLOW_DISTANCE = 35, TARGET_PULSE_RATE = 25, STING_COOL_OFF = 5;
+    const int MAX_TARGET_DISTANCE = 15, MAX_FOLLOW_DISTANCE = 35, TARGET_PULSE_RATE = 25, STING_COOL_OFF = 5;
 
     public ITargetable CurrentTarget { get; private set; }
     float beganStingCoolOff;
@@ -97,7 +97,7 @@ public class HornetBehaviour : MonoBehaviour {
 
         List<ITargetable> potentialTargets = EntityManager.Instance.QueryEntities<ITargetable>(t => {
             if (t.Friendliness() <= 0) return false;
-            if (t.IsDead) return false;
+            if (t.IsDead()) return false;
             if (Vector2.Distance(transform.position, t.GetPosition()) > MAX_TARGET_DISTANCE) return false;
 
             Path p = Pathfind.FindPath(transform.position, t.GetPosition());
@@ -117,5 +117,6 @@ public class HornetBehaviour : MonoBehaviour {
 
     public void InitiateStingCoolOff() {
         beganStingCoolOff = Time.time;
+        CurrentTarget = null;
     }
 }

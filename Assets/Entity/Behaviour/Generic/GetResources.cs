@@ -23,7 +23,6 @@ public class GetResources : State {
     
     
     Path path;
-    int step, stepsMax;
     static readonly int stepSpeed = 15;
 
     InventoryManager inventory;
@@ -80,9 +79,7 @@ public class GetResources : State {
         if (path != null) {
             this.path = path;
             targetEntity = itemEntities[index];
-
-            step = 0;
-            stepsMax = path.Count * stepSpeed;
+            path.Initialise(entity, stepSpeed);
             return true;
         }
         
@@ -108,9 +105,7 @@ public class GetResources : State {
         if (path != null) {
             this.path = path;
             (targetLocation, targetType, targetData) = storage[index];
-
-            step = 0;
-            stepsMax = path.Count * stepSpeed;
+            path.Initialise(entity, stepSpeed);
             return true;
         }
 
@@ -123,11 +118,9 @@ public class GetResources : State {
             return;
         }
 
-        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
+        bool success = path.Increment();
 
-        step += 1;
-
-        if (step == stepsMax) {
+        if (path.IsComplete()) {
             if (isTargetingItemEntity) {
                 targetEntity.Collect(inventory);
             }

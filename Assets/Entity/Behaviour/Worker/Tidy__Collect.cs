@@ -16,8 +16,6 @@ public class Tidy__Collect : State {
     ItemEntity targetEntity;
     Path path;
     const int TARGET_ATTEMPTS = 10;
-
-    int step, stepsMax;
     static readonly int stepSpeed = 15;
 
     InventoryManager inventory;
@@ -40,11 +38,9 @@ public class Tidy__Collect : State {
             return;
         }
 
-        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
+        bool success = path.Increment();
 
-        step += 1;
-
-        if (step > stepsMax) {
+        if (path.IsComplete()) {
             CompleteState();
             targetEntity.Collect(inventory);
             return;
@@ -67,9 +63,7 @@ public class Tidy__Collect : State {
         if (path != null) {
             this.path = path;
             targetEntity = itemEntities[index];
-
-            step = 0;
-            stepsMax = path.Count * stepSpeed;
+            path.Initialise(entity, stepSpeed);
             return;
         }
         

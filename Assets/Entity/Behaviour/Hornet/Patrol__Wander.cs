@@ -19,8 +19,6 @@ public class Patrol__Wander : State {
 
     static readonly int stepSpeed = 13;
 
-    int stepsMax, step;
-
 
     public override void OnSetup() {
         hornet = entity.GetComponent<HornetBehaviour>();
@@ -33,8 +31,7 @@ public class Patrol__Wander : State {
 
             path = Pathfind.FindPath(transform.position, dst);
             if (path != null) {
-                step = 0;
-                stepsMax = stepSpeed * path.Count;
+                path.Initialise(entity, stepSpeed);
                 return;
             }
         }
@@ -43,11 +40,9 @@ public class Patrol__Wander : State {
     }
 
     public override void FixedRun() {
-        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
+        bool success = path.Increment();
 
-        step += 1;
-
-        if (step >= stepsMax) {
+        if (path.IsComplete()) {
             CompleteState();
             return;
         }

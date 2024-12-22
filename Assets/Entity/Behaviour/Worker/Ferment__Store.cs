@@ -12,8 +12,6 @@ public class Ferment__Store : State {
     Dictionary<String, object> targetData;
 
     Path path;
-
-    int step, stepsMax;
     static readonly int stepSpeed = 15;
 
     int pulse;
@@ -49,9 +47,7 @@ public class Ferment__Store : State {
         if (path != null) {
             this.path = path;
             (targetLocation, targetType, targetData) = storage[index];
-
-            step = 0;
-            stepsMax = path.Count * stepSpeed;
+            path.Initialise(entity, stepSpeed);
             return;
         }
         
@@ -76,11 +72,9 @@ public class Ferment__Store : State {
             }
         }
 
-        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
+        bool success = path.Increment();
 
-        step += 1;
-
-        if (step == stepsMax) {
+        if (path.IsComplete()) {
             List<(Item item, uint)> taken = inventory.TakeResources(resourceRequirements);
 
             Vector2 pos = entity.transform.position;

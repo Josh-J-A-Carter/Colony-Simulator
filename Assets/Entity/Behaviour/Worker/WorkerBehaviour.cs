@@ -12,7 +12,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     WorkerTask task;
     InventoryManager inventory;
     public HealthComponent HealthComponent { get; private set; }
-    public bool IsDead { get; private set; }
+    bool isDead;
 
     GravityComponent gravity;
 
@@ -46,7 +46,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     }
 
     public bool OfferTask(Task task) {
-        if (IsDead) return false;
+        if (isDead) return false;
 
         // *Prefer* continuing with the current task
         if (this.task != null) return false;
@@ -101,7 +101,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     }
 
     public void FixedUpdate() {
-        if (IsDead) return;
+        if (isDead) return;
 
         if (HealthComponent.IsDead) {
             OnDeath();
@@ -204,7 +204,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         if (task != null) (this as ITaskAgent).CancelAssignment();
 
         stateMachine.SetChildState(die);
-        IsDead = true;
+        isDead = true;
 
         inventory.EmptyInventory();
         inventory.DisablePassiveProduction();
@@ -287,4 +287,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         return transform.position;
     }
 
+    public bool IsDead() {
+        return HealthComponent.IsDead;
+    }
 }

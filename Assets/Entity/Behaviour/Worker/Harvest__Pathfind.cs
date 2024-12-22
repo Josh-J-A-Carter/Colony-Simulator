@@ -9,9 +9,6 @@ public class Harvest__Pathfind : State {
 
     Path path;
     ForageTask task => (ForageTask) taskAgent.GetTask();
-
-    int step, stepsMax;
-
     static readonly int stepSpeed = 15;
 
     [SerializeField]
@@ -30,11 +27,9 @@ public class Harvest__Pathfind : State {
     }
 
     public override void FixedRun(){
-        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
+        bool success = path.Increment();
 
-        step += 1;
-
-        if (step > stepsMax) {
+        if (path.IsComplete()) {
             CompleteState();
             return;
         }
@@ -49,8 +44,7 @@ public class Harvest__Pathfind : State {
         (path, _) = Pathfind.FindPathToOneOf(transform.position, interior.ToList(), p => p);
 
         if (path != null) {
-            step = 0;
-            stepsMax = path.Count * stepSpeed;
+            path.Initialise(entity, stepSpeed);
             return;
         }
 

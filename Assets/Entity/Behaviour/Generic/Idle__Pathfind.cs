@@ -6,7 +6,7 @@ public class Idle__Pathfind : State {
 
     [SerializeField]
     /// Maximum/minimum distances to meander, from the current position
-    static int minRange = 3, maxRange = 8;
+    const int MIN_RANGE_X = 3, MAX_RANGE_X = 8, MIN_RANGE_Y = 0, MAX_RANGE_Y = 3;
 
     [SerializeField]
     AnimationClip anim;
@@ -17,10 +17,6 @@ public class Idle__Pathfind : State {
 
     static readonly int stepSpeed = 15;
 
-    int stepsMax;
-
-    int step;
-
     public override void OnEntry() {
         animator.Play(anim.name);
 
@@ -28,11 +24,9 @@ public class Idle__Pathfind : State {
     }
 
     public override void FixedRun() {
-        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
+        bool success = path.Increment();
 
-        step += 1;
-
-        if (step >= stepsMax) {
+        if (path.IsComplete()) {
             CompleteState();
             return;
         }
@@ -51,12 +45,10 @@ public class Idle__Pathfind : State {
         Vector2Int current = new Vector2Int(currentX, currentY);
 
         for (int attempt = 0 ; attempt < TARGET_ATTEMPTS ; attempt += 1) {
-            int signX = (int) Math.Pow(-1, Random.Range(0, 2));
-            int displacementX = signX * Random.Range(minRange, maxRange);
+            int displacementX = Utilities.RandSign() * Random.Range(MIN_RANGE_X, MAX_RANGE_X);
             int targetX = currentX + displacementX;
 
-            int signY = (int) Math.Pow(-1, Random.Range(0, 2));
-            int displacementY = signY * Random.Range(minRange, maxRange);
+            int displacementY = Utilities.RandSign() * Random.Range(MIN_RANGE_Y, MAX_RANGE_Y);
             int targetY = currentY + displacementY;
 
             Vector2Int target = new Vector2Int(targetX, targetY);
@@ -65,8 +57,7 @@ public class Idle__Pathfind : State {
             
             if (path != null) {
                 this.path = path;
-                step = 0;
-                stepsMax = path.Count * stepSpeed;
+                path.Initialise(entity, stepSpeed);
                 return;
             }
         }

@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
@@ -12,17 +12,102 @@ public class Path {
 
     public int Count => points.Count;
 
-    static readonly float DIAGONAL_DISTANCE = 1.414f;
-    static readonly float CARDINAL_DISTANCE = 1.0f;
+    const float DIAGONAL_DISTANCE = 1.414f;
+    const float CARDINAL_DISTANCE = 1.0f;
     static Vector2 TRANSLATION = new Vector2(0.5f, 0.5f);
 
     float[] linearSegments;
     float linearMax;
 
+    // State for path traversal
+    GameObject entity;
+    int step, stepsMax;
+    int initialStep, initialStepsMax;
+    Vector2 initialDelta;
+
+
     public Path(List<Vector2Int> points) {
         this.points = points;
 
         CalculateLinearSegments();
+    }
+
+    public Vector2Int NextGridPos() {
+        // Map 'step' from [0, stepsTotal] to [0, linearMax]
+        float normalisedStep = linearMax * step / stepsMax;
+
+        // Find the indices i, j of points in the path, such that linearSegments[i] < normalisedStep < linearSegments[j].
+        int index = 0;
+        for (int i = 0 ; i < linearSegments.Length - 1; i += 1) {
+            if (linearSegments[i] <= normalisedStep && normalisedStep <= linearSegments[i + 1]) break;
+
+            index += 1;
+        }
+
+        if (index >= linearSegments.Length - 1) return points.Last();
+
+        return points[index];
+    }
+
+    public void Initialise(GameObject entity, int slowness) {
+        this.entity = entity;
+
+        step = 0;
+        stepsMax = slowness * Count;
+
+        // We need to deal with the initial displacement of entity.transform.position from points[0]; it could be up to 0.5f!
+        Vector2 initialPosition = entity.transform.position;
+        
+        initialStep = 0;
+        float initialDistance = Vector2.Distance(entity.transform.position, points[0] + TRANSLATION);
+        initialStepsMax = 1 + (int) (initialDistance * slowness);
+
+        initialDelta = (points[0] + TRANSLATION - initialPosition) / initialStepsMax;
+
+        int sign = Math.Sign(initialDelta.x);
+        if (sign != 0) entity.transform.localScale = new Vector3(sign, 1, 1);
+    }
+
+    /// <summary>
+    /// Move <c>entity</c> along <c>path</c> using linear interpolation.
+    /// </summary>
+    /// <returns><c>true</c> if the path is still valid, false otherwise.</returns>
+    public bool Increment() {
+        if (step >= stepsMax) return false;
+
+        int currentX = (int) Math.Floor(entity.transform.position.x);
+        int currentY = (int) Math.Floor(entity.transform.position.y);
+
+        Vector2Int current = new(currentX, currentY);
+
+        if (IsValidFrom(current)) {
+            // Initial interpolation; Path uses a grid but the entity may not be perfectly aligned at the start
+            if (initialStep < initialStepsMax) {
+                entity.transform.Translate(initialDelta);
+                initialStep += 1;
+            }
+
+            else {
+                // Linearly interpolate to next point
+                Vector2 nextPoint = LinearlyInterpolate(step, stepsMax);
+                Vector2 translation = nextPoint - (Vector2) entity.transform.position;
+                entity.transform.Translate(translation);
+
+                /// Remember to flip the character's sprite as needed
+                int sign = Math.Sign(translation.x);
+                if (sign != 0) entity.transform.localScale = new Vector3(sign, 1, 1);
+
+                step += 1;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsComplete() {
+        return step >= stepsMax;
     }
 
     public override string ToString(){
@@ -157,10 +242,8 @@ public class Path {
     /// Linearly interpolate along the path, from <c>0</c> to <c>stepsTotal</c>,
     /// returning the position in the path that should be taken after <c>step</c> steps.
     /// </summary>
-    public Vector2 LinearlyInterpolate(int step, int stepsTotal) {
-
-        if (step > stepsTotal) throw new System.Exception("step > stepsTotal; has a timer for path interpolation gone too far?");
-
+    Vector2 LinearlyInterpolate(int step, int stepsTotal) {
+        
         // Map 'step' from [0, stepsTotal] to [0, linearMax]
         float normalisedStep = linearMax * step / stepsTotal;
 

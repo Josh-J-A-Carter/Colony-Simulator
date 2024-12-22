@@ -12,8 +12,6 @@ public class Ferment__Collect : State {
     Dictionary<String, object> targetData;
 
     Path path;
-
-    int step, stepsMax;
     static readonly int stepSpeed = 15;
 
     int pulse;
@@ -45,9 +43,7 @@ public class Ferment__Collect : State {
         if (path != null) {
             this.path = path;
             (targetLocation, targetType, targetData) = storage[index];
-
-            step = 0;
-            stepsMax = path.Count * stepSpeed;
+            path.Initialise(entity, stepSpeed);
             return;
         }
         
@@ -72,11 +68,9 @@ public class Ferment__Collect : State {
             }
         }
 
-        bool success = Pathfind.MoveAlongPath(entity, path, step, stepsMax);
+        bool success = path.Increment();
 
-        step += 1;
-
-        if (step == stepsMax) {
+        if (path.IsComplete()) {
             Vector2 pos = entity.transform.position;
             Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
             List<(Item item, uint)> fermentables = targetType.CollectFermentables(gridPos, targetData);            

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface ITargetable {
 
-    public bool IsDead { get; }
+    public bool IsDead();
 
     public int Friendliness();
 

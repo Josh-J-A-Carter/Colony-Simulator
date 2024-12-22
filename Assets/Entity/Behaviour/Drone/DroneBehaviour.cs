@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ILiving {
+public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable {
     
     [SerializeField]
     State idle, eat, die;
@@ -12,7 +12,7 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ILiving {
     
     InventoryManager inventory;
     public HealthComponent HealthComponent { get; private set; }
-    public bool IsDead { get; private set; }
+    bool isDead;
 
     GravityComponent gravity;
 
@@ -37,7 +37,7 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ILiving {
     }
 
     public void Update() {
-        if (IsDead) return;
+        if (isDead) return;
 
         if (HealthComponent.IsDead) {
             OnDeath();
@@ -68,7 +68,7 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ILiving {
 
     void OnDeath() {
         stateMachine.SetChildState(die);
-        IsDead = true;
+        isDead = true;
 
         inventory.EmptyInventory();
         inventory.DisablePassiveProduction();
@@ -129,5 +129,21 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ILiving {
         while (curr.stateMachine.childState != null) curr = curr.stateMachine.childState;
 
         return curr;
+    }
+
+    public bool IsDead() {
+        return HealthComponent.IsDead;
+    }
+
+    public int Friendliness() {
+        return 1;
+    }
+
+    public Vector2 GetPosition() {
+        return transform.position;
+    }
+
+    public void Damage(uint amount) {
+        HealthComponent.Damage(amount);
     }
 }

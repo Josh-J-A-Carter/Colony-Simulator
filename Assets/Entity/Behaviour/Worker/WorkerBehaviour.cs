@@ -21,7 +21,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
 
     String nameInfo;
 
-    const int STING_COOL_OFF = 3;
+    const int STING_COOL_OFF = 4;
     float beganStingCoolOff;
 
     public GameObject GetGameObject() {
@@ -104,6 +104,8 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     }
 
     public void FixedUpdate() {
+        stateMachine.FixedRun();
+
         if (isDead) return;
 
         if (healthComponent.IsDead) {
@@ -112,8 +114,6 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
         }
 
         if (stateMachine.EmptyState()) DecideState();
-
-        stateMachine.FixedRun();
     }
 
     void DecideState() {

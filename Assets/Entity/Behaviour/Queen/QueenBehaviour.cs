@@ -4,7 +4,7 @@ using UnityEngine;
 public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ITargetable {
     
     [SerializeField]
-    State idle, lay, eat, die;
+    State idle, lay, eat, die, sting;
     Animator animator;
     Task task;
     StateMachine stateMachine;
@@ -17,6 +17,9 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
     GravityComponent gravity;
 
     String nameInfo;
+
+    const int STING_COOL_OFF = 2;
+    float beganStingCoolOff;
 
     public GameObject GetGameObject() {
         return gameObject;
@@ -70,6 +73,12 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
 
 
     public void Update() {
+        stateMachine.Run();
+    }
+
+    public void FixedUpdate() {
+        stateMachine.FixedRun();
+
         if (isDead) return;
 
         if (healthComponent.IsDead) {
@@ -78,12 +87,6 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
         }
 
         if (stateMachine.EmptyState()) DecideState();
-
-        stateMachine.Run();
-    }
-
-    public void FixedUpdate() {
-        stateMachine.FixedRun();
     }
 
     void DecideState() {
@@ -112,6 +115,16 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
         if (task is LayTask) {
             stateMachine.SetChildState(lay);
             return;
+        }
+
+        else if (task is AttackTask) {
+            if (beganStingCoolOff + STING_COOL_OFF < Time.time) {
+                stateMachine.SetChildState(sting);
+            }
+
+            else {
+                stateMachine.SetChildState(idle);
+            }
         }
     }
     void OnDeath() {
@@ -198,5 +211,10 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
         if (attacker != null) {
             TaskManager.Instance.CreateTask(new AttackTask(attacker, TaskPriority.Critical));
         }
+    }
+
+    public void InitiateStingCoolOff() {
+        beganStingCoolOff = Time.time;
+        (this as ITaskAgent).CancelAssignment();
     }
 }

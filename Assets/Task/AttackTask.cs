@@ -33,6 +33,6 @@ public class AttackTask : Task {
     }
 
     public override bool IsQueenTask() {
-        return false;
+        return true;
     }
 }

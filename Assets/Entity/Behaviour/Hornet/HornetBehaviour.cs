@@ -51,6 +51,8 @@ public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
     }
 
     public void FixedUpdate() {
+        stateMachine.FixedRun();
+
         if (isDead) return;
 
         if (healthComponent.IsDead) {
@@ -59,8 +61,6 @@ public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
         }
 
         if (stateMachine.EmptyState()) DecideState();
-
-        stateMachine.FixedRun();
 
         UpdateTargets();
     }

@@ -9,7 +9,7 @@ public class Worker_Sting : State {
     WorkerBehaviour worker;
     ITargetable target => (worker.GetTask() as AttackTask)?.GetTarget();
     const float DISTANCE_EPSILON = 0.75f;
-    const int DMG_AMOUNT = 8, DMG_RAND_MIN = -1, DMG_RAND_MAX = 2;
+    const int DMG_AMOUNT = 7, DMG_RAND_MIN = -1, DMG_RAND_MAX = 2;
 
     Path path;
     int stepSpeed = 10;

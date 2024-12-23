@@ -21,6 +21,14 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
     const int STING_COOL_OFF = 2;
     float beganStingCoolOff;
 
+
+    Material material;
+    float beganHurtTime;
+    bool hurt;
+    const float MAX_HURT_TIME = 0.75f;
+    const String RED_TINT = "_REDTINT_ON";
+
+
     public GameObject GetGameObject() {
         return gameObject;
     }
@@ -32,6 +40,7 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
         inventory = GetComponent<InventoryManager>();
         healthComponent = GetComponent<HealthComponent>();
         gravity = GetComponent<GravityComponent>();
+        material = GetComponent<Renderer>().material;
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
@@ -73,6 +82,8 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
 
 
     public void Update() {
+        HideHurt();
+
         stateMachine.Run();
     }
 
@@ -211,6 +222,21 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
         if (attacker != null) {
             TaskManager.Instance.CreateTask(new AttackTask(attacker, TaskPriority.Critical));
         }
+        ShowHurt();
+    }
+    
+    void ShowHurt() {
+        // Visual hurt indication
+        hurt = true;
+        beganHurtTime = Time.time;
+        material.EnableKeyword(RED_TINT);
+    }
+
+    void HideHurt() {
+        if (hurt == false || beganHurtTime + MAX_HURT_TIME > Time.time) return;
+
+        material.DisableKeyword(RED_TINT);
+        hurt = false;
     }
 
     public void InitiateStingCoolOff() {

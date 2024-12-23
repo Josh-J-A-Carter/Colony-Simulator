@@ -1,7 +1,8 @@
-Shader "Unlit/Outline" {
+Shader "Unlit/EntityEffects" {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
-        _Color ("Color", Color) = (1, 1, 1, 1)
+        _OutlineColor ("Outline Color", Color) = (1, 1, 1, 1)
+        _RedTintIntensity ("Red Tint Intensity", Range(0, 1)) = 0.4
     }
 
     SubShader {
@@ -21,6 +22,10 @@ Shader "Unlit/Outline" {
             #pragma vertex vert
             #pragma fragment frag
 
+            // Static shader variants
+            #pragma multi_compile __ _OUTLINE_ON
+            #pragma multi_compile __ _REDTINT_ON
+
             #include "UnityCG.cginc"
 
             struct v2f {
@@ -30,8 +35,10 @@ Shader "Unlit/Outline" {
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            float4 _Color;
             float4 _MainTex_TexelSize;
+
+            float4 _OutlineColor;
+            float _RedTintIntensity;
 
             v2f vert (appdata_base v) {
                 v2f o;
@@ -46,6 +53,17 @@ Shader "Unlit/Outline" {
                 // Ignore parts of the texture that don't have an alpha value
                 textureColor.rgb *= textureColor.a;
 
+                // Final colour to be output
+                // This may be further modified, depending on shader variants
+                float4 finalColor = textureColor;
+
+            // Red Tint variant
+            #ifdef _REDTINT_ON
+                finalColor.r += _RedTintIntensity * textureColor.a;
+            #endif
+
+            // Outline variant
+            #if _OUTLINE_ON
                 // Is there a neighbouring pixel with non-zero alpha?
                 float upAlpha = tex2D(_MainTex, i.uv + float2(0, _MainTex_TexelSize.y)).a;
                 float downAlpha = tex2D(_MainTex, i.uv - float2(0, _MainTex_TexelSize.y)).a;
@@ -61,7 +79,10 @@ Shader "Unlit/Outline" {
                 //      -> if no non-empty neighbour,               -> 0
                 //      -> if not transparent,                      -> 0
                 //      -> if non-empty neighbour and transparent,  -> 1
-                return lerp(textureColor, _Color, nonEmptyNeighbour * transparent);
+                finalColor = lerp(finalColor, _OutlineColor, nonEmptyNeighbour * transparent);
+            #endif
+
+                return finalColor;
             }
 
             ENDCG

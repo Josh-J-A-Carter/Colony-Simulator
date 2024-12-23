@@ -10,7 +10,7 @@ public class Hornet_Sting : State {
 
     ITargetable target => hornet.CurrentTarget;
     const float DISTANCE_EPSILON = 0.75f;
-    const int DMG_AMOUNT = 10, DMG_RAND_MIN = 0, DMG_RAND_MAX = 2;
+    const int DMG_AMOUNT = 8, DMG_RAND_MIN = 0, DMG_RAND_MAX = 3;
 
     Path path;
     int stepSpeed = 10;

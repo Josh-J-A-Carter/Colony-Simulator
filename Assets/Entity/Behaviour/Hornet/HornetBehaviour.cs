@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -29,6 +30,13 @@ public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
     float beganStingCoolOff;
     int targetPulse;
 
+    Material material;
+    float beganHurtTime;
+    bool hurt;
+    const float MAX_HURT_TIME = 0.75f;
+    const String RED_TINT = "_REDTINT_ON";
+
+
     public GameObject GetGameObject() {
         return gameObject;
     }
@@ -40,6 +48,7 @@ public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
         render = GetComponent<Renderer>();
         healthComponent = GetComponent<HealthComponent>();
         gravity = GetComponent<GravityComponent>();
+        material = GetComponent<Renderer>().material;
 
         // Recursively set up the states
         foreach (Transform child in gameObject.transform) {
@@ -48,6 +57,10 @@ public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
 
         Home = new(-20, 1);
         TileManager.Instance.Construct(Home, nestConst);
+    }
+
+    public void Update() {
+        HideHurt();
     }
 
     public void FixedUpdate() {
@@ -148,6 +161,21 @@ public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
 
     public void Damage(uint amount, ITargetable attacker = null) {
         healthComponent.Damage(amount);
+        ShowHurt();
+    }
+    
+    void ShowHurt() {
+        // Visual hurt indication
+        hurt = true;
+        beganHurtTime = Time.time;
+        material.EnableKeyword(RED_TINT);
+    }
+
+    void HideHurt() {
+        if (hurt == false || beganHurtTime + MAX_HURT_TIME > Time.time) return;
+
+        material.DisableKeyword(RED_TINT);
+        hurt = false;
     }
 
     public Vector2 GetPosition() {

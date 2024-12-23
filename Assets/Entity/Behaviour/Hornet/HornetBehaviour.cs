@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
+public class HornetBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable {
 
     public Vector2Int Home { get; private set; }
 
@@ -36,9 +36,18 @@ public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
     const float MAX_HURT_TIME = 0.75f;
     const String RED_TINT = "_REDTINT_ON";
 
+    const String OUTLINE = "_OUTLINE_ON";
 
     public GameObject GetGameObject() {
         return gameObject;
+    }
+
+    public void SetOutline() {
+        material.EnableKeyword(OUTLINE);
+    }
+
+    public void ResetOutline() {
+        material.DisableKeyword(OUTLINE);
     }
 
     public void Start() {
@@ -184,5 +193,48 @@ public class HornetBehaviour : MonoBehaviour, IEntity, ITargetable {
 
     public bool IsDead() {
         return healthComponent.IsDead;
+    }
+
+    public string GetName() {
+        return "Hornet Wasp";
+    }
+
+    public string GetDescription() {
+        throw new System.NotImplementedException();
+    }
+
+    public InfoBranch GetInfoTree(object obj = null) {
+        InfoBranch root = new InfoBranch(String.Empty);
+
+        // Generic
+        InfoBranch genericCategory = new InfoBranch("Generic Properties");
+        root.AddChild(genericCategory);
+
+        InfoLeaf typeProperty = new InfoLeaf("Type", "Hornet Wasp (Entity)");
+        genericCategory.AddChild(typeProperty);
+
+
+    #if UNITY_EDITOR
+        InfoBranch taskCategory = new InfoBranch("Task Information");
+        root.AddChild(taskCategory);
+
+        InfoLeaf stateProperty = new InfoLeaf("State", DeepestChildState() + "");
+        taskCategory.AddChild(stateProperty);
+    #endif
+
+        // Health
+        root.AddChild(healthComponent.GetInfoBranch());
+
+        return root;
+    }
+
+    State DeepestChildState() {
+        State curr = stateMachine.childState;
+
+        if (curr == null) return curr;
+
+        while (curr.stateMachine.childState != null) curr = curr.stateMachine.childState;
+
+        return curr;
     }
 }

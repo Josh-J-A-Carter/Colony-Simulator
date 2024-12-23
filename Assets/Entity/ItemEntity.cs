@@ -8,13 +8,27 @@ public class ItemEntity : MonoBehaviour, IInformative, IEntity {
 
     GravityComponent gravity;
 
+    Material material;
+
+    const String OUTLINE = "_OUTLINE_ON";
+
     public GameObject GetGameObject() {
         return gameObject;
+    }
+
+    public void SetOutline() {
+        material.EnableKeyword(OUTLINE);
+    }
+
+    public void ResetOutline() {
+        material.DisableKeyword(OUTLINE);
     }
 
     public void Awake() {
         gravity = GetComponent<GravityComponent>();
         gravity.Enable();
+
+        material = GetComponent<Renderer>().material;
     }
 
     public void Setup(Item item, uint quantity) {

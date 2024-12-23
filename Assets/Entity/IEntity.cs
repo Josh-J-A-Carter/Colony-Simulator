@@ -6,6 +6,10 @@ public interface IEntity {
 
     // public virtual void OnDestruction() {}
 
-    public abstract GameObject GetGameObject();
+    public GameObject GetGameObject();
+
+    public void SetOutline();
+
+    public void ResetOutline();
 
 }

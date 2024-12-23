@@ -69,9 +69,7 @@ public class SelectTool : Tool {
         SelectionType oldSelectionType = selectionType;
 
         if (selectionType == SelectionType.Entity) {
-            // To be updated
-            // 
-            // 
+            entityPreview.GetComponent<IEntity>()?.ResetOutline();
         }
 
         else if (selectionType == SelectionType.Tile) {
@@ -88,7 +86,6 @@ public class SelectTool : Tool {
 
         if (type == HoverType.Entity) {
             entityPreview = data.GetEntityData();
-            // Get informative component??? idk man
             entityPreviewInfo = entityPreview.GetComponent<IInformative>();
 
             // If it turns out that this entity does not have a component implementing Informative, reset selection
@@ -98,8 +95,8 @@ public class SelectTool : Tool {
                 return;
             }
 
-            // Show the info tree in the display panel
-            // ...
+            // Show the info tree in the display panel & outline
+            entityPreview.GetComponent<IEntity>()?.SetOutline();
             InfoToUI.DisplayInfoTree(entityPreviewInfo.GetInfoTree());
 
             selectionType = SelectionType.Entity;

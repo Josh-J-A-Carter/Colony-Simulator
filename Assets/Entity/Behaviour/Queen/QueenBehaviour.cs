@@ -28,9 +28,18 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
     const float MAX_HURT_TIME = 0.75f;
     const String RED_TINT = "_REDTINT_ON";
 
+    const String OUTLINE = "_OUTLINE_ON";
 
     public GameObject GetGameObject() {
         return gameObject;
+    }
+
+    public void SetOutline() {
+        material.EnableKeyword(OUTLINE);
+    }
+
+    public void ResetOutline() {
+        material.DisableKeyword(OUTLINE);
     }
 
     public void Start() {

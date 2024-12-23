@@ -79,6 +79,8 @@ public class HealthComponent : MonoBehaviour {
         uint amount = quantity * fc.NutritionalValue;
 
         Nutrition = Nutrition + amount > MaxNutrition ? MaxNutrition : Nutrition + amount;
+
+        Heal(fc.HealValue * quantity);
     }
 
 

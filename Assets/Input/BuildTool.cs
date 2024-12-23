@@ -9,19 +9,22 @@ public class BuildTool : Tool {
     Constructable constructable;
     TileManager tm => TileManager.Instance;
 
-    Vector2Int startPreview, endPreview;
-    Dictionary<String, object> previewConfigDataTemplate;
-    bool previewActive = false;
+    // Single tile preview / cursor
+    bool previewCursorActive = false;
+    Vector2Int previewCursorPosition;
 
-    const int MAX_SELECTION = 512;
+    // Selection area / preview
+    bool previewAreaActive = false;
+    Vector2Int startPreviewArea, endPreviewArea;
+    const int MAX_SELECTION_AREA = 512;
+
+
+    Dictionary<String, object> previewConfigDataTemplate;
+
 
     public override void Run(HoverData data) {
         Constructable newConstructable = parent.GetConstructable();
-        
-        HoverType type = data.GetHoverType();
-        Vector2Int newStartPreview = data.GetGridPosition();
-        Vector2Int newEndPreview = newStartPreview;
-        
+                
         // New constructable is null; not useful
         if (newConstructable == null) return;
 
@@ -30,46 +33,93 @@ public class BuildTool : Tool {
             ShowInfoContainers(newConstructable);
         }
 
-        if (type == HoverType.None) return;
+        SingleSelection(data);
 
         // Began selection by holding shift & pressing left click
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0)) {
+        if (Input.GetKey(KeyCode.LeftShift) || previewAreaActive) { 
+            AreaSelection(data);
+        }
+    }
+
+    void SingleSelection(HoverData data) {
+        HoverType type = data.GetHoverType();
+
+        // If preview isn't active and we aren't hovering over a tile, don't start selection.
+        if (!previewCursorActive && (type == HoverType.UI || type == HoverType.None)) return;
+
+        // If we have an area preview, don't start the single selection preview.
+        if (previewAreaActive) return;
+
+        // If we have moved out of screen, onto UI, or are about to start area selection, delete the single selection
+        if (previewCursorActive && (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0)
+                                    || type == HoverType.UI || type == HoverType.None)) {
+            previewCursorActive = false;
+            tm.RemovePreview(previewCursorPosition);
+            return;
+        }
+
+        Vector2Int newPos = data.GetGridPosition();
+
+        // If we have moved the cursor & are hovering over a new tile, set that tile instead
+        if (previewCursorActive && newPos != previewCursorPosition) {
+            tm.RemovePreview(previewCursorPosition);
+        }
+
+        if (!previewCursorActive || newPos != previewCursorPosition) {
+            tm.SetPreview(newPos, constructable);
+            previewCursorActive = true;
+            previewCursorPosition = newPos;
+        }
+
+        // Build when clicked
+        if (previewCursorActive && Input.GetKeyDown(KeyCode.Mouse0)) {
+            tm.SetTaskPreview(previewCursorPosition, constructable);
+            TaskManager.Instance.CreateTask(new BuildTask(parent.GetPriority(), previewCursorPosition, constructable, previewConfigDataTemplate));
+        }
+    }
+
+    void AreaSelection(HoverData data) {
+        HoverType type = data.GetHoverType();
+        Vector2Int newStartPreview = data.GetGridPosition();
+        Vector2Int newEndPreview = newStartPreview;
+
+        if (Input.GetKeyDown(KeyCode.Mouse0)) {
             // Remove existing preview
-            if (previewActive) RemovePreviewArea(startPreview, endPreview);
+            if (previewAreaActive) RemovePreviewArea(startPreviewArea, endPreviewArea);
 
             // Set startPreview, endPreview to this & show preview
-            startPreview = newStartPreview;
-            endPreview = newEndPreview;
+            startPreviewArea = newStartPreview;
+            endPreviewArea = newEndPreview;
 
-            SetPreviewArea(startPreview, endPreview, constructable);
-            previewActive = true;
+            SetPreviewArea(startPreviewArea, endPreviewArea, constructable);
+            previewAreaActive = true;
         }
 
         // Changed selection area, and new area is not too large
-        else if (previewActive && newEndPreview != endPreview) {
-            (Vector2Int p1, Vector2Int p2) = GetBounds(startPreview, newEndPreview);
-            if ((p2.x - p1.x) * (p1.y - p2.y) > MAX_SELECTION) {
-                newEndPreview = GetClosestValidEndPreview(startPreview, newEndPreview);
+        else if (previewAreaActive && newEndPreview != endPreviewArea) {
+            (Vector2Int p1, Vector2Int p2) = GetBounds(startPreviewArea, newEndPreview);
+            if ((p2.x - p1.x) * (p1.y - p2.y) > MAX_SELECTION_AREA) {
+                newEndPreview = GetClosestValidEndPreview(startPreviewArea, newEndPreview);
             }
 
-            RemovePreviewArea(startPreview, endPreview);
+            RemovePreviewArea(startPreviewArea, endPreviewArea);
 
-            endPreview = newEndPreview;
+            endPreviewArea = newEndPreview;
 
-            SetPreviewArea(startPreview, endPreview, constructable);
+            SetPreviewArea(startPreviewArea, endPreviewArea, constructable);
         }
 
         // Ended selection by releasing either shift or left click
-        else if (previewActive && (!Input.GetKey(KeyCode.LeftShift) || !Input.GetKey(KeyCode.Mouse0))) {
-            RemovePreviewArea(startPreview, endPreview);
+        else if (previewAreaActive && (!Input.GetKey(KeyCode.LeftShift) || !Input.GetKey(KeyCode.Mouse0))) {
+            RemovePreviewArea(startPreviewArea, endPreviewArea);
 
-            BuildArea(startPreview, endPreview, constructable);
+            BuildArea(startPreviewArea, endPreviewArea, constructable);
 
-            previewActive = false;
+            previewAreaActive = false;
         }
 
         // If we haven't been using the area selection tool, but click on a single tile, then set that tile
-        else if (!previewActive && Input.GetKeyUp(KeyCode.Mouse0) && type != HoverType.UI) {
+        else if (!previewAreaActive && Input.GetKeyUp(KeyCode.Mouse0) && type != HoverType.UI) {
             BuildArea(newStartPreview, newEndPreview, constructable);
         }
     }
@@ -88,8 +138,8 @@ public class BuildTool : Tool {
             float scale = maxScale - increment * i;
 
             newPoint = new Vector2Int(Mathf.FloorToInt(extremity.x * scale), Mathf.FloorToInt(extremity.y * scale));
-            (Vector2Int p1, Vector2Int p2) = GetBounds(startPreview, newPoint);
-            if ((p2.x - p1.x) * (p1.y - p2.y) <= MAX_SELECTION) return newPoint;
+            (Vector2Int p1, Vector2Int p2) = GetBounds(startPreviewArea, newPoint);
+            if ((p2.x - p1.x) * (p1.y - p2.y) <= MAX_SELECTION_AREA) return newPoint;
         }
 
         return newPoint;
@@ -130,7 +180,7 @@ public class BuildTool : Tool {
 
         for (int x = p1.x ; x <= p2.x ; x += 1) {
             for (int y = p1.y ; y >= p2.y ; y -= 1) {
-                TaskManager.Instance.CreateTask(new BuildTask(TaskPriority.Normal, new Vector2Int(x, y), constructable, previewConfigDataTemplate));
+                TaskManager.Instance.CreateTask(new BuildTask(parent.GetPriority(), new Vector2Int(x, y), constructable, previewConfigDataTemplate));
             }
         }
 

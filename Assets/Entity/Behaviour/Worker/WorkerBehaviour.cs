@@ -138,7 +138,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     void DecideState() {
 
         // Low nutrition -> immediate action, provided there is food available
-        if (healthComponent.LowNutrition) {
+        if (healthComponent.LowNutrition || healthComponent.LowHealth) {
             Resource resource = new Resource(ItemTag.Food);
             if (ResourceManager.Instance.Available(inventory, resource)) {
                 stateMachine.SetChildState(eat);
@@ -188,7 +188,8 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
             }
 
             // Eat (with less urgency)
-            if (healthComponent.Nutrition <= 3 * healthComponent.MaxNutrition / 4) {
+            if (healthComponent.Nutrition <= 3 * healthComponent.MaxNutrition / 4 
+                || healthComponent.Health <= 3 * healthComponent.MaxHealth / 4) {
                 resource = new Resource(ItemTag.Food);
                 if (ResourceManager.Instance.Available(inventory, resource)) {
                     stateMachine.SetChildState(eat);

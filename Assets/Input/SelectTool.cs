@@ -135,9 +135,7 @@ public class SelectTool : Tool {
         if (selectionType == SelectionType.None) return;
 
         if (selectionType == SelectionType.Entity) {
-            // To be updated
-            // 
-            // 
+            entityPreview.GetComponent<IEntity>()?.ResetOutline();
         }
 
         else if (selectionType == SelectionType.Tile) {

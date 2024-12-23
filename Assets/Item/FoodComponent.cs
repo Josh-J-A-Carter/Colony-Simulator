@@ -6,4 +6,7 @@ public class FoodComponent : ItemComponent {
 
     [field: SerializeField]
     public uint NutritionalValue { get; private set; }
+
+    [field: SerializeField]
+    public uint HealValue { get; private set; }
 }

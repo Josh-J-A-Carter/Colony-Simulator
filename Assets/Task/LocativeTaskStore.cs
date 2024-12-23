@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,6 +28,10 @@ public class LocativeTaskStore {
 
     public void UnsetTask(ILocative task) {
         foreach (Vector2Int pos in task.GetInteriorPoints()) taskMap.Remove(pos);
+    }
+
+    public Task GetTaskAt(Vector2Int pos) {
+        return taskMap.GetValueOrDefault(pos, null) as Task;
     }
 
 }

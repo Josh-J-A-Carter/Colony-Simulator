@@ -86,4 +86,7 @@ public class ForageTask : Task, ILocative, IReward {
         return root;
     }
 
+    public override bool IsRuleGenerated() {
+        return true;
+    }
 }

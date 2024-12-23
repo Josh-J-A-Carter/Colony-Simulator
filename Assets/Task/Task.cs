@@ -86,6 +86,10 @@ public abstract class Task : IInformative {
     public virtual bool IsQueenTask() {
         return false;
     }
+
+    public virtual bool IsRuleGenerated() {
+        return false;
+    }
 }
 
 public enum TaskPriority {

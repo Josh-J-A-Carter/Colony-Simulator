@@ -280,4 +280,8 @@ public class TaskManager : MonoBehaviour {
     public void MarkComplete(Task task) {
         pendingCompletionTasks.Add(task);
     }
+
+    public Task GetTaskAt(Vector2Int pos) {
+        return locativeTaskStore.GetTaskAt(pos);
+    }
 }

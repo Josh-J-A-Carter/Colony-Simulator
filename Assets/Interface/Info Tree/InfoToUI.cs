@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 public static class InfoToUI {
@@ -18,6 +17,21 @@ public static class InfoToUI {
         }
 
         InterfaceManager.Instance.SetInfoContainerContent(infoContainer);
+    }
+
+    public static void DisplayTaskTree(InfoBranch root) {
+        VisualElement infoContainer = new VisualElement();
+        
+        foreach (InfoNode node in root.GetChildren()) {
+            DisplayInfoRecursive(node, infoContainer);
+        }
+
+        // Make sure toggles are unfocusable - issues with default Unity manipulators and this is the easiest way to disable them
+        foreach (Toggle toggle in infoContainer.Query<Toggle>().Build()) {
+            toggle.focusable = false;
+        }
+
+        InterfaceManager.Instance.SetTaskInfoContainerContent(infoContainer);
     }
 
     public static void DisplayConfigInfoTree(InfoBranch root, Action<String[], bool> callback) {

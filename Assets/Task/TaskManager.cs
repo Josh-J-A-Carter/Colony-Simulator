@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
@@ -131,7 +132,7 @@ public class TaskManager : MonoBehaviour {
             }
 
             // Unset locative task store!
-            if (task is ILocative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
+            if (task is ILocative locativeTask) locativeTaskStore.RemoveTask(locativeTask);
         }
 
         pendingCompletionTasks.Clear();
@@ -150,7 +151,7 @@ public class TaskManager : MonoBehaviour {
                 // when in reality they have the same age
                 tasks.Add(task);
                 toConfirm.Add(task);
-                if (task is ILocative locativeTask) locativeTaskStore.SetTask(locativeTask);
+                if (task is ILocative locativeTask) locativeTaskStore.AddTask(locativeTask);
             }
         }
         
@@ -199,7 +200,7 @@ public class TaskManager : MonoBehaviour {
         }
         
         // Unset locative task store!
-        if (task is ILocative locativeTask) locativeTaskStore.UnsetTask(locativeTask);
+        if (task is ILocative locativeTask) locativeTaskStore.RemoveTask(locativeTask);
     }
 
     public void Allocate(IConsumer consumer, InventoryManager inventory) {
@@ -281,7 +282,7 @@ public class TaskManager : MonoBehaviour {
         pendingCompletionTasks.Add(task);
     }
 
-    public Task GetTaskAt(Vector2Int pos) {
-        return locativeTaskStore.GetTaskAt(pos);
+    public ReadOnlyCollection<Task> GetTasksAt(Vector2Int pos) {
+        return locativeTaskStore.GetTasksAt(pos);
     }
 }

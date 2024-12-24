@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class SelectTool : Tool {
 
     [SerializeField]
     Constructable preview;
-
-    TileManager TM => TileManager.Instance;
-    InterfaceManager IM => InterfaceManager.Instance;
 
     int tick;
     const int MAX_TICKS = TileManager.TICK_RATE;
@@ -24,6 +22,8 @@ public class SelectTool : Tool {
     Vector2Int tilePreview;
     Constructable tilePreviewConstructable;
     Dictionary<String, object> tilePreviewData;
+
+    ReadOnlyCollection<Task> tilePreviewTasks;
 
     public override void OnEquip() {
         tick = TileManager.Instance.GetTileEntityTick();
@@ -45,10 +45,7 @@ public class SelectTool : Tool {
 
     void UpdateInfo() {
         if (selectionType == SelectionType.Tile) {
-            // Not a tile entity, so don't need to update the data constantly
-            if (tilePreviewData == null) return;
-
-            InfoToUI.DisplayInfoTree(tilePreviewConstructable.GetInfoTree(tilePreviewData));
+            UpdateTileSelection();
         }
 
         else if (selectionType == SelectionType.Entity) {
@@ -62,72 +59,99 @@ public class SelectTool : Tool {
         // Interacting with UI should not remove the selection
         if (type == HoverType.UI) return;
 
-
-        /// Remove the old selection
-        /// 
-        SelectionType oldSelectionType = selectionType;
-
+        // Remove previous selection
         if (selectionType == SelectionType.Entity) {
             entityPreview.GetComponent<IEntity>()?.ResetOutline();
         }
 
         else if (selectionType == SelectionType.Tile) {
-            TM.RemovePreview(tilePreview);
+            TileManager.Instance.RemovePreview(tilePreview);
         }
 
-        /// Set the new selection type
-        ///
+
+        ///////// Set the new selection type
+
+        // Empty selection
         if (type == HoverType.None) {
-            selectionType = SelectionType.None;
-            IM.HideInfoContainer();
+            ResetSelection();
             return;
         }
 
+        // Entity selection
         if (type == HoverType.Entity) {
             entityPreview = data.GetEntityData();
             entityPreviewInfo = entityPreview.GetComponent<IInformative>();
 
             // If it turns out that this entity does not have a component implementing Informative, reset selection
             if (entityPreviewInfo == null) {
-                selectionType = SelectionType.None;
-                IM.HideInfoContainer();
+                ResetSelection();
                 return;
             }
 
             // Show the info tree in the display panel & outline
-            entityPreview.GetComponent<IEntity>()?.SetOutline();
-            InfoToUI.DisplayInfoTree(entityPreviewInfo.GetInfoTree());
-
             selectionType = SelectionType.Entity;
+
+            entityPreview.GetComponent<IEntity>()?.SetOutline();
+
+            InfoToUI.DisplayInfoTree(entityPreviewInfo.GetInfoTree());
+            InterfaceManager.Instance.ShowInfoContainer();
+            InterfaceManager.Instance.HideTaskInfoContainer();
         }
 
+        // Selection at a location (i.e. tiles OR tasks)
         else if (type == HoverType.Tile) {
             tilePreview = data.GetGridPosition();
 
-            // Careful - there may not even be a tile here
-            (Vector2Int startPos, Constructable constructable) = TM.GetConstructableAt(tilePreview);
-            tilePreviewConstructable = constructable;
-            
-            if (tilePreviewConstructable == null) {
-                selectionType = SelectionType.None;
-                IM.HideInfoContainer();
-                return;
-            }
+            UpdateTileSelection();
+        }
+    }
 
-            TM.SetPreview(tilePreview, preview);
+    void UpdateTileSelection() {
+        // Careful - there may not even be a tile here
+        (Vector2Int startPos, Constructable constructable) = TileManager.Instance.GetConstructableAt(tilePreview);
+        tilePreviewConstructable = constructable;
 
-            if (tilePreviewConstructable is TileEntity) tilePreviewData = TM.GetTileEntityData(startPos);
+        tilePreviewTasks = TaskManager.Instance.GetTasksAt(tilePreview);
+
+        if (tilePreviewConstructable == null && tilePreviewTasks.Count == 0) {
+            ResetSelection();
+            return;
+        }
+        
+        selectionType = SelectionType.Tile;
+        TileManager.Instance.SetPreview(tilePreview, preview);
+    
+        if (tilePreviewConstructable != null) {
+            if (tilePreviewConstructable is TileEntity) tilePreviewData = TileManager.Instance.GetTileEntityData(startPos);
             else tilePreviewData = null;
             
             // Show the info tree in the display panel
             InfoBranch infoTree = tilePreviewConstructable.GetInfoTree(tilePreviewData);
             InfoToUI.DisplayInfoTree(infoTree);
-
-            selectionType = SelectionType.Tile;
+            InterfaceManager.Instance.ShowInfoContainer();
         }
 
-        // New selection is not None, but the old one was, so we need to show the info container
-        if (oldSelectionType == SelectionType.None) IM.ShowInfoContainer();
+        else InterfaceManager.Instance.HideInfoContainer();
+
+        if (tilePreviewTasks.Count > 0) {
+            InfoBranch taskTree = new(String.Empty);
+
+            foreach (Task task in tilePreviewTasks) taskTree.AddChild(task.GetInfoTree());
+
+            InfoToUI.DisplayTaskTree(taskTree);
+            InterfaceManager.Instance.ShowTaskInfoContainer();
+        }
+
+        else InterfaceManager.Instance.HideTaskInfoContainer();
+    }
+
+    void ResetSelection() {
+        if (selectionType == SelectionType.Tile) TileManager.Instance.RemovePreview(tilePreview);
+
+        selectionType = SelectionType.None;
+
+        InterfaceManager.Instance.HideInfoContainer();
+        InterfaceManager.Instance.HideTaskInfoContainer();
     }
 
     public override void OnDequip() {
@@ -138,12 +162,13 @@ public class SelectTool : Tool {
         }
 
         else if (selectionType == SelectionType.Tile) {
-            TM.RemovePreview(tilePreview);
+            TileManager.Instance.RemovePreview(tilePreview);
         }
 
         selectionType = SelectionType.None;
 
-        IM.HideInfoContainer();
+        InterfaceManager.Instance.HideInfoContainer();
+        InterfaceManager.Instance.HideTaskInfoContainer();
     }
 
 }

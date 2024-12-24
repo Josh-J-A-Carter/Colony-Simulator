@@ -8,11 +8,13 @@ public class InterfaceManager : MonoBehaviour {
 
 
     VisualElement containerRoot;
+    // Config containers
     VisualElement configurableContainerRoot, configurableContainerContentRoot;
-
     VisualElement configInfoContainerRoot, configInfoContainerContentRoot;
 
+    // Info containers
     VisualElement infoContainerRoot, infoContainerContentRoot;
+    VisualElement taskInfoContainerRoot, taskInfoContainerContentRoot;
 
 
     VisualElement forageContainerRoot, forageNewContainerRoot, forageOldContainerRoot;
@@ -50,9 +52,12 @@ public class InterfaceManager : MonoBehaviour {
         configInfoContainerRoot = containerRoot.Q(name: "config-info-container-root");
         configInfoContainerContentRoot = containerRoot.Q(name: "config-info-container-content-root");
 
-        // Configurable container
+        // Info container container
         infoContainerRoot = containerRoot.Q(name: "info-container-root");
         infoContainerContentRoot = containerRoot.Q(name: "info-container-content-root");
+        // Task info container
+        taskInfoContainerRoot = containerRoot.Q(name: "task-info-container-root");
+        taskInfoContainerContentRoot = containerRoot.Q(name: "task-info-container-content-root");
 
         // Forage menu
         forageContainerRoot = containerRoot.Q(name: "forage-menu");
@@ -113,12 +118,26 @@ public class InterfaceManager : MonoBehaviour {
         infoContainerContentRoot.Add(content);
     }
 
+    public void SetTaskInfoContainerContent(VisualElement content) {
+        taskInfoContainerContentRoot.Clear();
+
+        taskInfoContainerContentRoot.Add(content);
+    }
+
     public void ShowInfoContainer() {
-        infoContainerRoot.style.visibility = Visibility.Visible;
+        infoContainerRoot.style.display = DisplayStyle.Flex;
     }
 
     public void HideInfoContainer() {
-        infoContainerRoot.style.visibility = Visibility.Hidden;
+        infoContainerRoot.style.display = DisplayStyle.None;
+    }
+
+    public void ShowTaskInfoContainer() {
+        taskInfoContainerRoot.style.display = DisplayStyle.Flex;
+    }
+
+    public void HideTaskInfoContainer() {
+        taskInfoContainerRoot.style.display = DisplayStyle.None;
     }
 
     void DeselectAllButtons() {

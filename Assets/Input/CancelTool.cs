@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class CancelTool : Tool {
@@ -50,8 +51,22 @@ public class CancelTool : Tool {
         }
 
         // Need an actual task here
-        Task currentHoverTask = TaskManager.Instance.GetTaskAt(newPos);
-        if (currentHoverTask == null || currentHoverTask.IsRuleGenerated()) return;
+        ReadOnlyCollection<Task> currentHoverTasks = TaskManager.Instance.GetTasksAt(newPos);
+        Debug.Log("List has " + currentHoverTasks.Count);
+
+        if (currentHoverTasks.Count == 0) return;
+        
+        bool foundCancellableTask = false;
+        foreach (Task task in currentHoverTasks) {
+            if (task.IsRuleGenerated() == false) {
+                foundCancellableTask = true;
+                break;
+            }
+        }
+
+
+        if (foundCancellableTask == false) return;
+        Debug.Log("List not all rules ");
 
         if (!previewCursorActive || newPos != previewCursorPosition) {
             TileManager.Instance.SetPreview(newPos, cancelEffect);
@@ -59,9 +74,12 @@ public class CancelTool : Tool {
             previewCursorPosition = newPos;
         }
 
-        // Build when clicked
+        // Cancel tasks when clicked
         if (previewCursorActive && Input.GetKeyDown(KeyCode.Mouse0)) {
-            TaskManager.Instance.CancelTask(currentHoverTask);
+            foreach (Task task in currentHoverTasks) {
+                if (task.IsRuleGenerated()) continue;
+                TaskManager.Instance.CancelTask(task);
+            }
         }
     }
 
@@ -157,10 +175,13 @@ public class CancelTool : Tool {
 
         for (int x = p1.x ; x <= p2.x ; x += 1) {
             for (int y = p1.y ; y >= p2.y ; y -= 1) {
-                Task currentHoverTask = TaskManager.Instance.GetTaskAt(new(x, y));
-                if (currentHoverTask == null || currentHoverTask.IsRuleGenerated()) continue;
+                ReadOnlyCollection<Task> currentHoverTasks = TaskManager.Instance.GetTasksAt(new(x, y));
+                if (currentHoverTasks.Count == 0) continue;
 
-                TaskManager.Instance.CancelTask(currentHoverTask);
+                foreach (Task task in currentHoverTasks) {
+                    if (task.IsRuleGenerated()) continue;
+                    TaskManager.Instance.CancelTask(task);
+                }
             }
         }
     }

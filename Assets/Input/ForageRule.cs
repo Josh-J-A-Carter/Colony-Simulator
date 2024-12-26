@@ -153,4 +153,13 @@ public class ForageRule : TaskRule {
             TaskManager.Instance.CancelTask(task);
         }
     }
+
+    public bool Equals(ForageRule rule) {
+        if (rule.mainTag != mainTag) return false;
+
+        foreach (ItemTag t in tags) if (rule.tags.Contains(t) == false) return false;
+        foreach (ItemTag t in rule.tags) if (tags.Contains(t) == false) return false;
+
+        return true;
+    }
 }

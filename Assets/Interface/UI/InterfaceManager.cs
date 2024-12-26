@@ -17,7 +17,7 @@ public class InterfaceManager : MonoBehaviour {
     VisualElement taskInfoContainerRoot, taskInfoContainerContentRoot;
 
 
-    VisualElement forageContainerRoot, forageNewContainerRoot, forageOldContainerRoot;
+    VisualElement forageContainerRoot, forageNewContainerRoot, forageOldContainerRoot, forageWarnLabel;
     Button forageMenuQuit;
 
     List<Button> toolButtons;
@@ -64,6 +64,7 @@ public class InterfaceManager : MonoBehaviour {
         forageNewContainerRoot = containerRoot.Q(name: "new-rule-contents");
         forageOldContainerRoot = containerRoot.Q(name: "old-rule-contents");
         forageMenuQuit = containerRoot.Q(name: "forage-menu-quit") as Button;
+        forageWarnLabel = forageContainerRoot.Q(name: "warning-label");
 
 
         MakeTogglesUnfocusable();
@@ -204,5 +205,13 @@ public class InterfaceManager : MonoBehaviour {
     public void SetNewForageContent<T, Q>(RuleDisplay<T, Q> display) {
         forageNewContainerRoot.Clear();
         forageNewContainerRoot.Add(display);
+    }
+
+    public void ShowForageWarning() {
+        forageWarnLabel.visible = true;
+    }
+
+    public void HideForageWarning() {
+        forageWarnLabel.visible = false;
     }
 }

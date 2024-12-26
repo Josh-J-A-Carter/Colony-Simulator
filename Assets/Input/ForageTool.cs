@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class ForageTool : Tool {
@@ -39,7 +40,7 @@ public class ForageTool : Tool {
 
         currentQuality = ItemTag.Standard;
         currentQualityIndex = 0;
-        
+
         currentPriority = parent.GetPriority();
 
         rules = new();
@@ -49,6 +50,16 @@ public class ForageTool : Tool {
 
     void AddNewRule() {
         if (newRule != null) {
+            // Warn the user if the rule already exists
+            foreach (ForageRule rule in rules) {
+                if (rule.Equals(newRule)) {
+                    InterfaceManager.Instance.ShowForageWarning();
+                    return;
+                }
+            }
+
+            InterfaceManager.Instance.HideForageWarning();
+
             ForageRule thisRule = newRule;
             rules.Add(thisRule);
             TaskManager.Instance.RegisterRule(thisRule);
@@ -56,7 +67,7 @@ public class ForageTool : Tool {
             InterfaceManager.Instance.AddOldForageContent(
                 new RuleDisplay<ForageRule.Type, ItemTag> (
                     // Type options
-                    typeOptions, currentTypeIndex, (input) => thisRule.SetType((ForageRule.Type) input),
+                    typeOptions, currentTypeIndex, (input) => thisRule.SetType(input),
                     // Priority options
                     thisRule.priority, (input) => thisRule.SetPriority(input),
                     // Quality options
@@ -159,6 +170,8 @@ public class ForageTool : Tool {
 
     public override void OnDequip() {
         InterfaceManager.Instance.HideForageMenu();
+
+        InterfaceManager.Instance.HideForageWarning();
     }
 
 }

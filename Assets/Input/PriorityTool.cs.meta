@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 7179898903851344488fc5c288e7d31b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - navTreeRoot: {fileID: 11400000, guid: 18ab1f1ed8c65cd4bbab7ba79e4e6cca, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

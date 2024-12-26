@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -42,8 +45,8 @@ public class InterfaceManager : MonoBehaviour {
         select.RegisterCallback<ClickEvent>(ClickedSelectTool);
         containerRoot.Q(name: "construct-tool").RegisterCallback<ClickEvent>(ClickedConstructTool);
         containerRoot.Q(name: "destroy-tool").RegisterCallback<ClickEvent>(ClickedDestroyTool);
-        containerRoot.Q(name: "cancel-tool").RegisterCallback<ClickEvent>(ClickedCancelTool);
         containerRoot.Q(name: "forage-tool").RegisterCallback<ClickEvent>(ClickedForageTool);
+        containerRoot.Q(name: "cancel-tool").RegisterCallback<ClickEvent>(ClickedCancelTool);
 
         // Configurable container
         configurableContainerRoot = containerRoot.Q(name: "configurable-container-root");
@@ -71,10 +74,24 @@ public class InterfaceManager : MonoBehaviour {
     }
 
     public void Start() {
-        containerRoot.Q(name: "toolbar").Add(new PriorityDisplay(
-            InputManager.Instance.GetPriority(),
-            priority => InputManager.Instance.SetPriority(priority)
-        ));
+        List<(TaskPriority, String)> options = Enum.GetValues(typeof(TaskPriority))
+                                                .OfType<TaskPriority>()
+                                                .ToList()
+                                                .Select(t => (t, Enum.GetName(typeof(TaskPriority), t)))
+                                                .Reverse()
+                                                .ToList();
+
+        OptionDisplay<TaskPriority> display = new(
+            (int) InputManager.Instance.GetPriority(),
+            options,
+            priority => InputManager.Instance.SetPriority(priority),
+            ClickedPriorityTool
+        );
+
+        display.name = "priority-tool";
+
+        containerRoot.Q(name: "toolbar").Add(display);
+        toolButtons.Add(display);
     }
 
 
@@ -145,7 +162,7 @@ public class InterfaceManager : MonoBehaviour {
         foreach (Button b in toolButtons) b.RemoveFromClassList("selected");
     }
 
-    public void ClickedSelectTool(ClickEvent evt) {
+    public void ClickedSelectTool(ClickEvent _) {
         tm.SetTool(ToolType.Select);
 
         DeselectAllButtons();
@@ -153,7 +170,7 @@ public class InterfaceManager : MonoBehaviour {
         containerRoot.Q(name: "select-tool").AddToClassList("selected");
     }
 
-    void ClickedConstructTool(ClickEvent evt) {
+    void ClickedConstructTool(ClickEvent _) {
         tm.SetTool(ToolType.Build);
 
         DeselectAllButtons();
@@ -161,7 +178,7 @@ public class InterfaceManager : MonoBehaviour {
         containerRoot.Q(name: "construct-tool").AddToClassList("selected");
     }
 
-    void ClickedDestroyTool(ClickEvent evt) {
+    void ClickedDestroyTool(ClickEvent _) {
         tm.SetTool(ToolType.Destroy);
 
         DeselectAllButtons();
@@ -169,7 +186,11 @@ public class InterfaceManager : MonoBehaviour {
         containerRoot.Q(name: "destroy-tool").AddToClassList("selected");
     }
 
-    void ClickedCancelTool(ClickEvent evt) {
+    void ClickedForageTool(ClickEvent _) {
+        tm.SetTool(ToolType.Forage);
+    }
+
+    void ClickedCancelTool(ClickEvent _) {
         tm.SetTool(ToolType.Cancel);
 
         DeselectAllButtons();
@@ -177,10 +198,13 @@ public class InterfaceManager : MonoBehaviour {
         containerRoot.Q(name: "cancel-tool").AddToClassList("selected");
     }
 
-    void ClickedForageTool(ClickEvent evt) {
-        tm.SetTool(ToolType.Forage);
-    }
+    void ClickedPriorityTool() {
+        DeselectAllButtons();
 
+        tm.SetTool(ToolType.Priority);
+
+        containerRoot.Q(name: "priority-tool").AddToClassList("selected");
+    }
 
     public void ShowForageMenu() {
         forageContainerRoot.style.visibility = Visibility.Visible;

@@ -48,6 +48,7 @@ public class CancelTool : Tool {
         // If we have moved the cursor & are hovering over a new tile, set that tile instead
         if (previewCursorActive && newPos != previewCursorPosition) {
             TileManager.Instance.RemovePreview(previewCursorPosition);
+            previewCursorActive = false;
         }
 
         // Need an actual task here
@@ -113,17 +114,12 @@ public class CancelTool : Tool {
         }
 
         // Ended selection by releasing either shift or left click
-        else if (previewAreaActive && (!Input.GetKey(KeyCode.LeftShift) || !Input.GetKey(KeyCode.Mouse0))) {
+        if (previewAreaActive && (!Input.GetKey(KeyCode.LeftShift) || !Input.GetKey(KeyCode.Mouse0))) {
             RemovePreviewArea(startPreviewArea, endPreviewArea);
 
             BuildArea(startPreviewArea, endPreviewArea);
 
             previewAreaActive = false;
-        }
-
-        // If we haven't been using the area selection tool, but click on a single tile, then set that tile
-        else if (!previewAreaActive && Input.GetKeyUp(KeyCode.Mouse0) && type != HoverType.UI) {
-            BuildArea(newStartPreview, newEndPreview);
         }
     }
 

@@ -115,4 +115,8 @@ public class NurseTask : Task, ILocative, IConsumer {
 
         return root;
     }
+
+    public override bool IsRuleGenerated() {
+        return true;
+    }
 }

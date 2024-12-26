@@ -55,6 +55,10 @@ public abstract class Task : IInformative {
         OnConfirmation();
     }
 
+    public void SetPriority(TaskPriority priority) {
+        this.priority = priority;
+    }
+
     public void IncrementAssignment() {
         assignment += 1;
     }

@@ -9,11 +9,14 @@ public class OptionDisplay<T> : Button {
 
     int minIndex, maxIndex;
 
-    public OptionDisplay(int initialIndex, List<(T, String)> options, Action<T> onSetOption, Action onClick) {
+    public OptionDisplay(int initialIndex, List<(T, String)> options, Action<T> onSetOption, Action onClick = null) {
 
         currentIndex = initialIndex;
 
-        if (onClick != null) RegisterCallback<ClickEvent>(_ => onClick());
+        if (onClick != null) {
+            RegisterCallback<ClickEvent>(_ => onClick());
+            AddToClassList("selectable");
+        }
 
         minIndex = 0;
         maxIndex = options.Count - 1;

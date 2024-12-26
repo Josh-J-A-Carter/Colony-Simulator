@@ -30,7 +30,12 @@
     scale: 1.05 1.05;
 }
 
-.tool:active, .selected {
+.tool:active {
+    background-color: var(--ui-ele-bg-active);
+    scale: 1.05 1.05;
+}
+
+.selected {
     background-color: var(--ui-ele-bg-active);
     scale: 1.05 1.05;
 }
@@ -254,11 +259,19 @@
     background-image: url("project://database/Assets/Interface/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-3753015318093942961&guid=1d959dfbd75fccb4aaf6d3243e2d5f8a&type=3#arrow-left");
 }
 
-.priority__left:hover, .priority__right:hover {
+.priority__left:hover {
     background-color: var(--ui-ele-bg-hover);
 }
 
-.priority__left:active, .priority__right:active {
+.priority__right:hover {
+    background-color: var(--ui-ele-bg-hover);
+}
+
+.priority__left:active {
+    background-color: var(--ui-ele-bg-active);
+}
+
+.priority__right:active {
     background-color: var(--ui-ele-bg-active);
 }
 
@@ -268,10 +281,6 @@
     background-color: rgba(0, 0, 0, 0);
     background-image: url("project://database/Assets/Interface/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-4521532143779581420&guid=1d959dfbd75fccb4aaf6d3243e2d5f8a&type=3#arrow-right");
 }
-
-
-
-
 
 .option-display__label {
     margin: 4px;
@@ -291,6 +300,20 @@
     border-color: var(--ui-ele-border);
 }
 
+.option-display__label.selectable:hover {
+    background-color: var(--ui-ele-bg-hover);
+}
+
+.option-display__label.selectable:active {
+    background-color: var(--ui-ele-bg-active);
+    scale: 1 1;
+}
+
+.option-display__label.selectable.selected {
+    background-color: var(--ui-ele-bg-active);
+    scale: 1 1;
+}
+
 .option-display__left {
     width: 30px;
     border-width: 0;
@@ -298,11 +321,19 @@
     background-image: url("project://database/Assets/Interface/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-3753015318093942961&guid=1d959dfbd75fccb4aaf6d3243e2d5f8a&type=3#arrow-left");
 }
 
-.option-display__left:hover, .option-display__right:hover {
+.option-display__left:hover {
     background-color: var(--ui-ele-bg-hover);
 }
 
-.option-display__left:active, .option-display__right:active {
+.option-display__right:hover {
+    background-color: var(--ui-ele-bg-hover);
+}
+
+.option-display__left:active {
+    background-color: var(--ui-ele-bg-active);
+}
+
+.option-display__right:active {
     background-color: var(--ui-ele-bg-active);
 }
 

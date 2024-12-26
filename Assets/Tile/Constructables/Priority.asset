@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1c25a7fab5fdf84da2fadb84937ea98, type: 3}
-  m_Name: Cancel
+  m_Name: Priority
   m_EditorClassIdentifier: 
   gridData:
   - gridEntries:
-    - worldTile: {fileID: 11400000, guid: ebd417c13a6fc7544a3b16cdf0a6e01e, type: 2}
-      previewTile: {fileID: 11400000, guid: ebd417c13a6fc7544a3b16cdf0a6e01e, type: 2}
+    - worldTile: {fileID: 11400000, guid: 55534056e760783489f7381e23e963a0, type: 2}
+      previewTile: {fileID: 11400000, guid: 55534056e760783489f7381e23e963a0, type: 2}
   obstructive: 0
   nameInfo: 
   descriptionInfo: 

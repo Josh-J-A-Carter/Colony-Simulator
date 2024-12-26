@@ -11,7 +11,7 @@ public class InputManager : MonoBehaviour {
     CameraManager cameraManager;
 
     // Tool references
-    Tool selectTool, buildTool, destroyTool, forageTool, cancelTool;
+    Tool selectTool, buildTool, destroyTool, forageTool, cancelTool, priorityTool;
     Tool currentTool, previousTool;
 
     // Tool selections that should be persistent, even across tool changes
@@ -34,12 +34,14 @@ public class InputManager : MonoBehaviour {
         destroyTool = GetComponentInChildren<DestroyTool>();
         forageTool = GetComponentInChildren<ForageTool>();
         cancelTool = GetComponentInChildren<CancelTool>();
+        priorityTool = GetComponentInChildren<PriorityTool>();
 
         selectTool.SetUp(this);
         buildTool.SetUp(this);
         destroyTool.SetUp(this);
         cancelTool.SetUp(this);
         forageTool.SetUp(this);
+        priorityTool.SetUp(this);
 
         currentTool = selectTool;
         previousTool = selectTool;
@@ -100,6 +102,7 @@ public class InputManager : MonoBehaviour {
             ToolType.Destroy => destroyTool,
             ToolType.Forage => forageTool,
             ToolType.Cancel => cancelTool,
+            ToolType.Priority => priorityTool,
             _ => throw new Exception("Unknown tool type")
         };
 
@@ -142,5 +145,6 @@ public enum ToolType {
     Build,
     Destroy,
     Forage,
-    Cancel
+    Cancel,
+    Priority
 }

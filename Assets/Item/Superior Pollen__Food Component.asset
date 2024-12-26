@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cda5d758f01e864abd113f63a8de746, type: 3}
+  m_Name: Superior Pollen__Food Component
+  m_EditorClassIdentifier: 
+  <ComponentType>k__BackingField: 0
+  <NutritionalValue>k__BackingField: 2
+  <HealValue>k__BackingField: 1

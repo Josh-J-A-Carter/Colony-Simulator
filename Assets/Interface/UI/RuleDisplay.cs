@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class RuleDisplay : VisualElement {
+public class RuleDisplay<TypeParam, QualParam> : VisualElement {
 
     int currentTypeIndex;
-    public RuleDisplay(List<(Sprite, String, int)> typeOptions, int initialTypeIndex, Action<int> onSetType,
+    public RuleDisplay(List<(TypeParam, Sprite, String)> typeOptions, int initialTypeIndex, Action<TypeParam> onSetType,
                         TaskPriority initialPriority, Action<TaskPriority> onSetPriority,
+                        List<(QualParam, String)> qualityOptions, int initialQualityIndex, Action<QualParam> onSetQuality,
                         String confirmationText, Action onConfirmation) {
+
         AddToClassList("rule-display");
 
     #if UNITY_EDITOR
         Debug.Assert(typeOptions.Count > initialTypeIndex);
+        Debug.Assert(qualityOptions.Count > initialQualityIndex);
     #endif
 
 
         // Visual & textual preview of ForageRule.Type
         currentTypeIndex = initialTypeIndex;
-        (Sprite sprite, String name, _) = typeOptions[currentTypeIndex];
+        (_, Sprite sprite, String name) = typeOptions[currentTypeIndex];
 
         Button preview = new();
         preview.AddToClassList("rule-display__preview");
@@ -33,52 +36,20 @@ public class RuleDisplay : VisualElement {
         preview.RegisterCallback<ClickEvent>(_ => {
             // Increment, or wrap to 0
             currentTypeIndex = currentTypeIndex == typeOptions.Count - 1 ? 0 : currentTypeIndex + 1;
-            (Sprite newSprite, String newName, int newType) = typeOptions[currentTypeIndex];
+            (TypeParam newType, Sprite newSprite, String newName) = typeOptions[currentTypeIndex];
 
             preview.style.backgroundImage = new StyleBackground(newSprite);
             label.text = $"Foraging for {newName}";
             onSetType(newType);
         });
 
-
         // Priority
         PriorityDisplay priority = new PriorityDisplay(initialPriority, onSetPriority);
         Add(priority);
-        // String priorityText = priorityOptions[initialPriorityIndex].Item1;
-        // currentPriorityIndex = initialPriorityIndex;
 
-        // Label priority = new(priorityText);
-        // priority.AddToClassList("priority__label");
-        // Add(priority);
-
-        // Button priority__left = new();
-        // priority__left.AddToClassList("priority__left");
-        // priority.Add(priority__left);
-
-        // Button priority__right = new();
-        // priority__right.AddToClassList("priority__right");
-        // priority.Add(priority__right);
-
-        // priority__left.RegisterCallback<ClickEvent>(_ => {
-        //     // Increment, or do nothing if at max value
-        //     if (currentPriorityIndex == priorityOptions.Count - 1) return;
-        //     currentPriorityIndex = currentPriorityIndex + 1;
-        //     (String newName, TaskPriority newPriority) = priorityOptions[currentPriorityIndex];
-
-        //     priority.text = newName;
-        //     onSetPriority(newPriority);
-        // });
-
-        // priority__right.RegisterCallback<ClickEvent>(_ => {
-        //     // Decrement, or do nothing if at min value
-        //     if (currentPriorityIndex == 0) return;
-        //     currentPriorityIndex = currentPriorityIndex - 1;
-        //     (String newName, TaskPriority newPriority) = priorityOptions[currentPriorityIndex];
-
-        //     priority.text = newName;
-        //     onSetPriority(newPriority);
-        // });
-
+        // Quality tag
+        OptionDisplay<QualParam> quality = new(initialQualityIndex, qualityOptions, onSetQuality, null);
+        Add(quality);
 
         // Confirmation operation (i.e. Add or Remove)
         Button confirmOperation = new();

@@ -16,5 +16,5 @@ MonoBehaviour:
   infoDescription: A raw material which can be combined with other ingredients for
     use in construction.
   previewSprite: {fileID: 21300000, guid: ef00486cfe4984443b056bf329cd9bea, type: 3}
-  itemTags: 04000000
+  itemTags: 0400000007000000
   components: []

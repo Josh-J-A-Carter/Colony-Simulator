@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 872d223d1c667a2469523e9b3c0d8de8, type: 3}
-  m_Name: Pollen
+  m_Name: Superior Pollen
   m_EditorClassIdentifier: 
   infoName: Pollen
   infoDescription: An unprocessed lump of pollen. Although it has some nutritional
     value, it is hard to digest as it is, and should be fermented into bee bread
     for easier consumption.
   previewSprite: {fileID: 21300000, guid: 4595dd337f3ef6d49a69f4e8cc674195, type: 3}
-  itemTags: 00000000030000000500000007000000
+  itemTags: 0000000003000000050000000700000008000000
   components:
-  - {fileID: 11400000, guid: 21ae13d4292a7f94097415712cb3a9fc, type: 2}
-  - {fileID: 11400000, guid: d752119c10e975941a9be15cba6f28a4, type: 2}
+  - {fileID: 11400000, guid: 86e283bc64fe1ba4cb057446e8485436, type: 2}
+  - {fileID: 11400000, guid: 9993950327ca0594288e6801008df301, type: 2}

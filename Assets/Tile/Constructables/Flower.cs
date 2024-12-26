@@ -144,7 +144,7 @@ public class Flower : TileEntity, IProducer {
         List<Item> available = new();
 
         if (isNectarProducer && (bool) instance[NECTAR__IS_READY]) available.Add(nectar);
-        else if (isPollenProducer && (bool) instance[POLLEN__IS_READY]) available.Add(pollen);
+        if (isPollenProducer && (bool) instance[POLLEN__IS_READY]) available.Add(pollen);
 
         return available;
     }

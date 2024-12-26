@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -29,7 +27,7 @@ public class TileManager : MonoBehaviour {
     TileBase dirt, grass;
 
     [SerializeField]
-    Constructable flower, flower2;
+    Constructable flower, flower2, flower3;
 
     TileEntityStore tileEntityStore;
 
@@ -64,6 +62,10 @@ public class TileManager : MonoBehaviour {
         Construct(new Vector2Int(0, 1), flower);
         Construct(new Vector2Int(10, 1), flower2);
         Construct(new Vector2Int(11, 1), flower2);
+
+        Construct(new Vector2Int(15, 1), flower3);
+        Construct(new Vector2Int(14, 1), flower3);
+        Construct(new Vector2Int(13, 1), flower3);
     }
 
     public void FixedUpdate() {

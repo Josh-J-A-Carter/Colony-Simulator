@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class ForageRule : TaskRule {
@@ -58,12 +59,22 @@ public class ForageRule : TaskRule {
         updatedRule = true;
     }
 
-    public void SetTags(List<ItemTag> newTags) {
-        if (tags.Equals(newTags)) return;
+    public void AddTag(ItemTag tag) {
+        if (tags.Contains(tag)) return;
 
-        tags = newTags;
+        tags.Add(tag);
 
         updatedRule = true;
+    }
+
+    public void RemoveTag(ItemTag tag) {
+        if (tags.Remove(tag) == false)  return;
+
+        updatedRule = true;
+    }
+
+    public bool HasTag(ItemTag tag) {
+        return tags.Contains(tag);
     }
 
     public override void Refresh() {
@@ -102,10 +113,11 @@ public class ForageRule : TaskRule {
             val => {
                 (Vector2Int pos, IProducer type, Dictionary<String, object> instance) = val;
                 
-                // Is there already a task at that location?
-                foreach (ILocative task in childTasks) if (task.GetStartPosition() == pos) return false;
+                // Is there already a foraging task at that location?
+                ReadOnlyCollection<Task> existingTasks = TaskManager.Instance.GetTasksAt(pos);
+                foreach (Task task in existingTasks) if (task is ForageTask) return false;
 
-                // Does it contain an item with all the required tags?
+                // Does it contain an item with all the required tags
                 return SatisfyTags(type.AvailableProductionItemTypes(instance));
             }
         );
@@ -122,9 +134,15 @@ public class ForageRule : TaskRule {
         foreach (Item item in items) {
             if (item.HasItemTag(mainTag) == false) continue;
 
-            foreach (ItemTag tag in tags) if (item.HasItemTag(tag) == false) continue;
+            bool found = true;
+            foreach (ItemTag tag in tags) {
+                if (item.HasItemTag(tag) == false) {
+                    found = false;
+                    break;
+                }
+            }
 
-            return true;
+            if (found) return true;
         }
 
         return false;

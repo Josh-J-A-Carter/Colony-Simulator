@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aabd070bfc0c9eb45aac4bbcff182b75, type: 3}
+  m_Name: Marigold
+  m_EditorClassIdentifier: 
+  gridData:
+  - gridEntries:
+    - worldTile: {fileID: 11400000, guid: 59e67c4cfc6f0ea428842fe9d46276cc, type: 2}
+      previewTile: {fileID: 0}
+  obstructive: 0
+  nameInfo: Marigold
+  descriptionInfo: A great source of quality pollen, and also produces nectar occasionally.
+  previewSprite: {fileID: 0}
+  requiredResources: []
+  isPollenProducer: 1
+  pollen: {fileID: 11400000, guid: fc27d730c0b04364cb6a82b181f71e7b, type: 2}
+  minPollenDelay: 10
+  maxPollenDelay: 60
+  minPollenQuantity: 1
+  maxPollenQuantity: 2
+  isNectarProducer: 1
+  nectar: {fileID: 11400000, guid: 73eaea258b6679441b5ee8b389bbb70f, type: 2}
+  minNectarDelay: 120
+  maxNectarDelay: 240
+  minNectarQuantity: 0
+  maxNectarQuantity: 1

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class ForageTool : Tool {
@@ -8,19 +7,40 @@ public class ForageTool : Tool {
     [SerializeField]
     Item nectar, pollen, sap;
 
-    List<(Sprite, String, int)> typeOptions;
+    List<(ForageRule.Type, Sprite, String)> typeOptions;
+
+    List<(ItemTag, String)> qualityOptions;
 
     ForageRule newRule;
+
+    ForageRule.Type currentType;
+    int currentTypeIndex;
+    ItemTag currentQuality;
+    int currentQualityIndex;
+    TaskPriority currentPriority;
 
     List<ForageRule> rules;
 
     public void Awake() {
         typeOptions = new() {
-            (nectar.GetPreviewSprite(), nectar.GetName(), (int) ForageRule.Type.Nectar),
-            (pollen.GetPreviewSprite(), pollen.GetName(), (int) ForageRule.Type.Pollen),
-            (sap.GetPreviewSprite(), sap.GetName(), (int) ForageRule.Type.Sap)
+            (ForageRule.Type.Nectar, nectar.GetPreviewSprite(), nectar.GetName()),
+            (ForageRule.Type.Pollen, pollen.GetPreviewSprite(), pollen.GetName()),
+            (ForageRule.Type.Sap, sap.GetPreviewSprite(), sap.GetName())
         };
 
+        qualityOptions = new() {
+            (ItemTag.Standard, Utilities.GetDescription(ItemTag.Standard)),
+            (ItemTag.Superior, Utilities.GetDescription(ItemTag.Superior)),
+            (ItemTag.Perfect, Utilities.GetDescription(ItemTag.Perfect))
+        };
+
+        currentType = ForageRule.Type.Nectar;
+        currentTypeIndex = 0;
+
+        currentQuality = ItemTag.Standard;
+        currentQualityIndex = 0;
+        
+        currentPriority = parent.GetPriority();
 
         rules = new();
 
@@ -34,8 +54,17 @@ public class ForageTool : Tool {
             TaskManager.Instance.RegisterRule(thisRule);
 
             InterfaceManager.Instance.AddOldForageContent(
-                new (typeOptions, (int) thisRule.type, (input) => thisRule.SetType((ForageRule.Type) input),
-                    thisRule.priority, (priority) => thisRule.SetPriority(priority),
+                new RuleDisplay<ForageRule.Type, ItemTag> (
+                    // Type options
+                    typeOptions, currentTypeIndex, (input) => thisRule.SetType((ForageRule.Type) input),
+                    // Priority options
+                    thisRule.priority, (input) => thisRule.SetPriority(input),
+                    // Quality options
+                    qualityOptions, currentQualityIndex, (input) => {
+                        foreach ((ItemTag tag, _) in qualityOptions) thisRule.RemoveTag(tag);
+                        thisRule.AddTag(input);
+                    },
+                    // Remove button
                     "Remove", () => RemoveRule(thisRule)
                 )
             );
@@ -45,11 +74,30 @@ public class ForageTool : Tool {
     }
 
     void SetNewRule() {
-        newRule = new(ForageRule.Type.Nectar, new(), parent.GetPriority());
+        newRule = new(currentType, new() { currentQuality }, currentPriority);
 
         InterfaceManager.Instance.SetNewForageContent(
-            new (typeOptions, (int) newRule.type, (input) => newRule.SetType((ForageRule.Type) input),
-                newRule.priority, (priority) => newRule.SetPriority(priority),
+            new RuleDisplay<ForageRule.Type, ItemTag>(
+                // Type options
+                typeOptions, currentTypeIndex, (input) => {
+                    newRule.SetType(input);
+                    currentType = input;
+                    currentTypeIndex = typeOptions.FindIndex(t => t.Item1 == input);
+                },
+                // Priority options
+                newRule.priority, (input) => {
+                    newRule.SetPriority(input);
+                    currentPriority = input;
+                },
+                // Quality options
+                qualityOptions, currentQualityIndex, (input) => {
+                    newRule.RemoveTag(currentQuality);
+                    newRule.AddTag(input);
+
+                    currentQuality = input;
+                    currentQualityIndex = qualityOptions.FindIndex(q => q.Item1 == input);
+                },
+                // Final addition button
                 "Add", () => AddNewRule()
             )
         );
@@ -64,11 +112,35 @@ public class ForageTool : Tool {
 
     void RefreshOldRuleDisplay() {
         InterfaceManager.Instance.ResetOldForageContent();
+
         
         foreach (ForageRule rule in rules) {
+            ForageRule.Type type = rule.type;
+            int typeIndex = typeOptions.FindIndex(t => t.Item1 == type);
+
+            ItemTag quality = ItemTag.Standard;
+            foreach ((ItemTag tag, _) in qualityOptions) {
+                if (rule.HasTag(tag)) {
+                    quality = tag;
+                    break;
+                }
+            }
+            int qualityIndex = qualityOptions.FindIndex(t => t.Item1 == quality);
+
+            TaskPriority priority = rule.priority;
+
             InterfaceManager.Instance.AddOldForageContent(
-                new (typeOptions, (int) rule.type, (input) => rule.SetType((ForageRule.Type) input),
-                    rule.priority, (priority) => rule.SetPriority(priority),
+                new RuleDisplay<ForageRule.Type, ItemTag>(
+                    // Type options
+                    typeOptions, typeIndex, (input) => rule.SetType(input),
+                    // Priority
+                    priority, (input) => rule.SetPriority(input),
+                    // Quality
+                    qualityOptions, qualityIndex, (input) => {
+                        foreach ((ItemTag tag, _) in qualityOptions) rule.RemoveTag(tag);
+                        rule.AddTag(input);
+                    },
+                    // Remove button
                     "Remove", () => RemoveRule(rule)
                 )
             );
@@ -76,6 +148,8 @@ public class ForageTool : Tool {
     }
 
     public override void OnEquip() {
+        currentPriority = parent.GetPriority();
+
         SetNewRule();
 
         RefreshOldRuleDisplay();

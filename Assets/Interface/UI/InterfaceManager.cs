@@ -193,7 +193,7 @@ public class InterfaceManager : MonoBehaviour {
         forageMenuQuit.RegisterCallback(callback);
     }
 
-    public void AddOldForageContent(RuleDisplay display) {
+    public void AddOldForageContent<T, Q>(RuleDisplay<T, Q> display) {
         forageOldContainerRoot.Add(display);
     }
 
@@ -201,7 +201,7 @@ public class InterfaceManager : MonoBehaviour {
         forageOldContainerRoot.Clear();
     }
 
-    public void SetNewForageContent(RuleDisplay display) {
+    public void SetNewForageContent<T, Q>(RuleDisplay<T, Q> display) {
         forageNewContainerRoot.Clear();
         forageNewContainerRoot.Add(display);
     }

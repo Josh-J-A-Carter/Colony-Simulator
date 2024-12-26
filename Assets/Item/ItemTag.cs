@@ -17,4 +17,10 @@ public enum ItemTag {
     Fermentable,
     [Description("Beeswax")]
     Beeswax,
+    [Description("Standard Quality")]
+    Standard,
+    [Description("Superior Quality")]
+    Superior,
+    [Description("Perfect Quality")]
+    Perfect
 }

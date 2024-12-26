@@ -52,7 +52,6 @@ public class CancelTool : Tool {
 
         // Need an actual task here
         ReadOnlyCollection<Task> currentHoverTasks = TaskManager.Instance.GetTasksAt(newPos);
-        Debug.Log("List has " + currentHoverTasks.Count);
 
         if (currentHoverTasks.Count == 0) return;
         
@@ -66,7 +65,6 @@ public class CancelTool : Tool {
 
 
         if (foundCancellableTask == false) return;
-        Debug.Log("List not all rules ");
 
         if (!previewCursorActive || newPos != previewCursorPosition) {
             TileManager.Instance.SetPreview(newPos, cancelEffect);

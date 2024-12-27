@@ -7,7 +7,7 @@ Shader "Unlit/EntityEffects" {
 
     SubShader {
         Tags {
-            "QUEUE"="Transparent"
+            "Queue"="Transparent"
             "IgnoreProjector"="true"
             "RenderType"="Transparent"
             "PreviewType"="Plane"
@@ -42,7 +42,14 @@ Shader "Unlit/EntityEffects" {
 
             v2f vert (appdata_base v) {
                 v2f o;
+            
+            // Adds variation / hover effect to bees, but also introduces weird graphical issues
+                // float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
+                // worldPos.y += sin(_Time * 80) * 0.075;
+                // o.vertex = mul(UNITY_MATRIX_VP, worldPos);
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
+
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
                 return o;
             }

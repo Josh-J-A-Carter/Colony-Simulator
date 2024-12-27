@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7b6a9d050a2eb458421518bb2ec1d2, type: 3}
   m_Name: Storage
   m_EditorClassIdentifier: 
-  categoryName: Storage
-  preview: {fileID: 21300000, guid: f2ca551996a2aea408aa8b6390c47008, type: 3}
+  categoryName: Building
+  preview: {fileID: 242228495, guid: 1b5016842a08a0e45a5c148d9d9c6a07, type: 3}
   constructables:
-  - {fileID: 11400000, guid: 928cb5dc22216df48a239ce0372de8fa, type: 2}
+  - {fileID: 11400000, guid: 521f3767cd61b924ebf2f3cf699e6dce, type: 2}
+  - {fileID: 11400000, guid: 13666197605fbb646944e350cf83f302, type: 2}

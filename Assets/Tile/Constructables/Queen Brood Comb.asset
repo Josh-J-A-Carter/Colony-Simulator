@@ -27,9 +27,9 @@ MonoBehaviour:
   requiredResources:
   - resource:
       <ResourceType>k__BackingField: 0
-      <Item>k__BackingField: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
+      <Item>k__BackingField: {fileID: 11400000, guid: 09a218d535aa80c44adf556f4e538273, type: 2}
       <ItemTag>k__BackingField: 0
-    quantity: 3
+    quantity: 2
   maxCapacity: 450
   broodCombSize: 2
   toFertilise: 1

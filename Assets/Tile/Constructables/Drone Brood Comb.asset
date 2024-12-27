@@ -23,9 +23,9 @@ MonoBehaviour:
   previewSprite: {fileID: -615253942, guid: 4d4a6c37b6fe60444a21f5a77e18c3db, type: 3}
   requiredResources:
   - resource:
-      <ResourceType>k__BackingField: 0
-      <Item>k__BackingField: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
-      <ItemTag>k__BackingField: 0
+      <ResourceType>k__BackingField: 1
+      <Item>k__BackingField: {fileID: 0}
+      <ItemTag>k__BackingField: 6
     quantity: 2
   maxCapacity: 150
   broodCombSize: 1

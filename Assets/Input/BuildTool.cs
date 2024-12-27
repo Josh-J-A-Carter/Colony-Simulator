@@ -75,7 +75,7 @@ public class BuildTool : Tool {
         // Build when clicked
         if (previewCursorActive && Input.GetKeyDown(KeyCode.Mouse0)) {
             tm.SetTaskPreview(previewCursorPosition, constructable);
-            TaskManager.Instance.CreateTask(new BuildTask(parent.GetPriority(), previewCursorPosition, constructable, previewConfigDataTemplate));
+            BuildArea(previewCursorPosition, previewCursorPosition, constructable);
         }
     }
 
@@ -182,7 +182,7 @@ public class BuildTool : Tool {
 
         // IMPORTANT! Update after setting tasks, otherwise changing the configuration parameters
         // will change the tasks too... not desired
-        previewConfigDataTemplate = Utilities.RecursiveDataCopy(previewConfigDataTemplate);
+        if (previewConfigDataTemplate != null) previewConfigDataTemplate = Utilities.RecursiveDataCopy(previewConfigDataTemplate);
     }
 
 
@@ -216,8 +216,9 @@ public class BuildTool : Tool {
         root.AddChild(reqsCategory);
 
         foreach ((Resource res, uint quantity) in newConstructable.GetRequiredResources()) {
-            String reqName = res.Item.GetName();
-            if (res.ResourceType == ResourceType.Tag) reqName = res.ItemTag.GetDescription();
+            String reqName;
+            if (res.ResourceType == ResourceType.Item) reqName = res.Item.GetName();
+            else reqName = res.ItemTag.GetDescription();
 
             InfoLeaf reqProperty = new(reqName, $"x {quantity}");
             reqsCategory.AddChild(reqProperty);

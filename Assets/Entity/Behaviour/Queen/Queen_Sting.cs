@@ -25,7 +25,7 @@ public class Queen_Sting : State {
     }
 
     public override void FixedRun() {
-        if (target == null) {
+        if (target == null || target.CanTarget() == false) {
             CompleteState();
             return;
         }

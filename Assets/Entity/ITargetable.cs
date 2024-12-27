@@ -2,6 +2,8 @@ using UnityEngine;
 
 public interface ITargetable {
 
+    public bool CanTarget();
+
     public bool IsDead();
 
     public int Friendliness();

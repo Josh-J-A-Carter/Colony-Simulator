@@ -11,6 +11,8 @@ public class CameraManager : MonoBehaviour {
     Camera mainCamera;
     float cameraSizeDefault;
 
+    BoundsInt maxBounds;
+
     // Pan speed fields & calculations
     static readonly float panSpeedBase = 0.75f;
     float UniDirectionalPanSpeed => panSpeedBase * zoom;
@@ -48,6 +50,23 @@ public class CameraManager : MonoBehaviour {
         cameraSizeDefault = mainCamera.orthographicSize;
     }
 
+    public void Start() {
+        BoundsInt worldBounds = TileManager.Instance.GetBounds();
+
+        Vector3Int boundsPadding = new(2, 2, 0);
+
+        maxBounds = new(worldBounds.min - boundsPadding, worldBounds.size + 2 * boundsPadding);
+    }
+
+    public Bounds Bounds() {
+        float screenAspect = Screen.width / (float) Screen.height;
+        float cameraHeight = mainCamera.orthographicSize * 2;
+        Bounds bounds = new Bounds(
+            mainCamera.transform.position,
+            new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
+        return bounds;
+    }
+
     public void Run(HoverData data) {
         CheckInput(data);
     }
@@ -80,7 +99,18 @@ public class CameraManager : MonoBehaviour {
 
     void ApplyCameraChanges() {
         // Determine the direction
-        Vector3 translation = new Vector3((int) horizontalInput, (int) verticalInput);
+        float hComp = (int) horizontalInput;
+        float vComp = (int) verticalInput;
+
+        Bounds cBounds = Bounds();
+
+        if (hComp < 0 && cBounds.min.x <= maxBounds.min.x) hComp = 0;
+        if (hComp > 0 && cBounds.max.x >= maxBounds.max.x) hComp = 0;
+
+        if (vComp < 0 && cBounds.min.y <= maxBounds.min.y) vComp = 0;
+        if (vComp > 0 && cBounds.max.y >= maxBounds.max.y) vComp = 0;
+
+        Vector3 translation = new Vector3(hComp, vComp);
 
         // Determine the magnitude in each direction
         if (horizontalInput != HorizontalInput.None && verticalInput != VerticalInput.None) translation *= BiDirectionalPanSpeed;

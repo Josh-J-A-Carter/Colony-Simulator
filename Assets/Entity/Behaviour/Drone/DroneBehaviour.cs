@@ -151,9 +151,14 @@ public class DroneBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable 
         return curr;
     }
 
+    public bool CanTarget() {
+        return !healthComponent.IsDead;
+    }
+
     public bool IsDead() {
         return healthComponent.IsDead;
     }
+
 
     public int Friendliness() {
         return 1;

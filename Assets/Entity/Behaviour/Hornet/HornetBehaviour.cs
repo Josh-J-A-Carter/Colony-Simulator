@@ -141,7 +141,7 @@ public class HornetBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable
 
         List<ITargetable> potentialTargets = EntityManager.Instance.QueryEntities<ITargetable>(t => {
             if (t.Friendliness() <= 0) return false;
-            if (t.IsDead()) return false;
+            if (t.CanTarget() == false) return false;
             if (Vector2.Distance(transform.position, t.GetPosition()) > MAX_TARGET_DISTANCE) return false;
 
             Path p = Pathfind.FindPath(transform.position, t.GetPosition());
@@ -191,9 +191,14 @@ public class HornetBehaviour : MonoBehaviour, IInformative, IEntity, ITargetable
         return transform.position;
     }
 
+    public bool CanTarget() {
+        return !healthComponent.IsDead && state != nest;
+    }
+
     public bool IsDead() {
         return healthComponent.IsDead;
     }
+
 
     public string GetName() {
         return "Hornet Wasp";

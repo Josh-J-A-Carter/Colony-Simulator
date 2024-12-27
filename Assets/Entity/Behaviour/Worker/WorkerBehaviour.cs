@@ -214,8 +214,8 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
             stateMachine.SetChildState(forage);
         }
 
-        else if (task is AttackTask) {
-            if (beganStingCoolOff + STING_COOL_OFF < Time.time) {
+        else if (task is AttackTask attack) {
+            if (beganStingCoolOff + STING_COOL_OFF < Time.time && attack.GetTarget().CanTarget()) {
                 stateMachine.SetChildState(sting);
             }
 
@@ -338,6 +338,10 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
 
     public Vector2 GetPosition() {
         return transform.position;
+    }
+
+    public bool CanTarget() {
+        return !healthComponent.IsDead;
     }
 
     public bool IsDead() {

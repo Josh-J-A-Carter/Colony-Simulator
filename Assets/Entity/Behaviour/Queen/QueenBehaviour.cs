@@ -137,8 +137,8 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
             return;
         }
 
-        else if (task is AttackTask) {
-            if (beganStingCoolOff + STING_COOL_OFF < Time.time) {
+        else if (task is AttackTask attack) {
+            if (beganStingCoolOff + STING_COOL_OFF < Time.time && attack.GetTarget().CanTarget()) {
                 stateMachine.SetChildState(sting);
             }
 
@@ -211,6 +211,10 @@ public class QueenBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, 
         while (curr.stateMachine.childState != null) curr = curr.stateMachine.childState;
 
         return curr;
+    }
+
+    public bool CanTarget() {
+        return !healthComponent.IsDead;
     }
 
     public bool IsDead() {

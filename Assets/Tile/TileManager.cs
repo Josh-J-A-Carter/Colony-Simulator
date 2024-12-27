@@ -17,10 +17,12 @@ public class TileManager : MonoBehaviour {
 
     WorldLoader worldLoader;
 
-    const int WORLD_WIDTH = 512;
-    const int WORLD_HEIGHT = 128;
+    const int WORLD_WIDTH = 256;
+    const int WORLD_HEIGHT = 48;
     const int MIN_X = - WORLD_WIDTH / 2;
-    const int MIN_Y = - WORLD_HEIGHT / 4;
+    const int MIN_Y = - WORLD_HEIGHT / 3;
+
+    BoundsInt bounds;
 
 
     [SerializeField]
@@ -43,6 +45,8 @@ public class TileManager : MonoBehaviour {
             Destroy(this);
             return;
         } else Instance = this;
+
+        bounds = new(new(MIN_X, MIN_Y), new(WORLD_WIDTH, WORLD_HEIGHT));
 
         obstacles = new Graph();
         obstacles.CreateGraph(MIN_X, MIN_Y, MIN_X + WORLD_WIDTH, MIN_Y + WORLD_HEIGHT);
@@ -78,6 +82,10 @@ public class TileManager : MonoBehaviour {
 
     public bool IsInBounds(int x, int y) {
         return obstacles.IsInBounds(x, y);
+    }
+
+    public BoundsInt GetBounds() {
+        return bounds;
     }
 
     public bool IsObstructed(int x, int y) {

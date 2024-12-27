@@ -23,7 +23,7 @@ MonoBehaviour:
   nameInfo: Queen Brood Comb
   descriptionInfo: A spacious cell built for a queen, and also capable of holding
     many items inside.
-  previewSprite: {fileID: 0}
+  previewSprite: {fileID: 21300000, guid: 8845389858022d94fa9b83810bd32284, type: 3}
   requiredResources:
   - resource:
       <ResourceType>k__BackingField: 0

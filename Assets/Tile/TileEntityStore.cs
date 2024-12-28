@@ -82,7 +82,6 @@ public class TileEntityStore {
             for (int j = 0 ; j < tileEntities.Count ; j += 1) {
                 if (tileEntities[j].Item1 == position) {
                     (Vector2Int pos, TileEntity tileEntity, Dictionary<String, object> data) = tileEntities[j];
-                    // tileEntity.Destroy(pos, tileEntities[j].Item3);
                     tileEntities.RemoveAt(j);
                     break;
                 }
@@ -96,7 +95,6 @@ public class TileEntityStore {
         for (int i = 0 ; i < tileEntitiesToAdd.Count ; i += 1) {
             (Vector2Int pos, TileEntity tileEntity, Dictionary<String, object> data) = tileEntitiesToAdd[i];
             tileEntities.Add((pos, tileEntity, data));
-            // tileEntity.Create(pos, data);
         }
 
         tileEntitiesToAdd.Clear();

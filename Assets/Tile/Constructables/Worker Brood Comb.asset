@@ -27,6 +27,7 @@ MonoBehaviour:
       <Item>k__BackingField: {fileID: 0}
       <ItemTag>k__BackingField: 6
     quantity: 1
+  tags: 02000000
   maxCapacity: 50
   broodCombSize: 0
   toFertilise: 1

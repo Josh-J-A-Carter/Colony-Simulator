@@ -83,6 +83,18 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         return data;
     }
 
+    protected override void DestructionCleanup(Vector2Int location, Dictionary<string, object> instance = null) {
+        List<(Item, uint)> storedItems = new();
+
+        StorageType type = (StorageType) instance[CURRENT_STORAGE_TYPE];
+        if (type == StorageType.Item) storedItems.AddRange(GetInventory(instance).GetContents());
+        else if (type == StorageType.Fermentable) storedItems.AddRange(instance[FERMENTABLE_DATA__ITEMS] as List<(Item, uint)>);
+
+        foreach (ResourceInstance res in destructionItems) {
+            EntityManager.Instance.InstantiateItemEntity(location, res.item, res.quantity);
+        }
+    }
+
     /// <summary>
     /// Pass a tile-entity instance's data to its parent constructable, in order to execute specific behaviour.
     /// <br></br><br></br>

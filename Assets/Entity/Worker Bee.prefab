@@ -86,7 +86,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 994044572249963573}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bca25d6184de2f94ca52b0aaa08fc044, type: 3}
+  m_Script: {fileID: 11500000, guid: a0b1b11b278f1444297dc9fe211bfac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
@@ -694,6 +694,7 @@ MonoBehaviour:
   eat: {fileID: 7657159451167296912}
   die: {fileID: 4157886100282825499}
   sting: {fileID: 6257514487397700297}
+  destroy: {fileID: 0}
 --- !u!114 &8531101069963779304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,8 +722,8 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 09a218d535aa80c44adf556f4e538273, type: 2}
     minQuantity: 0
     maxQuantity: 1
-    minDelaySeconds: 5
-    maxDelaySeconds: 15
+    minDelaySeconds: 90
+    maxDelaySeconds: 120
 --- !u!114 &4870670698135158782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -836,7 +837,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5114106759502051238}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84319336ddb259342bdc9b76e327049c, type: 3}
+  m_Script: {fileID: 11500000, guid: a0b1b11b278f1444297dc9fe211bfac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}
@@ -1111,7 +1112,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6786297765104256902}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9658d00499a742746912ff4a2d0dd834, type: 3}
+  m_Script: {fileID: 11500000, guid: a0b1b11b278f1444297dc9fe211bfac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 7400000, guid: 678348a0b1595ca45b51f77c3101d425, type: 2}

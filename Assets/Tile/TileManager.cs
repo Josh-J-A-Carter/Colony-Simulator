@@ -206,9 +206,18 @@ public class TileManager : MonoBehaviour {
 
         if (constructable == null) return false;
 
-        // If the constructable is a tile entity, make sure to add this
-        if (constructable is TileEntity) tileEntityStore.RemoveTileEntity(startPosition);
+        Dictionary<String, object> data = null;
 
+        // If the constructable is a tile entity, make sure to remove this - also get data to pass to OnDestruction
+        if (constructable is TileEntity) {
+            data = tileEntityStore.GetTileEntityData(startPosition);
+            tileEntityStore.RemoveTileEntity(startPosition);
+        }
+
+        // Tell constructable to clean up
+        constructable.OnDestruction(startPosition, data);
+
+        // Remove from tilemap & constructable storage map
         foreach (Vector2Int pos in constructable.GetInteriorPoints()) {
             SetTile(startPosition + pos, null, false);
             constructableGraph.RemoveConstructable(startPosition + pos);

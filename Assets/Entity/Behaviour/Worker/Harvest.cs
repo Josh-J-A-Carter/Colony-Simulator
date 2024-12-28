@@ -8,6 +8,8 @@ public class Harvest : State {
     ITaskAgent taskAgent;
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();
+
+        (pathfind as Locative__Pathfind).TargetInteriorPoints();
     }
 
     public override void OnEntry() {

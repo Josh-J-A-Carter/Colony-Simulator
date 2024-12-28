@@ -27,12 +27,21 @@ public class Constructable : ScriptableObject, IInformative {
     protected List<ResourceRequirement> requiredResources;
 
     [SerializeField]
+    protected List<ResourceInstance> destructionItems;
+
+    [SerializeField]
     ConstructableTag[] tags;
 
     ReadOnlyCollection<(Resource, uint)> requirement;
 
     ReadOnlyCollection<Vector2Int> exteriorPoints;
     ReadOnlyCollection<Vector2Int> interiorPoints;
+
+    [Serializable]
+    protected struct ResourceInstance {
+        public Item item;
+        public uint quantity;
+    }
 
     public bool IsObstructive() {
         return obstructive;
@@ -145,6 +154,16 @@ public class Constructable : ScriptableObject, IInformative {
 
         return requirement;
     }
+
+    public void OnDestruction(Vector2Int location, Dictionary<String, object> instance = null) {
+        foreach (ResourceInstance res in destructionItems) {
+            EntityManager.Instance.InstantiateItemEntity(location, res.item, res.quantity);
+        }
+
+        DestructionCleanup(location, instance);
+    }
+
+    protected virtual void DestructionCleanup(Vector2Int location, Dictionary<String, object> instance = null) {}
 
 
     public String GetName() {

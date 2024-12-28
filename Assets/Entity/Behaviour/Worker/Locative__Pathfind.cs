@@ -2,11 +2,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
-public class Harvest__Pathfind : State {
-
-
+public class Locative__Pathfind : State {
     Path path;
-    ForageTask task => (ForageTask) taskAgent.GetTask();
+    ILocative task => (ILocative) taskAgent.GetTask();
+
     static readonly int stepSpeed = 15;
 
     [SerializeField]
@@ -14,8 +13,14 @@ public class Harvest__Pathfind : State {
 
     ITaskAgent taskAgent;
 
+    bool targetInterior;
+
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();
+    }
+
+    public void TargetInteriorPoints() {
+        targetInterior = true;
     }
 
     public override void OnEntry() {
@@ -24,7 +29,7 @@ public class Harvest__Pathfind : State {
         TryFindPath();
     }
 
-    public override void FixedRun(){
+    public override void FixedRun() {
         bool success = path.Increment();
 
         if (path.IsComplete()) {
@@ -36,10 +41,12 @@ public class Harvest__Pathfind : State {
     }
 
     void TryFindPath() {
-        ReadOnlyCollection<Vector2Int> interior = task.GetInteriorPoints();
+        ReadOnlyCollection<Vector2Int> points;
+        if (targetInterior) points = task.GetInteriorPoints();
+        else points = task.GetExteriorPoints();
 
         // Find a path to one of them, if possible
-        (path, _) = Pathfind.FindPathToOneOf(transform.position, interior.ToList(), p => p, oneTagFrom: new[]{ ConstructableTag.BeeTraversable });
+        (path, _) = Pathfind.FindPathToOneOf(transform.position, points.ToList(), p => p, oneTagFrom: new[]{ ConstructableTag.BeeTraversable });
 
         if (path != null) {
             path.Initialise(entity, stepSpeed);
@@ -48,4 +55,5 @@ public class Harvest__Pathfind : State {
 
         CompleteState(false);
     }
+
 }

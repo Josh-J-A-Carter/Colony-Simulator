@@ -19,6 +19,8 @@ public class Nurse : State {
     public override void OnSetup() {
         taskAgent = entity.GetComponent<ITaskAgent>();
         inventory = entity.GetComponent<InventoryManager>();
+
+        (pathfind as Locative__Pathfind).TargetInteriorPoints();
     }
  
     public override void OnEntry() {

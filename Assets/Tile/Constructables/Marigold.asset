@@ -21,10 +21,12 @@ MonoBehaviour:
   descriptionInfo: A great source of quality pollen, and also produces nectar occasionally.
   previewSprite: {fileID: 0}
   requiredResources: []
+  destructionItems: []
+  tags: 
   isPollenProducer: 1
   pollen: {fileID: 11400000, guid: fc27d730c0b04364cb6a82b181f71e7b, type: 2}
-  minPollenDelay: 10
-  maxPollenDelay: 60
+  minPollenDelay: 60
+  maxPollenDelay: 120
   minPollenQuantity: 1
   maxPollenQuantity: 2
   isNectarProducer: 1

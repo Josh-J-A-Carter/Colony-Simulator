@@ -6,7 +6,7 @@ using UnityEngine;
 public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity, ITargetable {
 
     [SerializeField]
-    State idle, build, nurse, tidy, forage, ferment, eat, die, sting;
+    State idle, build, nurse, tidy, forage, ferment, eat, die, sting, destroy;
     Animator animator;
 
     Task task;
@@ -76,6 +76,9 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
 
         // Make sure pathfinding to the task is possible, if applicable
         if (task is ILocative locative && !IsPathAvailable(locative)) return false;
+
+        // Bee needs to be able to destroy the target constructable!
+        if (task is DestroyTask destroyTask && !destroyTask.IsConstructableTagPresent(ConstructableTag.HoneyBeeDestructable)) return false;
 
         if (task.IsWorkerTask()) {
             this.task = task;
@@ -222,6 +225,10 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
             else {
                 stateMachine.SetChildState(idle);
             }
+        }
+
+        else if (task is DestroyTask destroyTask) {
+            stateMachine.SetChildState(destroy);
         }
         
         else {

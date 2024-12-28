@@ -49,6 +49,11 @@ public class SelectTool : Tool {
         }
 
         else if (selectionType == SelectionType.Entity) {
+            if (!entityPreview) {
+                ResetSelection();
+                return;
+            }
+
             InfoToUI.DisplayInfoTree(entityPreviewInfo.GetInfoTree());
         }
     }

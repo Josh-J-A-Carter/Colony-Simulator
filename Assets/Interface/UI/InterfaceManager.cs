@@ -82,7 +82,7 @@ public class InterfaceManager : MonoBehaviour {
                                                 .ToList();
 
         OptionDisplay<TaskPriority> display = new(
-            (int) InputManager.Instance.GetPriority(),
+            options.Count - 1 - (int) InputManager.Instance.GetPriority(),
             options,
             priority => InputManager.Instance.SetPriority(priority),
             ClickedPriorityTool

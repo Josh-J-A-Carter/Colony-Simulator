@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Constructable/Brood Comb Constructable")]
 public class BroodComb : TileEntity, IConfigurable, IStorage {
@@ -87,11 +87,22 @@ public class BroodComb : TileEntity, IConfigurable, IStorage {
         List<(Item, uint)> storedItems = new();
 
         StorageType type = (StorageType) instance[CURRENT_STORAGE_TYPE];
+        // Spill item contents
         if (type == StorageType.Item) storedItems.AddRange(GetInventory(instance).GetContents());
-        else if (type == StorageType.Fermentable) storedItems.AddRange(instance[FERMENTABLE_DATA__ITEMS] as List<(Item, uint)>);
+        // Fermentables - need to check if they are done or not
+        else if (type == StorageType.Fermentable) {
+            if (FermentablesReady(instance)) {
+                storedItems.AddRange(CollectFermentables(location, instance));
+            } else {
+                storedItems.AddRange(instance[FERMENTABLE_DATA__ITEMS] as List<(Item, uint)>);
+            }
+        }
 
-        foreach (ResourceInstance res in destructionItems) {
-            EntityManager.Instance.InstantiateItemEntity(location, res.item, res.quantity);
+        Vector2 centre = new(0.5f, 0.5f);
+
+        foreach ((Item item, uint quantity) in storedItems) {
+            Vector2 offset = new(Random.Range(-0.5f, 0.5f), Random.Range(-0.25f, 0.25f));
+            EntityManager.Instance.InstantiateItemEntity(location + centre + offset, item, quantity);
         }
     }
 

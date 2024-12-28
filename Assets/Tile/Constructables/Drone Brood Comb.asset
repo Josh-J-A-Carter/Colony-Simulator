@@ -27,6 +27,9 @@ MonoBehaviour:
       <Item>k__BackingField: {fileID: 0}
       <ItemTag>k__BackingField: 6
     quantity: 2
+  destructionItems:
+  - item: {fileID: 11400000, guid: e6d0b44fe8a271247ba3cdd37e515735, type: 2}
+    quantity: 2
   tags: 02000000
   maxCapacity: 150
   broodCombSize: 1

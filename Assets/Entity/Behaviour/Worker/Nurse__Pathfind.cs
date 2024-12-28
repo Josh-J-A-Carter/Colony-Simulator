@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
@@ -43,7 +40,8 @@ public class Nurse__Pathfind : State {
         ReadOnlyCollection<Vector2Int> interior = task.GetExteriorPoints();
 
         // Find a path to one of them, if possible
-        (path, _) = Pathfind.FindPathToOneOf(transform.position, interior.ToList(), p => p);
+        (path, _) = Pathfind.FindPathToOneOf(transform.position, interior.ToList(), p => p, 
+                                                oneTagFrom: new[]{ ConstructableTag.BeeTraversable });
 
         if (path != null) {
             path.Initialise(entity, stepSpeed);

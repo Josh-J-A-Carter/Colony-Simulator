@@ -74,7 +74,8 @@ public class GetResources : State {
         if (itemEntities.Count == 0) return false;
         
         // Find a path to one of them, if possible
-        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, itemEntities.ToList(), entity => entity.transform.position, randomise: true);
+        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, itemEntities.ToList(), entity => entity.transform.position, 
+                                                            oneTagFrom: new[]{ ConstructableTag.BeeTraversable }, randomise: true);
 
         if (path != null) {
             this.path = path;
@@ -100,7 +101,8 @@ public class GetResources : State {
 
         if (storage.Count == 0) return false;
 
-        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, storage, tuple => tuple.Item1);
+        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, storage, tuple => tuple.Item1, 
+                                                            oneTagFrom: new[]{ ConstructableTag.BeeTraversable });
 
         if (path != null) {
             this.path = path;

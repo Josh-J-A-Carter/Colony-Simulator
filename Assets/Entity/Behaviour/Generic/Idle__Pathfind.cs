@@ -53,7 +53,7 @@ public class Idle__Pathfind : State {
 
             Vector2Int target = new Vector2Int(targetX, targetY);
 
-            Path path = Pathfind.FindPath(current, target);
+            Path path = Pathfind.FindPath(current, target, oneTagFrom: new[]{ ConstructableTag.BeeTraversable });
             
             if (path != null) {
                 this.path = path;

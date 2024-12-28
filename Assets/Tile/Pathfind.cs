@@ -17,31 +17,31 @@ public static class Pathfind {
     /// Find all the neighbouring tiles and their cost to travel to each of them.
     /// </summary>
     /// <returns>List of tuples, each containing a neighbour and its associated travel cost / weight</returns>
-    static List<(Vector2Int, int)> GetNeighbours(Vector2Int point) {
+    static List<(Vector2Int, int)> GetNeighbours(Vector2Int point, ConstructableTag[] tags) {
         List<(Vector2Int, int)> neighbours = new List<(Vector2Int, int)>();
 
         int x = point.x;
         int y = point.y;
 
         // Neighbouring cells in cardinal directions
-        if (tm.IsInBounds(x - 1, y) && tm.IsUnobstructed(x - 1, y)) neighbours.Add((new Vector2Int(x - 1, y), CARDINAL_DIR_COST));
-        if (tm.IsInBounds(x + 1, y) && tm.IsUnobstructed(x + 1, y)) neighbours.Add((new Vector2Int(x + 1, y), CARDINAL_DIR_COST));
-        if (tm.IsInBounds(x, y - 1) && tm.IsUnobstructed(x, y - 1)) neighbours.Add((new Vector2Int(x, y - 1), CARDINAL_DIR_COST));
-        if (tm.IsInBounds(x, y + 1) && tm.IsUnobstructed(x, y + 1)) neighbours.Add((new Vector2Int(x, y + 1), CARDINAL_DIR_COST));
+        if (tm.IsInBounds(x - 1, y) && tm.IsUnobstructed(x - 1, y, tags)) neighbours.Add((new Vector2Int(x - 1, y), CARDINAL_DIR_COST));
+        if (tm.IsInBounds(x + 1, y) && tm.IsUnobstructed(x + 1, y, tags)) neighbours.Add((new Vector2Int(x + 1, y), CARDINAL_DIR_COST));
+        if (tm.IsInBounds(x, y - 1) && tm.IsUnobstructed(x, y - 1, tags)) neighbours.Add((new Vector2Int(x, y - 1), CARDINAL_DIR_COST));
+        if (tm.IsInBounds(x, y + 1) && tm.IsUnobstructed(x, y + 1, tags)) neighbours.Add((new Vector2Int(x, y + 1), CARDINAL_DIR_COST));
 
         // // Diagonals
         // // Can only go to diagonal tile (x*, y*) if:
         // // - (x*, y*) is in the grid bounds
         // // - (x*, y*) is not obstructed
         // // - there is an unobstructed cardinal cell next to it (otherwise, we could slip through corners in walls)
-        if (tm.IsInBounds(x - 1, y - 1) && tm.IsUnobstructed(x - 1, y - 1)
-            && (tm.IsUnobstructed(x - 1, y) || tm.IsUnobstructed(x, y - 1))) neighbours.Add((new Vector2Int(x - 1, y - 1), DIAGONAL_DIR_COST));
-        if (tm.IsInBounds(x - 1, y + 1) && tm.IsUnobstructed(x - 1, y + 1)
-            && (tm.IsUnobstructed(x - 1, y) || tm.IsUnobstructed(x, y + 1))) neighbours.Add((new Vector2Int(x - 1, y + 1), DIAGONAL_DIR_COST));
-        if (tm.IsInBounds(x + 1, y + 1) && tm.IsUnobstructed(x + 1, y + 1)
-            && (tm.IsUnobstructed(x + 1, y) || tm.IsUnobstructed(x, y + 1))) neighbours.Add((new Vector2Int(x + 1, y + 1), DIAGONAL_DIR_COST));
-        if (tm.IsInBounds(x + 1, y - 1) && tm.IsUnobstructed(x + 1, y - 1)
-            && (tm.IsUnobstructed(x + 1, y) || tm.IsUnobstructed(x, y - 1))) neighbours.Add((new Vector2Int(x + 1, y - 1), DIAGONAL_DIR_COST));
+        if (tm.IsInBounds(x - 1, y - 1) && tm.IsUnobstructed(x - 1, y - 1, tags)
+            && (tm.IsUnobstructed(x - 1, y, tags) || tm.IsUnobstructed(x, y - 1, tags))) neighbours.Add((new Vector2Int(x - 1, y - 1), DIAGONAL_DIR_COST));
+        if (tm.IsInBounds(x - 1, y + 1) && tm.IsUnobstructed(x - 1, y + 1, tags)
+            && (tm.IsUnobstructed(x - 1, y, tags) || tm.IsUnobstructed(x, y + 1, tags))) neighbours.Add((new Vector2Int(x - 1, y + 1), DIAGONAL_DIR_COST));
+        if (tm.IsInBounds(x + 1, y + 1) && tm.IsUnobstructed(x + 1, y + 1, tags)
+            && (tm.IsUnobstructed(x + 1, y, tags) || tm.IsUnobstructed(x, y + 1, tags))) neighbours.Add((new Vector2Int(x + 1, y + 1), DIAGONAL_DIR_COST));
+        if (tm.IsInBounds(x + 1, y - 1) && tm.IsUnobstructed(x + 1, y - 1, tags)
+            && (tm.IsUnobstructed(x + 1, y, tags) || tm.IsUnobstructed(x, y - 1, tags))) neighbours.Add((new Vector2Int(x + 1, y - 1), DIAGONAL_DIR_COST));
 
         return neighbours;
     }
@@ -59,7 +59,7 @@ public static class Pathfind {
     /// </summary>
     /// <returns>A valid path between <c>startPoint</c> and <c>endPoint</c> if one exists; 
     /// or returns <c>null</c> if no such path exists.</returns>
-    public static Path FindPath(Vector2 startPoint, Vector2 endPoint) {
+    public static Path FindPath(Vector2 startPoint, Vector2 endPoint, ConstructableTag[] oneTagFrom = null) {
         Vector2Int root = new Vector2Int((int) Math.Floor(startPoint.x), (int) Math.Floor(startPoint.y));
         Vector2Int goal = new Vector2Int((int) Math.Floor(endPoint.x), (int) Math.Floor(endPoint.y));
 
@@ -70,7 +70,7 @@ public static class Pathfind {
         Dictionary<Vector2Int, int> gScores = new Dictionary<Vector2Int, int>();
         Dictionary<Vector2Int, int> fScores = new Dictionary<Vector2Int, int>();
 
-        if (!tm.IsInBounds(goal.x, goal.y) || tm.IsObstructed(goal.x, goal.y)) return null;
+        if (!tm.IsInBounds(goal.x, goal.y) || !tm.IsUnobstructed(goal.x, goal.y, oneTagFrom)) return null;
 
         openSet.Add(root);
         gScores.Add(root, 0);
@@ -94,7 +94,7 @@ public static class Pathfind {
             int gScore;
             gScores.TryGetValue(next, out gScore);
 
-            foreach ((Vector2Int neighbour, int edgeWeight) in GetNeighbours(next)) {
+            foreach ((Vector2Int neighbour, int edgeWeight) in GetNeighbours(next, oneTagFrom)) {
 
                 // Have we already found the best path to this point?
                 if (closedSet.Contains(neighbour)) continue;
@@ -129,7 +129,7 @@ public static class Pathfind {
 
         path.Reverse();
 
-        return new Path(path);
+        return new Path(path, oneTagFrom);
     }
 
 
@@ -157,7 +157,8 @@ public static class Pathfind {
     /// Find a valid path out of a number of potential options, choosing the closest one to the given position.
     /// This also returns the index of the chosen target in the original list.
     /// </summary>
-    public static (Path, int) FindPathToOneOf<T>(Vector2 position, List<T> targets, Func<T, Vector2> location, bool randomise = false) {
+    public static (Path, int) FindPathToOneOf<T>(Vector2 position, List<T> targets, Func<T, Vector2> location,
+                                                 ConstructableTag[] oneTagFrom = null, bool randomise = false) {
         List<T> limitedTargets = targets;
 
 
@@ -172,7 +173,7 @@ public static class Pathfind {
         
         // Choose the closest one that is reachable
         foreach (T instance in orderedTargets) {
-            Path path = FindPath(position, location(instance));
+            Path path = FindPath(position, location(instance), oneTagFrom);
             if (path != null) return (path, targets.FindIndex(t => Equals(t, instance)));
         }
 

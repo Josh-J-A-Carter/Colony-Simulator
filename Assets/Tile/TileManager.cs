@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -76,9 +77,6 @@ public class TileManager : MonoBehaviour {
         tileEntityStore.Tick();
     }
 
-    public bool IsObstructed(Vector2Int p) {
-        return obstacles.IsObstructed(p);
-    }
 
     public bool IsInBounds(int x, int y) {
         return obstacles.IsInBounds(x, y);
@@ -88,15 +86,24 @@ public class TileManager : MonoBehaviour {
         return bounds;
     }
 
-    public bool IsObstructed(int x, int y) {
-        return obstacles.IsObstructed(new Vector2Int(x, y));
+    public bool IsObstructed(Vector2Int p, ConstructableTag[] oneTagFrom = null) {
+        return !IsUnobstructed(p.x, p.y, oneTagFrom);
     }
 
-    public bool IsUnobstructed(Vector2Int pos) {
-        return !obstacles.IsObstructed(pos);
+    public bool IsObstructed(int x, int y, ConstructableTag[] oneTagFrom = null) {
+        return !IsUnobstructed(x, y, oneTagFrom);
     }
 
-    public bool IsUnobstructed(int x, int y) {
+    public bool IsUnobstructed(Vector2Int pos, ConstructableTag[] oneTagFrom = null) {
+        return IsUnobstructed(pos.x, pos.y, oneTagFrom);
+    }
+
+    public bool IsUnobstructed(int x, int y, ConstructableTag[] oneTagFrom = null) {
+        if (oneTagFrom != null) {
+            (_, Constructable c) = GetConstructableAt(new(x, y));
+            if (c) foreach (ConstructableTag tag in oneTagFrom) if (c.HasTag(tag)) return true;
+        }
+
         return !obstacles.IsObstructed(new Vector2Int(x, y));
     }
 

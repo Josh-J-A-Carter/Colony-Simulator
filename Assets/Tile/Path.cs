@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
@@ -9,6 +8,7 @@ public class Path {
     TileManager tm => TileManager.Instance;
 
     List<Vector2Int> points;
+    ConstructableTag[] oneTagFrom;
 
     public int Count => points.Count;
 
@@ -26,8 +26,9 @@ public class Path {
     Vector2 initialDelta;
 
 
-    public Path(List<Vector2Int> points) {
+    public Path(List<Vector2Int> points, ConstructableTag[] oneTagFrom) {
         this.points = points;
+        this.oneTagFrom = oneTagFrom;
 
         CalculateLinearSegments();
     }
@@ -130,7 +131,7 @@ public class Path {
             // The position may be slightly off due to rounding issues
             // so check if this is close to diagonals in the path
             // Obviously, this tile needs to be unobstructed too
-            if (tm.IsObstructed(start)) return false;
+            if (tm.IsObstructed(start, oneTagFrom)) return false;
 
             bool foundInDiagonal = false;
             for (int i = 0 ; i < points.Count - 1 ; i += 1) {
@@ -154,14 +155,14 @@ public class Path {
             // If this is the final point, there are no points after it,
             // so the path will be valid as long as this point is unobstructed
             if (i == points.Count - 1) {
-                if (!tm.IsObstructed(points[i])) continue;
+                if (!tm.IsObstructed(points[i], oneTagFrom)) continue;
                 return false;
             }
 
             // If this point and the next are cardinally adjacent, it is sufficient that
             // they both be unobstructed (only check points[i] since points[i + 1] will be checked next iteration)
             if (Adjacent(points[i], points[i + 1])) {
-                if (!tm.IsObstructed(points[i])) continue;
+                if (!tm.IsObstructed(points[i], oneTagFrom)) continue;
                 return false;
             }
 
@@ -169,19 +170,19 @@ public class Path {
             // p1 and p3 are cardinally adjacent, and p2 and p3 are cardinally adjacent, with p3 unobstructed
             // (basically, diagonals need to be able to be approximated with a corner of cardinals)
             if (Diagonal(points[i], points[i + 1])) {
-                if (tm.IsObstructed(points[i])) return false;
-                if (tm.IsObstructed(points[i + 1])) return false;
+                if (tm.IsObstructed(points[i], oneTagFrom)) return false;
+                if (tm.IsObstructed(points[i + 1], oneTagFrom)) return false;
 
                 // Here, we know points[i] and points[i + 1] are diagonal, and both unobstructed
                 // Therefore, look for an unobstructed corner point
                 Vector2Int p = new Vector2Int(points[i].x + 1, points[i].y);
-                if (Adjacent(p, points[i]) && Adjacent(p, points[i + 1]) && !tm.IsObstructed(p)) continue;
+                if (Adjacent(p, points[i]) && Adjacent(p, points[i + 1]) && !tm.IsObstructed(p, oneTagFrom)) continue;
                 p = new Vector2Int(points[i].x - 1, points[i].y);
-                if (Adjacent(p, points[i]) && Adjacent(p, points[i + 1]) && !tm.IsObstructed(p)) continue;
+                if (Adjacent(p, points[i]) && Adjacent(p, points[i + 1]) && !tm.IsObstructed(p, oneTagFrom)) continue;
                 p = new Vector2Int(points[i].x, points[i].y + 1);
-                if (Adjacent(p, points[i]) && Adjacent(p, points[i + 1]) && !tm.IsObstructed(p)) continue;
+                if (Adjacent(p, points[i]) && Adjacent(p, points[i + 1]) && !tm.IsObstructed(p, oneTagFrom)) continue;
                 p = new Vector2Int(points[i].x, points[i].y - 1);
-                if (Adjacent(p, points[i]) && Adjacent(p, points[i + 1]) && !tm.IsObstructed(p)) continue;
+                if (Adjacent(p, points[i]) && Adjacent(p, points[i + 1]) && !tm.IsObstructed(p, oneTagFrom)) continue;
 
                 return false;
             }

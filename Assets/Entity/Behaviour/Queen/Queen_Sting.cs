@@ -53,7 +53,7 @@ public class Queen_Sting : State {
 
     void CalculatePath() {
         Vector2 startPos = entity.transform.position;
-        path = Pathfind.FindPath(startPos, target.GetPosition());
+        path = Pathfind.FindPath(startPos, target.GetPosition(), oneTagFrom: new[]{ ConstructableTag.BeeTraversable });
     
         if (path == null) {
             CompleteState(false);

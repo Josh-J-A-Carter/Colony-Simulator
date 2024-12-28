@@ -58,7 +58,8 @@ public class Tidy__Collect : State {
         }
 
         // Find a path to one of them, if possible
-        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, itemEntities.ToList(), entity => entity.transform.position, randomise: true);
+        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, itemEntities.ToList(), entity => entity.transform.position, 
+                                                            oneTagFrom: new[]{ ConstructableTag.BeeTraversable }, randomise: true);
 
         if (path != null) {
             this.path = path;

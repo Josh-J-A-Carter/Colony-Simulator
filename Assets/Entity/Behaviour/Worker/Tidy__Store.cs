@@ -37,7 +37,8 @@ public class Tidy__Store : State {
         }
 
         // Find a path to one of them, if possible
-        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, storage, tuple => tuple.Item1, randomise: true);
+        (Path path, int index) = Pathfind.FindPathToOneOf(transform.position, storage, tuple => tuple.Item1, 
+                                                            oneTagFrom: new[]{ ConstructableTag.BeeTraversable }, randomise: true);
 
         if (path != null) {
             this.path = path;

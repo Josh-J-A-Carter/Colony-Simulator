@@ -16,7 +16,7 @@ MonoBehaviour:
   - gridEntries:
     - worldTile: {fileID: 11400000, guid: 9961d5409563d894db30573f625ee3de, type: 2}
       previewTile: {fileID: 11400000, guid: 1d91fa58fdc27c249ad9e0816b860169, type: 2}
-  obstructive: 0
+  obstructive: 1
   nameInfo: Propolis
   descriptionInfo: A sticky substance made from plant resins and beeswax. It has
     powerful anti-microbial properties.
@@ -32,3 +32,4 @@ MonoBehaviour:
       <Item>k__BackingField: {fileID: 0}
       <ItemTag>k__BackingField: 6
     quantity: 1
+  tags: 0000000001000000

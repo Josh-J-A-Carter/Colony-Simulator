@@ -39,7 +39,7 @@ public class Lay__Pathfind : State {
         Vector2 pos = entity.transform.position;
         Vector2Int gridPos = new Vector2Int((int) Math.Floor(pos.x), (int) Math.Floor(pos.y));
 
-        path = Pathfind.FindPath(gridPos, destination);
+        path = Pathfind.FindPath(gridPos, destination, oneTagFrom: new[]{ ConstructableTag.BeeTraversable });
 
         // We couldn't find a path to the task location :(
         if (path == null) {

@@ -86,7 +86,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
     bool IsPathAvailable(ILocative locative) {
         ReadOnlyCollection<Vector2Int> exterior = locative.GetExteriorPoints();
         foreach (Vector2Int destination in exterior) {
-            Path path = Pathfind.FindPath(transform.position, destination);
+            Path path = Pathfind.FindPath(transform.position, destination, oneTagFrom: new[]{ ConstructableTag.BeeTraversable });
             if (path != null) return true;
         }
         

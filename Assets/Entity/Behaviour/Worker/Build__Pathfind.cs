@@ -40,7 +40,7 @@ public class Build__Pathfind : State {
         ReadOnlyCollection<Vector2Int> interior = task.GetExteriorPoints();
 
         // Find a path to one of them, if possible
-        (path, _) = Pathfind.FindPathToOneOf(transform.position, interior.ToList(), p => p);
+        (path, _) = Pathfind.FindPathToOneOf(transform.position, interior.ToList(), p => p, oneTagFrom: new[]{ ConstructableTag.BeeTraversable });
 
         if (path != null) {
             path.Initialise(entity, stepSpeed);

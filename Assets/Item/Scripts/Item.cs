@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Item/Item")]
@@ -59,9 +60,7 @@ public class Item : ScriptableObject, IInformative {
     }
 
     public bool HasItemTag(ItemTag input) {
-        foreach (ItemTag tag in itemTags) if (input == tag) return true;
-
-        return false;
+        return itemTags.Contains(input);
     }
 
     public ItemComponent GetItemComponent(ItemTag tag) {

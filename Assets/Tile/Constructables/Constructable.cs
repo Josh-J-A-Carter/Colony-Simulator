@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -26,6 +25,9 @@ public class Constructable : ScriptableObject, IInformative {
 
     [SerializeField]
     protected List<ResourceRequirement> requiredResources;
+
+    [SerializeField]
+    ConstructableTag[] tags;
 
     ReadOnlyCollection<(Resource, uint)> requirement;
 
@@ -53,6 +55,10 @@ public class Constructable : ScriptableObject, IInformative {
     public void SetData(GridRow[] gridData, bool obstructive) {
         this.gridData = gridData;
         this.obstructive = obstructive;
+    }
+
+    public bool HasTag(ConstructableTag tag) {
+        return tags != null && tags.Contains(tag);
     }
 
     /// <summary>

@@ -74,7 +74,6 @@ public class BuildTool : Tool {
 
         // Build when clicked
         if (previewCursorActive && Input.GetKeyDown(KeyCode.Mouse0)) {
-            tm.SetTaskPreview(previewCursorPosition, constructable);
             BuildArea(previewCursorPosition, previewCursorPosition, constructable);
         }
     }

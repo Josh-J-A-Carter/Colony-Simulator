@@ -4,16 +4,18 @@ using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class DestroyTask : Task, ILocative {
-    
-    Constructable constructable;
     Vector2Int startPos;
+    Constructable preview;
+    Constructable constructable;
 
     ReadOnlyCollection<Vector2Int> exteriorPoints;
     ReadOnlyCollection<Vector2Int> interiorPoints;
 
-    public DestroyTask(TaskPriority priority, Vector2Int startPos, Constructable constructable) {
+    public DestroyTask(TaskPriority priority, Vector2Int startPos, Constructable preview, Constructable constructable) {
         this.priority = priority;
+
         this.startPos = startPos;
+        this.preview = preview;
         this.constructable = constructable;
 
         creationTime = Time.time;
@@ -23,22 +25,12 @@ public class DestroyTask : Task, ILocative {
         return constructable.HasTag(tag);
     }
 
-    public override bool MustAbort() {
-        // If there is nothing in the world map at any of the necessary positions, abort
-        foreach (Vector2Int pos in GetInteriorPoints()) {
-            (_, Constructable existingConstructable) =  TileManager.Instance.GetConstructableAt(pos);
-            if (existingConstructable == null) return true;
-        }
-
-        return false;
-    }
-
     public override void OnCancellation() {
         TileManager.Instance.RemoveTaskPreview(startPos);
     }
 
     public override void OnConfirmation() {
-        TileManager.Instance.SetTaskPreview(startPos, constructable);
+        TileManager.Instance.SetTaskPreview(startPos, preview);
     }
 
     public override void OnCompletion() {

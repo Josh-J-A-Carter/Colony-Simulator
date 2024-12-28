@@ -163,10 +163,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 165163172}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e7b87a231d990e489f5113ae24f46fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f183d901f3db944898c3e3e346143a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  previewTile: {fileID: 11400000, guid: 1c9d093ae73311d47b4881b69b75bbdd, type: 2}
+  destroyEffect: {fileID: 11400000, guid: b6300e387d7c2b74f9fb413b3fc1281c, type: 2}
 --- !u!1 &228560784
 GameObject:
   m_ObjectHideFlags: 0

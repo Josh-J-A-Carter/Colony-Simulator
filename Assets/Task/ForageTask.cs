@@ -65,26 +65,14 @@ public class ForageTask : Task, ILocative, IReward {
         return forageStructure.CollectAll(data);
     }
 
-    public override String GetName() {
+    protected override String GetTaskCategory() {
         return "Foraging";
     }
 
-    public override String GetDescription() {
-        return "Foraging for nectar, pollen, sap, and other resources essential to the survival of the bee nest";
+    protected override String GetTaskType() {
+        return "Foraging plant materials";
     }
 
-    public override InfoBranch GetInfoTree(object obj = null) {
-        InfoBranch root = new InfoBranch(String.Empty);
-        
-        InfoLeaf nameProperty = new InfoLeaf("Type", "Foraging");
-        root.AddChild(nameProperty);
-
-        int percentProgress = (int) (100 * (float) progress / MAX_PROGRESS);
-        InfoLeaf progressProperty = new InfoLeaf("Progress", percentProgress + "%");
-        root.AddChild(progressProperty);
-
-        return root;
-    }
 
     public override bool IsRuleGenerated() {
         return true;

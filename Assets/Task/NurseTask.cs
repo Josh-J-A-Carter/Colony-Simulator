@@ -95,25 +95,12 @@ public class NurseTask : Task, ILocative, IConsumer {
         return startPos;
     }
 
-    public override String GetName() {
+    protected override String GetTaskCategory() {
         return "Nursing";
     }
 
-    public override String GetDescription() {
-        return "Feeding newly hatched eggs and capping larvae before they become pupae";
-    }
-
-    public override InfoBranch GetInfoTree(object obj = null) {
-        InfoBranch root = new InfoBranch(String.Empty);
-        
-        InfoLeaf nameProperty = new InfoLeaf("Type", "Nursing");
-        root.AddChild(nameProperty);
-
-        int percentProgress = (int) (100 * (float) progress / MAX_PROGRESS);
-        InfoLeaf progressProperty = new InfoLeaf("Progress", percentProgress + "%");
-        root.AddChild(progressProperty);
-
-        return root;
+    protected override String GetTaskType() {
+        return "Nursing brood";
     }
 
     public override bool IsRuleGenerated() {

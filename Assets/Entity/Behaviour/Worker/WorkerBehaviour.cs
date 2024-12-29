@@ -285,7 +285,7 @@ public class WorkerBehaviour : MonoBehaviour, ITaskAgent, IInformative, IEntity,
             InfoLeaf currentTaskProperty = new InfoLeaf("Current task", "None", "As this bee is not assigned a particular task, it may instead be tidying or idling");
             taskCategory.AddChild(currentTaskProperty);
         } else {
-            foreach (InfoNode node in task.GetInfoTree().GetChildren()) {
+            foreach (InfoNode node in task.GetGenericInfoTree().GetChildren()) {
                 taskCategory.AddChild(node);
             }
         }

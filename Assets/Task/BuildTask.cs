@@ -110,25 +110,11 @@ public class BuildTask : Task, ILocative, IConsumer {
         return startPos;
     }
 
-
-    public override String GetName() {
-        return "Construction";
+    protected override String GetTaskCategory() {
+        return "Nest duties";
     }
 
-    public override String GetDescription() {
-        return "Constructing little bee structures out of beeswax and other naturally found materials";
-    }
-
-    public override InfoBranch GetInfoTree(object obj = null) {
-        InfoBranch root = new InfoBranch(String.Empty);
-        
-        InfoLeaf nameProperty = new InfoLeaf("Type", "Construction");
-        root.AddChild(nameProperty);
-
-        int percentProgress = (int) (100 * (float) progress / MAX_PROGRESS);
-        InfoLeaf progressProperty = new InfoLeaf("Progress", percentProgress + "%");
-        root.AddChild(progressProperty);
-
-        return root;
+    protected override String GetTaskType() {
+        return "Building structures";
     }
 }

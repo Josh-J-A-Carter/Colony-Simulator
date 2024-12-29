@@ -26,25 +26,16 @@ public class AttackTask : Task {
         return true;
     }
 
-    public override String GetName() {
-        return "Attack";
+    protected override String GetProgress() {
+        return "Incomplete";
     }
 
-    public override String GetDescription() {
-        return "Attacking any living organisms that threaten the security of the hive";
+
+    protected override String GetTaskCategory() {
+        return "Soldier duties";
     }
 
-    public override InfoBranch GetInfoTree(object obj = null) {
-        InfoBranch root = new InfoBranch(String.Empty);
-        
-        InfoLeaf nameProperty = new InfoLeaf("Type", "Attack");
-        root.AddChild(nameProperty);
-
-        if (target is IInformative info) {
-            InfoLeaf progressProperty = new InfoLeaf("Target", info.GetName());
-            root.AddChild(progressProperty);
-        }
-
-        return root;
+    protected override String GetTaskType() {
+        return "Attacking enemies";
     }
 }

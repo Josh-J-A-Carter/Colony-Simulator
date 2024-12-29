@@ -1,14 +1,13 @@
 Shader "Unlit/SkyBox" {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
+        _B_Plains ("Plains Biome Texture", 2D) = "white" {}
+
+        _Sky_Day ("Sky Texture (Day)", 2D) = "white" {}
+        _Sky_Dusk ("Sky Texture (Dawn/dusk)", 2D) = "white" {}
+        _Sky_Night ("Sky Texture (Night)", 2D) = "white" {}
 
         _VertOffset ("Vertical Offset", Float) = 20
-
-        _GroundLevel ("Ground level", Float) = 2
-        _SkyLevel ("Sky level", Float) = 40
-
-        _GroundColor ("Ground Default Color", Color) = (0.043, 0.522, 0.239, 1)
-        _SkyColor ("Sky Default Color", Color) = (0.75, 0.75, 1, 1)
     }
     SubShader {
         Tags { "RenderType"="Opaque" }
@@ -26,38 +25,51 @@ Shader "Unlit/SkyBox" {
                 float2 uv : TEXCOORD0;
             };
 
-            struct v2f {
+            struct interpolator {
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
                 float2 worldPos : TEXCOORD1;
             };
 
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
+            sampler2D _B_Plains;
 
-            float _GroundLevel;
-            float _SkyLevel;
-
-            float4 _GroundColor;
-            float4 _SkyColor;
+            sampler2D _Sky_Day;
+            sampler2D _Sky_Dusk;
+            sampler2D _Sky_Night;
 
             float _VertOffset;
 
-            v2f vert (appdata v) {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xy;
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                return o;
+            interpolator vert (appdata input) {
+                interpolator output;
+                output.vertex = UnityObjectToClipPos(input.vertex);
+                output.worldPos = mul(unity_ObjectToWorld, input.vertex).xy;
+                return output;
             }
 
-            float4 frag (v2f i) : SV_Target {
-                if (i.worldPos.y <= _GroundLevel) return _GroundColor;
-                if (i.worldPos.y >= _SkyLevel) return _SkyColor;
+            float4 frag (interpolator i) : SV_Target {
+                float2 uv = float2 (i.worldPos.x, i.worldPos.y * 2 + _VertOffset) / 70;
 
-                fixed4 col = tex2D(_MainTex, float2 (i.worldPos.x, i.worldPos.y * 4 + _VertOffset) / 70);
+                // Foreground colour
+                float4 foreground = tex2D(_B_Plains, uv);
 
-                return col;
+                // Get background colour, depending on time
+                float4 background;
+                float time = cos(_Time) * 0.5 + 0.5;
+                
+                float4 day = tex2D(_Sky_Day, uv);
+                float4 dusk = tex2D(_Sky_Dusk, uv);
+                float4 night = tex2D(_Sky_Night, uv);
+
+                if (time > 0.75) background = day;
+                else if (time < 0.25) background = night;
+                else if (time < 0.5) background = lerp(night, dusk, (time - 0.25) * 4);
+                else background = lerp(dusk, day, (time - 0.5) * 4);
+
+                // If fg is transparent, this is 0 -> show bg. Otherwise, this is 1 -> show fg.
+                float show_foreground = clamp(foreground.a, 0, 1);
+                float4 final_colour = lerp(background, foreground, show_foreground);
+
+                return final_colour;
             }
 
             ENDCG

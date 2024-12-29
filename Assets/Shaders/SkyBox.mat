@@ -23,6 +23,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _B_Plains:
+        m_Texture: {fileID: 2800000, guid: df98867d00dfbc34198adc6c6922fccb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -57,6 +61,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Sky_Day:
+        m_Texture: {fileID: 2800000, guid: cd6a8e90e39b2c44d8bd5a89a4c0930a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Sky_Dusk:
+        m_Texture: {fileID: 2800000, guid: 3e80587eec748dc4081ae339caa0b0d5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Sky_Night:
+        m_Texture: {fileID: 2800000, guid: a3149318a8e389f44b774bbd3cf12d1a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []

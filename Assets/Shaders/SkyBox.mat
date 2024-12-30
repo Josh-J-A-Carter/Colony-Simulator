@@ -23,8 +23,24 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _B_Forest:
+        m_Texture: {fileID: 2800000, guid: 1bc95b1abd711cd4fa57440e88c5e7af, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _B_Meadow:
+        m_Texture: {fileID: 2800000, guid: 09aaf556e411c7d4b98fd1e014d17b74, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _B_Mountain:
+        m_Texture: {fileID: 2800000, guid: 6e2aaa45b390b7c468f1a69f84c5edef, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _B_Plains:
         m_Texture: {fileID: 2800000, guid: df98867d00dfbc34198adc6c6922fccb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _B_Sparse_Plains:
+        m_Texture: {fileID: 2800000, guid: 9874d200827dfd3419c852e94c781d63, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -96,7 +112,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _VertOffset: -3
+    - _VertOffset: -2
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

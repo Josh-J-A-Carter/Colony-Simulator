@@ -1,7 +1,12 @@
 Shader "Unlit/SkyBox" {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
+        
+        _B_Sparse_Plains ("Sparse Plains Biome Texture", 2D) = "white" {}
         _B_Plains ("Plains Biome Texture", 2D) = "white" {}
+        _B_Meadow ("Flower Meadow Biome Texture", 2D) = "white" {}
+        _B_Forest ("Forest Biome Texture", 2D) = "white" {}
+        _B_Mountain ("Mountain Biome Texture", 2D) = "white" {}
 
         _Sky_Day ("Sky Texture (Day)", 2D) = "white" {}
         _Sky_Dusk ("Sky Texture (Dawn/dusk)", 2D) = "white" {}
@@ -31,7 +36,11 @@ Shader "Unlit/SkyBox" {
                 float2 worldPos : TEXCOORD1;
             };
 
+            sampler2D _B_Sparse_Plains;
             sampler2D _B_Plains;
+            sampler2D _B_Meadow;
+            sampler2D _B_Forest;
+            sampler2D _B_Mountain;
 
             sampler2D _Sky_Day;
             sampler2D _Sky_Dusk;
@@ -47,10 +56,16 @@ Shader "Unlit/SkyBox" {
             }
 
             float4 frag (interpolator i) : SV_Target {
-                float2 uv = float2 (i.worldPos.x, i.worldPos.y * 2 + _VertOffset) / 70;
+                float2 uv = float2 (i.worldPos.x, i.worldPos.y * 2 + _VertOffset) / 32;
 
-                // Foreground colour
-                float4 foreground = tex2D(_B_Plains, uv);
+                // Foreground colour - depends on biome
+                float4 foreground;
+                int biome = (((int) i.worldPos.x) / 16) % 5;
+                if (biome == 0) foreground = tex2D(_B_Plains, uv);
+                else if (biome == 1) foreground = tex2D(_B_Sparse_Plains, uv);
+                else if (biome == 2) foreground = tex2D(_B_Meadow, uv);
+                else if (biome == 3) foreground = tex2D(_B_Mountain, uv);
+                else foreground = tex2D(_B_Forest, uv);
 
                 // Get background colour, depending on time
                 float4 background;
